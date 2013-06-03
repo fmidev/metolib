@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8" />
+    <title>Parser examples</title>
+
+    <!-- JavaScript -->
+    <script type="text/javascript" src="../deps/jquery/jquery-1.9.1.js"></script>
+    <script type="text/javascript" src="../deps/underscore/underscore-1.4.4.js"></script>
+
+    <!-- Parser JavaScript files -->
+    <script type="text/javascript" src="../src/utils.js"></script>
+    <script type="text/javascript" src="../src/wfsrequestparser.js"></script>
+
+    <script type="text/javascript">
+        // Stored query ids.
+        var STORED_QUERY_OBSERVATION = "fmi::observations::weather::multipointcoverage";
+        var STORED_QUERY_FORECAST = "fmi::forecast::hirlam::surface::point::multipointcoverage";
+
+        // URL for test server.
+        var TEST_SERVER_URL = "http://data.fmi.fi/fmi-apikey/REPLACE-WITH-YOUR-OWN-APIKEY/wfs";
+        if (TEST_SERVER_URL.indexOf("REPLACE-WITH-YOUR-OWN-APIKEY") !== -1) {
+            alert("Check parser.html source! TEST_SERVER_URL should contain proper API-key!");
+        }
+
+        /**
+         * This function recursively browses the given {data} structure and appends the content as text
+         * to the {container} element.
+
+         * @param {Element} container Content is appended as a text here.
+         * @param {Object|Array|String|etc} data Content that is browsed through recursively.
+         * @param {String} indentStr Indentation string of the previous recursion level.
+         */
+        function recursiveBrowse(container, data, indentStr) {
+            if (_.isArray(data) || _.isObject(data)) {
+                // Browse all the child items of the array or object.
+                indentStr += ">";
+                _.each(data, function(value, key) {
+                    container.append("<br>" + indentStr + " [" + key + "]");
+                    recursiveBrowse(container, value, indentStr);
+                });
+
+            } else {
+                // This is a leaf. So, just append it after its container array or object.
+                container.append(" > " + data);
+            }
+        }
+
+        /**
+         * Handle parser results in this callback function.
+         *
+         * Append result strings to the UI.
+         *
+         * @param {Object} data Parsed data.
+         * @param {Object} errors Parser errors.
+         * @param {String} test case name.
+         */
+        function handleCallback(data, errors, caseName) {
+            var results = jQuery("#results");
+            results.append("<h2>" + caseName + "</h2>");
+            if (data) {
+                results.append("<h3>Data object</h3>");
+                recursiveBrowse(results, data, "");
+            }
+            if (errors) {
+                results.append("<h3>Errors object</h3>");
+                recursiveBrowse(results, errors, "");
+            }
+        }
+
+        function testHkiTd(url) {
+            // See API documentation and comments from parser source code of
+            // fi.fmi.metoclient.metolib.WfsRequestParser.getData function for the description
+            // of function options parameter object and for the callback parameters objects structures.
+            fi.fmi.metoclient.metolib.WfsRequestParser.getData({
+                url : url,
+                storedQueryId : STORED_QUERY_OBSERVATION,
+                requestParameter : "td",
+                // Integer values are used to init dates for older browsers.
+                // (new Date("2013-05-10T08:00:00Z")).getTime()
+                // (new Date("2013-05-12T10:00:00Z")).getTime()
+                begin : new Date(1368172800000),
+                end : new Date(1368352800000),
+                timestep : 60 * 60 * 1000,
+                sites : "Helsinki",
+                callback : function(data, errors) {
+                    // Handle the data and errors object in a way you choose.
+                    // Here, we delegate the content for a separate handler function.
+                    // See parser documentation from source code comments for more details.
+                    handleCallback(data, errors, "Helsinki td");
+                }
+            });
+        };
+
+        function testHkiTurkuTdWind(url) {
+            // See API documentation and comments from parser source code of
+            // fi.fmi.metoclient.metolib.WfsRequestParser.getData function for the description
+            // of function options parameter object and for the callback parameters objects structures.
+            fi.fmi.metoclient.metolib.WfsRequestParser.getData({
+                url : url,
+                storedQueryId : STORED_QUERY_OBSERVATION,
+                requestParameter : "td,ws_10min",
+                // Integer values are used to init dates for older browsers.
+                // (new Date("2013-05-10T08:00:00Z")).getTime()
+                // (new Date("2013-05-12T10:00:00Z")).getTime()
+                begin : new Date(1368172800000),
+                end : new Date(1368352800000),
+                timestep : 60 * 60 * 1000,
+                sites : ["Kaisaniemi,Helsinki", "Turku"],
+                callback : function(data, errors) {
+                    // Handle the data and errors object in a way you choose.
+                    // Here, we delegate the content for a separate handler function.
+                    // See parser documentation from source code comments for more details.
+                    handleCallback(data, errors, "Helsinki Turku td wind");
+                }
+            });
+        };
+
+        function testSpatialTdWindspeed(url) {
+            // See API documentation and comments from parser source code of
+            // fi.fmi.metoclient.metolib.WfsRequestParser.getData function for the description
+            // of function options parameter object and for the callback parameters objects structures.
+            fi.fmi.metoclient.metolib.WfsRequestParser.getData({
+                url : url,
+                storedQueryId : STORED_QUERY_OBSERVATION,
+                requestParameter : "td,ws_10min",
+                // Integer values are used to init dates for older browsers.
+                // (new Date("2013-05-10T08:00:00Z")).getTime()
+                // (new Date("2013-05-12T10:00:00Z")).getTime()
+                begin : new Date(1368172800000),
+                end : new Date(1368352800000),
+                timestep : 60 * 60 * 1000,
+                bbox : "21,60,24,65",
+                callback : function(data, errors) {
+                    // Handle the data and errors object in a way you choose.
+                    // Here, we delegate the content for a separate handler function.
+                    // See parser documentation from source code comments for more details.
+                    handleCallback(data, errors, "Spatial td wind");
+                }
+            });
+        };
+
+        function testForecastTemperatureWindspeed(url) {
+            // See API documentation and comments from parser source code of
+            // fi.fmi.metoclient.metolib.WfsRequestParser.getData function for the description
+            // of function options parameter object and for the callback parameters objects structures.
+            fi.fmi.metoclient.metolib.WfsRequestParser.getData({
+                url : url,
+                storedQueryId : STORED_QUERY_FORECAST,
+                requestParameter : "temperature,windspeedms",
+                begin : new Date(),
+                end : new Date((new Date()).getTime() + 26 * 60 * 60 * 1000),
+                timestep : 60 * 60 * 1000,
+                sites : ["Helsinki", "Turku"],
+                callback : function(data, errors) {
+                    // Handle the data and errors object in a way you choose.
+                    // Here, we delegate the content for a separate handler function.
+                    // See parser documentation from source code comments for more details.
+                    handleCallback(data, errors, "Forecast Helsinki Turku temperature windspeed");
+                }
+            });
+        };
+
+        $(function() {
+            // Run test cases by using functions above.
+
+            // Single station and single observation.
+            testHkiTd(TEST_SERVER_URL);
+            // Multiple stations and multiple observations.
+            testHkiTurkuTdWind(TEST_SERVER_URL);
+
+            // Spatial multiple observation data.
+            testSpatialTdWindspeed(TEST_SERVER_URL);
+
+            // Multiple stations and multiple observations.
+            testForecastTemperatureWindspeed(TEST_SERVER_URL);
+        });
+    </script>
+</head>
+<html>
+    <body>
+        <h1>Parser examples</h1>
+        <p>
+            Notice,
+            <code>
+                fi.fmi.metoclient.metolib.WfsRequestParser
+            </code> source code is well commented.
+            See more information about API and implementation from source code comments.
+        </p>
+        <h2>Parser results (may take a moment before shown):</h2>
+        <div id="results">
+            <!-- Test results will be appended here. -->
+        </div>
+    </body>
+</html>

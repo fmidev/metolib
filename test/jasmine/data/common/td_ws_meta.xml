@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CompositeObservableProperty xmlns="http://inspire.ec.europa.eu/schemas/omop/2.9"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:gml="http://www.opengis.net/gml/3.2"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+  gml:id="prop-1"
+  xsi:schemaLocation="http://inspire.ec.europa.eu/schemas/omop/2.9 http://inspire.ec.europa.eu/draft-schemas/omop/2.9/ObservableProperties.xsd">
+  <count>2</count>
+    <component>
+      <ObservableProperty gml:id="td">
+        <label>Dew-point temperature</label>
+      	<basePhenomenon>Humidity</basePhenomenon>
+      	<uom uom="degC"/>
+      	<statisticalMeasure>     
+          <StatisticalMeasure gml:id="stat-avg-PT1M-td---">
+            <statisticalFunction>avg</statisticalFunction><aggregationTimePeriod>PT1M</aggregationTimePeriod>
+          </StatisticalMeasure>
+        </statisticalMeasure>
+      </ObservableProperty>
+    </component>  
+    <component>
+      <ObservableProperty gml:id="ws_10min">
+        <label>Wind speed</label>
+      	<basePhenomenon>Wind</basePhenomenon>
+      	<uom uom="m/s"/>
+      	<statisticalMeasure>     
+          <StatisticalMeasure gml:id="stat-avg-PT10M-ws_10min---">
+            <statisticalFunction>avg</statisticalFunction><aggregationTimePeriod>PT10M</aggregationTimePeriod>
+          </StatisticalMeasure>
+        </statisticalMeasure>
+      </ObservableProperty>
+    </component>  </CompositeObservableProperty>

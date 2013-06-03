@@ -1,0 +1,62 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+    <head>
+        <title>MetOLib Spec Runner</title>
+
+        <link rel="stylesheet" type="text/css" href="../../testdeps/jasmine-1.3.1/jasmine.css">
+        <script type="text/javascript" src="../../testdeps/jasmine-1.3.1/jasmine.js"></script>
+        <script type="text/javascript" src="../../testdeps/jasmine-1.3.1/jasmine-html.js"></script>
+
+        <!-- Test dependencies -->
+        <script type="text/javascript" src="../../deps/jquery/jquery-1.9.1-min.js"></script>
+        <script type="text/javascript" src="../../deps/underscore/underscore-1.4.4-min.js"></script>
+        <script type="text/javascript" src="../../deps/async/async-0.2.5-min.js"></script>
+
+        <!-- The tested source files  -->
+        <script type="text/javascript" src="../../lib/utils-0.1.1-min.js"></script>
+        <script type="text/javascript" src="../../lib/wfsrequestparser-0.1.1-min.js"></script>
+        <script type="text/javascript" src="../../lib/splittercache-0.1.1-min.js"></script>
+        <script type="text/javascript" src="../../lib/wfsconnection-0.1.1-min.js"></script>
+
+        <!-- The spec files -->
+        <!-- Notice, modify this config if server data should also be tested. -->
+        <script type="text/javascript" src="js/specconfig.js"></script>
+        <script type="text/javascript" src="js/specutils.js"></script>
+        <script type="text/javascript" src="spec/CacheSpec.js"></script>
+        <script type="text/javascript" src="spec/ParserSpec.js"></script>
+        <script type="text/javascript" src="spec/ConnectionSpec.js"></script>
+
+        <script type="text/javascript">
+            (function() {
+                var jasmineEnv = jasmine.getEnv();
+                jasmineEnv.updateInterval = 1000;
+
+                var htmlReporter = new jasmine.HtmlReporter();
+
+                jasmineEnv.addReporter(htmlReporter);
+
+                jasmineEnv.specFilter = function(spec) {
+                    return htmlReporter.specFilter(spec);
+                };
+
+                var currentWindowOnload = window.onload;
+
+                window.onload = function() {
+                    if (currentWindowOnload) {
+                        currentWindowOnload();
+                    }
+                    execJasmine();
+                };
+
+                function execJasmine() {
+                    jasmineEnv.execute();
+                }
+
+            })();
+        </script>
+    </head>
+    <body>
+        <!-- Test results will be automatically included here. -->
+    </body>
+</html>

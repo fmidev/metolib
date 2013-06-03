@@ -1,0 +1,25 @@
+{
+  "name": "MetOLib",
+  "version": "0.1.1",
+  "description": "See:\r http://gruntjs.com\r http://gruntjs.com/getting-started",
+  "main": "",
+  "scripts": {
+    "build": "grunt build",
+    "test": "grunt test"
+  },
+  "repository": "",
+  "author": "FMI",
+  "license": "MIT",
+  "readmeFilename": "",
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-contrib-clean": "~0.4.1",
+    "grunt-contrib-concat": "~0.2.0",
+    "grunt-contrib-uglify": "~0.2.0",
+    "grunt-contrib-jshint": "~0.4.3",
+    "grunt-contrib-jasmine": "~0.4.2",
+    "grunt-contrib-connect": "~0.3.0",
+    "grunt-string-replace": "~0.2.4",
+    "karma": "~0.8.5"
+  }
+}

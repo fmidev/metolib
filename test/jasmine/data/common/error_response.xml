@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ExceptionReport xmlns="http://www.opengis.net/ows/1.1"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.opengis.net/ows/1.1 http://schemas.opengis.net/ows/1.1.0/owsExceptionReport.xsd"
+  version="2.0.0">
+
+
+  <Exception exceptionCode="OperationProcessingFailed">
+    <ExceptionText>2013-May-15 15:28:32 C++ exception &apos;std::runtime_error&apos;: Unknown location: ErrorSite
+Query: /wfs?request=getFeature&amp;storedquery_id=fmi::observations::weather::multipointcoverage&amp;parameters=td,ws_10min&amp;starttime=2013-05-09T06:00:00Z&amp;endtime=2013-05-14T13:00:00Z&amp;timestep=60&amp;place=ErrorSite
+</ExceptionText>
+    
+  </Exception>
+
+</ExceptionReport>

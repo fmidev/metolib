@@ -1,0 +1,3941 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wfs:FeatureCollection
+  timeStamp="2013-05-15T13:49:39Z"
+  numberMatched="1"
+  numberReturned="1"
+  xmlns:wfs="http://www.opengis.net/wfs/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+  xmlns:om="http://www.opengis.net/om/2.0"
+  xmlns:ompr="http://inspire.ec.europa.eu/schemas/ompr/2.0rc3"
+  xmlns:omso="http://inspire.ec.europa.eu/schemas/omso/2.0rc3"
+  xmlns:gml="http://www.opengis.net/gml/3.2"
+  xmlns:gmd="http://www.isotc211.org/2005/gmd"
+  xmlns:gco="http://www.isotc211.org/2005/gco"
+  xmlns:swe="http://www.opengis.net/swe/2.0"
+  xmlns:gmlcov="http://www.opengis.net/gmlcov/1.0"
+  xmlns:sam="http://www.opengis.net/sampling/2.0"
+  xmlns:sams="http://www.opengis.net/samplingSpatial/2.0"
+  xmlns:target="http://xml.fmi.fi/namespace/om/atmosphericfeatures/0.95"
+  xsi:schemaLocation="http://www.opengis.net/wfs/2.0 http://schemas.opengis.net/wfs/2.0/wfs.xsd
+  http://www.opengis.net/gmlcov/1.0 http://schemas.opengis.net/gmlcov/1.0/gmlcovAll.xsd
+  http://www.opengis.net/sampling/2.0 http://schemas.opengis.net/sampling/2.0/samplingFeature.xsd
+  http://www.opengis.net/samplingSpatial/2.0 http://schemas.opengis.net/samplingSpatial/2.0/spatialSamplingFeature.xsd
+  http://www.opengis.net/swe/2.0 http://schemas.opengis.net/sweCommon/2.0/swe.xsd
+  http://inspire.ec.europa.eu/schemas/ompr/2.0rc3 http://inspire.ec.europa.eu/draft-schemas/ompr/2.0rc3/Processes.xsd
+  http://inspire.ec.europa.eu/schemas/omso/2.0rc3 http://inspire.ec.europa.eu/draft-schemas/omso/2.0rc3/SpecialisedObservations.xsd
+  http://xml.fmi.fi/namespace/om/atmosphericfeatures/0.95 http://xml.fmi.fi/schema/om/atmosphericfeatures/0.95/atmosphericfeatures.xsd">
+
+  <wfs:member>
+    <omso:GridSeriesObservation gml:id="WFS-xM574qbJbyTmNBtytXdWCWqaJL.JTowroWbbpdOt.Lnl5dsPTTv3c3Trvlw9NGXk6dbeuzpp4b9O7pj39svLDnywtLFlz6d1TTty2vfoUqpgk8NbFv67smndnhb_GMaoGTkDHCBUBQQDGx8udakWhTjunTRk1cM7LuyVNO3La9.hSrGCWOEzNm_Hh2Za1M2m_GkruvTM4a23D4iaefTDux5aVq6EBpbcPiLw349HOcGOZvbcvTLvoYeWHbl6ZeXOsTpkrQ7877Fht07mtt08.endnqZfHSsadhnNrd12z81Pph6ad.7nOE3OeXhh5YemWPy39eHOQ1ufTD00791Tzwy1ob.GXdkw9MLc59N_LLk49cvLzf05K3Qs23S6db8XPLy7Yemnfu5unXfLh6aMvJ0629dnTTw36d3THv7ZeWHPlaHTTty0.mXhPyEA">
+
+                 <om:phenomenonTime>
+        <gml:TimePeriod gml:id="time1-1-1">
+          <gml:beginPosition>2013-05-10T08:00:00Z</gml:beginPosition>
+          <gml:endPosition>2013-05-12T10:00:00Z</gml:endPosition>
+        </gml:TimePeriod>
+      </om:phenomenonTime>
+      <om:resultTime>
+        <gml:TimeInstant gml:id="time2-1-1">
+          <gml:timePosition>2013-05-12T10:00:00Z</gml:timePosition>
+        </gml:TimeInstant>
+      </om:resultTime>
+
+     <om:procedure xlink:href="http://xml.fmi.fi/inspire/process/opendata"/>
+                 <om:parameter>
+                <om:NamedValue>
+                    <om:name xlink:href="http://inspire.ec.europa.eu/codeList/ProcessParameterValue/value/groundObservation/observationIntent"/>
+                    <om:value>
+			atmosphere
+                    </om:value>
+                </om:NamedValue>
+            </om:parameter>
+
+     <om:observedProperty  xlink:href="data/common/td_ws_meta.xml?observableProperty=observation&amp;param=td,ws_10min&amp;language=eng"/>
+     	<om:featureOfInterest>
+        <sams:SF_SpatialSamplingFeature gml:id="sampling-feature-1-1-fmisid">
+
+          <sam:sampledFeature>
+		<target:LocationCollection gml:id="sampled-target-1-1">
+		    <target:member>
+		    <target:Location gml:id="obsloc-fmisid-100924-pos">
+		        <gml:identifier codeSpace="http://xml.fmi.fi/namespace/stationcode/fmisid">100924</gml:identifier>
+			<gml:name codeSpace="http://xml.fmi.fi/namespace/locationcode/name">Fagerholm</gml:name>
+			
+			<gml:name codeSpace="http://xml.fmi.fi/namespace/locationcode/wmo">2950</gml:name>
+			<target:representativePoint xlink:href="#point-100924"/>					
+			
+			
+			<target:region codeSpace="http://xml.fmi.fi/namespace/location/region">Parainen</target:region>	   			
+			
+		    </target:Location></target:member>
+		    <target:member>
+		    <target:Location gml:id="obsloc-fmisid-100934-pos">
+		        <gml:identifier codeSpace="http://xml.fmi.fi/namespace/stationcode/fmisid">100934</gml:identifier>
+			<gml:name codeSpace="http://xml.fmi.fi/namespace/locationcode/name">Yltöinen</gml:name>
+			
+			<gml:name codeSpace="http://xml.fmi.fi/namespace/locationcode/wmo">2828</gml:name>
+			<target:representativePoint xlink:href="#point-100934"/>					
+			
+			
+			<target:region codeSpace="http://xml.fmi.fi/namespace/location/region">Kaarina</target:region>	   			
+			
+		    </target:Location></target:member>
+		    <target:member>
+		    <target:Location gml:id="obsloc-fmisid-100947-pos">
+		        <gml:identifier codeSpace="http://xml.fmi.fi/namespace/stationcode/fmisid">100947</gml:identifier>
+			<gml:name codeSpace="http://xml.fmi.fi/namespace/locationcode/name">Vepsä</gml:name>
+			
+			<gml:name codeSpace="http://xml.fmi.fi/namespace/locationcode/wmo">2747</gml:name>
+			<target:representativePoint xlink:href="#point-100947"/>					
+			
+			
+			<target:region codeSpace="http://xml.fmi.fi/namespace/location/region">Turku</target:region>	   			
+			
+		    </target:Location></target:member>
+		    <target:member>
+		    <target:Location gml:id="obsloc-fmisid-100949-pos">
+		        <gml:identifier codeSpace="http://xml.fmi.fi/namespace/stationcode/fmisid">100949</gml:identifier>
+			<gml:name codeSpace="http://xml.fmi.fi/namespace/locationcode/name">Polusmäki</gml:name>
+			
+			<gml:name codeSpace="http://xml.fmi.fi/namespace/locationcode/wmo">2773</gml:name>
+			<target:representativePoint xlink:href="#point-100949"/>					
+			
+			
+			<target:region codeSpace="http://xml.fmi.fi/namespace/location/region">Raisio</target:region>	   			
+			
+		    </target:Location></target:member>
+		    <target:member>
+		    <target:Location gml:id="obsloc-fmisid-100951-pos">
+		        <gml:identifier codeSpace="http://xml.fmi.fi/namespace/stationcode/fmisid">100951</gml:identifier>
+			<gml:name codeSpace="http://xml.fmi.fi/namespace/locationcode/name">Trotby</gml:name>
+			
+			<gml:name codeSpace="http://xml.fmi.fi/namespace/locationcode/wmo">2906</gml:name>
+			<target:representativePoint xlink:href="#point-100951"/>					
+			
+			
+			<target:region codeSpace="http://xml.fmi.fi/namespace/location/region">Kemiönsaari</target:region>	   			
+			
+		    </target:Location></target:member>
+		    <target:member>
+		    <target:Location gml:id="obsloc-fmisid-100955-pos">
+		        <gml:identifier codeSpace="http://xml.fmi.fi/namespace/stationcode/fmisid">100955</gml:identifier>
+			<gml:name codeSpace="http://xml.fmi.fi/namespace/locationcode/name">Kankare</gml:name>
+			
+			<gml:name codeSpace="http://xml.fmi.fi/namespace/locationcode/wmo">2756</gml:name>
+			<target:representativePoint xlink:href="#point-100955"/>					
+			
+			
+			<target:region codeSpace="http://xml.fmi.fi/namespace/location/region">Salo</target:region>	   			
+			
+		    </target:Location></target:member>
+		    <target:member>
+		    <target:Location gml:id="obsloc-fmisid-100967-pos">
+		        <gml:identifier codeSpace="http://xml.fmi.fi/namespace/stationcode/fmisid">100967</gml:identifier>
+			<gml:name codeSpace="http://xml.fmi.fi/namespace/locationcode/name">Hidaisenpyöli</gml:name>
+			
+			<gml:name codeSpace="http://xml.fmi.fi/namespace/locationcode/wmo">2777</gml:name>
+			<target:representativePoint xlink:href="#point-100967"/>					
+			
+			
+			<target:region codeSpace="http://xml.fmi.fi/namespace/location/region">Salo</target:region>	   			
+			
+		    </target:Location></target:member>
+		    <target:member>
+		    <target:Location gml:id="obsloc-fmisid-101059-pos">
+		        <gml:identifier codeSpace="http://xml.fmi.fi/namespace/stationcode/fmisid">101059</gml:identifier>
+			<gml:name codeSpace="http://xml.fmi.fi/namespace/locationcode/name">Isokari</gml:name>
+			
+			<gml:name codeSpace="http://xml.fmi.fi/namespace/locationcode/wmo">2964</gml:name>
+			<target:representativePoint xlink:href="#point-101059"/>					
+			
+			
+			<target:region codeSpace="http://xml.fmi.fi/namespace/location/region">Kustavi</target:region>	   			
+			
+		    </target:Location></target:member>
+		    <target:member>
+		    <target:Location gml:id="obsloc-fmisid-101061-pos">
+		        <gml:identifier codeSpace="http://xml.fmi.fi/namespace/stationcode/fmisid">101061</gml:identifier>
+			<gml:name codeSpace="http://xml.fmi.fi/namespace/locationcode/name">Kylmä-Pihlava</gml:name>
+			
+			<gml:name codeSpace="http://xml.fmi.fi/namespace/locationcode/wmo">2761</gml:name>
+			<target:representativePoint xlink:href="#point-101061"/>					
+			
+			
+			<target:region codeSpace="http://xml.fmi.fi/namespace/location/region">Rauma</target:region>	   			
+			
+		    </target:Location></target:member>
+		    <target:member>
+		    <target:Location gml:id="obsloc-fmisid-101064-pos">
+		        <gml:identifier codeSpace="http://xml.fmi.fi/namespace/stationcode/fmisid">101064</gml:identifier>
+			<gml:name codeSpace="http://xml.fmi.fi/namespace/locationcode/name">Tiilimäki</gml:name>
+			
+			<gml:name codeSpace="http://xml.fmi.fi/namespace/locationcode/wmo">2926</gml:name>
+			<target:representativePoint xlink:href="#point-101064"/>					
+			
+			
+			<target:region codeSpace="http://xml.fmi.fi/namespace/location/region">Pori</target:region>	   			
+			
+		    </target:Location></target:member>
+		    <target:member>
+		    <target:Location gml:id="obsloc-fmisid-101103-pos">
+		        <gml:identifier codeSpace="http://xml.fmi.fi/namespace/stationcode/fmisid">101103</gml:identifier>
+			<gml:name codeSpace="http://xml.fmi.fi/namespace/locationcode/name">Tulkkila</gml:name>
+			
+			<gml:name codeSpace="http://xml.fmi.fi/namespace/locationcode/wmo">2937</gml:name>
+			<target:representativePoint xlink:href="#point-101103"/>					
+			
+			
+			<target:region codeSpace="http://xml.fmi.fi/namespace/location/region">Kokemäki</target:region>	   			
+			
+		    </target:Location></target:member>
+		    <target:member>
+		    <target:Location gml:id="obsloc-fmisid-101104-pos">
+		        <gml:identifier codeSpace="http://xml.fmi.fi/namespace/stationcode/fmisid">101104</gml:identifier>
+			<gml:name codeSpace="http://xml.fmi.fi/namespace/locationcode/name">Jokioinen</gml:name>
+			
+			<gml:name codeSpace="http://xml.fmi.fi/namespace/locationcode/wmo">2963</gml:name>
+			<target:representativePoint xlink:href="#point-101104"/>					
+			
+			
+			<target:region codeSpace="http://xml.fmi.fi/namespace/location/region"></target:region>	   			
+			
+		    </target:Location></target:member>
+		    <target:member>
+		    <target:Location gml:id="obsloc-fmisid-101124-pos">
+		        <gml:identifier codeSpace="http://xml.fmi.fi/namespace/stationcode/fmisid">101124</gml:identifier>
+			<gml:name codeSpace="http://xml.fmi.fi/namespace/locationcode/name">Härmälä</gml:name>
+			
+			<gml:name codeSpace="http://xml.fmi.fi/namespace/locationcode/wmo">2763</gml:name>
+			<target:representativePoint xlink:href="#point-101124"/>					
+			
+			
+			<target:region codeSpace="http://xml.fmi.fi/namespace/location/region">Tampere</target:region>	   			
+			
+		    </target:Location></target:member>
+		    <target:member>
+		    <target:Location gml:id="obsloc-fmisid-101128-pos">
+		        <gml:identifier codeSpace="http://xml.fmi.fi/namespace/stationcode/fmisid">101128</gml:identifier>
+			<gml:name codeSpace="http://xml.fmi.fi/namespace/locationcode/name">Salkola</gml:name>
+			
+			<gml:name codeSpace="http://xml.fmi.fi/namespace/locationcode/wmo">2949</gml:name>
+			<target:representativePoint xlink:href="#point-101128"/>					
+			
+			
+			<target:region codeSpace="http://xml.fmi.fi/namespace/location/region">Somero</target:region>	   			
+			
+		    </target:Location></target:member>
+		    <target:member>
+		    <target:Location gml:id="obsloc-fmisid-101267-pos">
+		        <gml:identifier codeSpace="http://xml.fmi.fi/namespace/stationcode/fmisid">101267</gml:identifier>
+			<gml:name codeSpace="http://xml.fmi.fi/namespace/locationcode/name">Kupeli</gml:name>
+			
+			<gml:name codeSpace="http://xml.fmi.fi/namespace/locationcode/wmo">2751</gml:name>
+			<target:representativePoint xlink:href="#point-101267"/>					
+			
+			
+			<target:region codeSpace="http://xml.fmi.fi/namespace/location/region">Pori</target:region>	   			
+			
+		    </target:Location></target:member>
+		    <target:member>
+		    <target:Location gml:id="obsloc-fmisid-101268-pos">
+		        <gml:identifier codeSpace="http://xml.fmi.fi/namespace/stationcode/fmisid">101268</gml:identifier>
+			<gml:name codeSpace="http://xml.fmi.fi/namespace/locationcode/name">Murgrund</gml:name>
+			
+			<gml:name codeSpace="http://xml.fmi.fi/namespace/locationcode/wmo">2752</gml:name>
+			<target:representativePoint xlink:href="#point-101268"/>					
+			
+			
+			<target:region codeSpace="http://xml.fmi.fi/namespace/location/region">Kristiinankaupunki</target:region>	   			
+			
+		    </target:Location></target:member>
+		    <target:member>
+		    <target:Location gml:id="obsloc-fmisid-101272-pos">
+		        <gml:identifier codeSpace="http://xml.fmi.fi/namespace/stationcode/fmisid">101272</gml:identifier>
+			<gml:name codeSpace="http://xml.fmi.fi/namespace/locationcode/name">Alkkia</gml:name>
+			
+			<gml:name codeSpace="http://xml.fmi.fi/namespace/locationcode/wmo">2708</gml:name>
+			<target:representativePoint xlink:href="#point-101272"/>					
+			
+			
+			<target:region codeSpace="http://xml.fmi.fi/namespace/location/region">Karvia</target:region>	   			
+			
+		    </target:Location></target:member>
+		    <target:member>
+		    <target:Location gml:id="obsloc-fmisid-101289-pos">
+		        <gml:identifier codeSpace="http://xml.fmi.fi/namespace/stationcode/fmisid">101289</gml:identifier>
+			<gml:name codeSpace="http://xml.fmi.fi/namespace/locationcode/name">Koski</gml:name>
+			
+			<gml:name codeSpace="http://xml.fmi.fi/namespace/locationcode/wmo">2769</gml:name>
+			<target:representativePoint xlink:href="#point-101289"/>					
+			
+			
+			<target:region codeSpace="http://xml.fmi.fi/namespace/location/region">Kauhajoki</target:region>	   			
+			
+		    </target:Location></target:member>
+		    <target:member>
+		    <target:Location gml:id="obsloc-fmisid-101291-pos">
+		        <gml:identifier codeSpace="http://xml.fmi.fi/namespace/stationcode/fmisid">101291</gml:identifier>
+			<gml:name codeSpace="http://xml.fmi.fi/namespace/locationcode/name">Niinisalo</gml:name>
+			
+			<gml:name codeSpace="http://xml.fmi.fi/namespace/locationcode/wmo">2753</gml:name>
+			<target:representativePoint xlink:href="#point-101291"/>					
+			
+			
+			<target:region codeSpace="http://xml.fmi.fi/namespace/location/region">Kankaanpää</target:region>	   			
+			
+		    </target:Location></target:member>
+		    <target:member>
+		    <target:Location gml:id="obsloc-fmisid-101310-pos">
+		        <gml:identifier codeSpace="http://xml.fmi.fi/namespace/stationcode/fmisid">101310</gml:identifier>
+			<gml:name codeSpace="http://xml.fmi.fi/namespace/locationcode/name">Äijänneva</gml:name>
+			
+			<gml:name codeSpace="http://xml.fmi.fi/namespace/locationcode/wmo">2735</gml:name>
+			<target:representativePoint xlink:href="#point-101310"/>					
+			
+			
+			<target:region codeSpace="http://xml.fmi.fi/namespace/location/region">Virrat</target:region>	   			
+			
+		    </target:Location></target:member>
+		    <target:member>
+		    <target:Location gml:id="obsloc-fmisid-101311-pos">
+		        <gml:identifier codeSpace="http://xml.fmi.fi/namespace/stationcode/fmisid">101311</gml:identifier>
+			<gml:name codeSpace="http://xml.fmi.fi/namespace/locationcode/name">Pispala</gml:name>
+			
+			<gml:name codeSpace="http://xml.fmi.fi/namespace/locationcode/wmo">2943</gml:name>
+			<target:representativePoint xlink:href="#point-101311"/>					
+			
+			
+			<target:region codeSpace="http://xml.fmi.fi/namespace/location/region">Tampere</target:region>	   			
+			
+		    </target:Location></target:member>
+		    <target:member>
+		    <target:Location gml:id="obsloc-fmisid-101464-pos">
+		        <gml:identifier codeSpace="http://xml.fmi.fi/namespace/stationcode/fmisid">101464</gml:identifier>
+			<gml:name codeSpace="http://xml.fmi.fi/namespace/locationcode/name">Lappörarna</gml:name>
+			
+			<gml:name codeSpace="http://xml.fmi.fi/namespace/locationcode/wmo">2910</gml:name>
+			<target:representativePoint xlink:href="#point-101464"/>					
+			
+			
+			<target:region codeSpace="http://xml.fmi.fi/namespace/location/region">Mustasaari</target:region>	   			
+			
+		    </target:Location></target:member>
+		    <target:member>
+		    <target:Location gml:id="obsloc-fmisid-101479-pos">
+		        <gml:identifier codeSpace="http://xml.fmi.fi/namespace/stationcode/fmisid">101479</gml:identifier>
+			<gml:name codeSpace="http://xml.fmi.fi/namespace/locationcode/name">Skagelbådan</gml:name>
+			
+			<gml:name codeSpace="http://xml.fmi.fi/namespace/locationcode/wmo">2780</gml:name>
+			<target:representativePoint xlink:href="#point-101479"/>					
+			
+			
+			<target:region codeSpace="http://xml.fmi.fi/namespace/location/region">Korsnäs</target:region>	   			
+			
+		    </target:Location></target:member>
+		    <target:member>
+		    <target:Location gml:id="obsloc-fmisid-101485-pos">
+		        <gml:identifier codeSpace="http://xml.fmi.fi/namespace/stationcode/fmisid">101485</gml:identifier>
+			<gml:name codeSpace="http://xml.fmi.fi/namespace/locationcode/name">Huutoniemi</gml:name>
+			
+			<gml:name codeSpace="http://xml.fmi.fi/namespace/locationcode/wmo">2957</gml:name>
+			<target:representativePoint xlink:href="#point-101485"/>					
+			
+			
+			<target:region codeSpace="http://xml.fmi.fi/namespace/location/region">Vaasa</target:region>	   			
+			
+		    </target:Location></target:member>
+		    <target:member>
+		    <target:Location gml:id="obsloc-fmisid-101486-pos">
+		        <gml:identifier codeSpace="http://xml.fmi.fi/namespace/stationcode/fmisid">101486</gml:identifier>
+			<gml:name codeSpace="http://xml.fmi.fi/namespace/locationcode/name">Pelmaa</gml:name>
+			
+			<gml:name codeSpace="http://xml.fmi.fi/namespace/locationcode/wmo">2833</gml:name>
+			<target:representativePoint xlink:href="#point-101486"/>					
+			
+			
+			<target:region codeSpace="http://xml.fmi.fi/namespace/location/region">Seinäjoki</target:region>	   			
+			
+		    </target:Location></target:member>
+		    <target:member>
+		    <target:Location gml:id="obsloc-fmisid-101519-pos">
+		        <gml:identifier codeSpace="http://xml.fmi.fi/namespace/stationcode/fmisid">101519</gml:identifier>
+			<gml:name codeSpace="http://xml.fmi.fi/namespace/locationcode/name">Kauhava keskus</gml:name>
+			
+			<gml:name codeSpace="http://xml.fmi.fi/namespace/locationcode/wmo">2914</gml:name>
+			<target:representativePoint xlink:href="#point-101519"/>					
+			
+			
+			<target:region codeSpace="http://xml.fmi.fi/namespace/location/region">Kauhava</target:region>	   			
+			
+		    </target:Location></target:member>
+		    <target:member>
+		    <target:Location gml:id="obsloc-fmisid-101660-pos">
+		        <gml:identifier codeSpace="http://xml.fmi.fi/namespace/stationcode/fmisid">101660</gml:identifier>
+			<gml:name codeSpace="http://xml.fmi.fi/namespace/locationcode/name">Kallan</gml:name>
+			
+			<gml:name codeSpace="http://xml.fmi.fi/namespace/locationcode/wmo">2920</gml:name>
+			<target:representativePoint xlink:href="#point-101660"/>					
+			
+			
+			<target:region codeSpace="http://xml.fmi.fi/namespace/location/region">Luoto</target:region>	   			
+			
+		    </target:Location></target:member>
+		    <target:member>
+		    <target:Location gml:id="obsloc-fmisid-101661-pos">
+		        <gml:identifier codeSpace="http://xml.fmi.fi/namespace/stationcode/fmisid">101661</gml:identifier>
+			<gml:name codeSpace="http://xml.fmi.fi/namespace/locationcode/name">Tankar</gml:name>
+			
+			<gml:name codeSpace="http://xml.fmi.fi/namespace/locationcode/wmo">2721</gml:name>
+			<target:representativePoint xlink:href="#point-101661"/>					
+			
+			
+			<target:region codeSpace="http://xml.fmi.fi/namespace/location/region">Kokkola</target:region>	   			
+			
+		    </target:Location></target:member>
+		    <target:member>
+		    <target:Location gml:id="obsloc-fmisid-101673-pos">
+		        <gml:identifier codeSpace="http://xml.fmi.fi/namespace/stationcode/fmisid">101673</gml:identifier>
+			<gml:name codeSpace="http://xml.fmi.fi/namespace/locationcode/name">Maakalla</gml:name>
+			
+			<gml:name codeSpace="http://xml.fmi.fi/namespace/locationcode/wmo">2907</gml:name>
+			<target:representativePoint xlink:href="#point-101673"/>					
+			
+			
+			<target:region codeSpace="http://xml.fmi.fi/namespace/location/region">Kalajoki</target:region>	   			
+			
+		    </target:Location></target:member>
+		    <target:member>
+		    <target:Location gml:id="obsloc-fmisid-101675-pos">
+		        <gml:identifier codeSpace="http://xml.fmi.fi/namespace/stationcode/fmisid">101675</gml:identifier>
+			<gml:name codeSpace="http://xml.fmi.fi/namespace/locationcode/name">Kokkola</gml:name>
+			
+			<gml:name codeSpace="http://xml.fmi.fi/namespace/locationcode/wmo">2852</gml:name>
+			<target:representativePoint xlink:href="#point-101675"/>					
+			
+			
+			<target:region codeSpace="http://xml.fmi.fi/namespace/location/region"></target:region>	   			
+			
+		    </target:Location></target:member>
+		    <target:member>
+		    <target:Location gml:id="obsloc-fmisid-101775-pos">
+		        <gml:identifier codeSpace="http://xml.fmi.fi/namespace/stationcode/fmisid">101775</gml:identifier>
+			<gml:name codeSpace="http://xml.fmi.fi/namespace/locationcode/name">Pyhäluoto</gml:name>
+			
+			<gml:name codeSpace="http://xml.fmi.fi/namespace/locationcode/wmo">2800</gml:name>
+			<target:representativePoint xlink:href="#point-101775"/>					
+			
+			
+			<target:region codeSpace="http://xml.fmi.fi/namespace/location/region">Pyhäjoki</target:region>	   			
+			
+		    </target:Location></target:member>
+		    <target:member>
+		    <target:Location gml:id="obsloc-fmisid-151049-pos">
+		        <gml:identifier codeSpace="http://xml.fmi.fi/namespace/stationcode/fmisid">151049</gml:identifier>
+			<gml:name codeSpace="http://xml.fmi.fi/namespace/locationcode/name">Juhannuskylä</gml:name>
+			
+			<gml:name codeSpace="http://xml.fmi.fi/namespace/locationcode/wmo">2744</gml:name>
+			<target:representativePoint xlink:href="#point-151049"/>					
+			
+			
+			<target:region codeSpace="http://xml.fmi.fi/namespace/location/region">Tampere</target:region>	   			
+			
+		    </target:Location></target:member>
+		</target:LocationCollection>
+ 	   </sam:sampledFeature>
+          <sams:shape>
+            <gml:MultiPoint gml:id="mp-1-1-fmisid">
+              <gml:pointMember>
+              <gml:Point gml:id="point-100924" srsName="http://www.opengis.net/def/crs/EPSG/0/4258" srsDimension="2">
+                <gml:name>Fagerholm</gml:name>
+                <gml:pos>60.11163 21.69939 </gml:pos>
+            </gml:Point>
+	    </gml:pointMember>
+              <gml:pointMember>
+              <gml:Point gml:id="point-100934" srsName="http://www.opengis.net/def/crs/EPSG/0/4258" srsDimension="2">
+                <gml:name>Yltöinen</gml:name>
+                <gml:pos>60.38678 22.55142 </gml:pos>
+            </gml:Point>
+	    </gml:pointMember>
+              <gml:pointMember>
+              <gml:Point gml:id="point-100947" srsName="http://www.opengis.net/def/crs/EPSG/0/4258" srsDimension="2">
+                <gml:name>Vepsä</gml:name>
+                <gml:pos>60.37788 22.09640 </gml:pos>
+            </gml:Point>
+	    </gml:pointMember>
+              <gml:pointMember>
+              <gml:Point gml:id="point-100949" srsName="http://www.opengis.net/def/crs/EPSG/0/4258" srsDimension="2">
+                <gml:name>Polusmäki</gml:name>
+                <gml:pos>60.45454 22.17835 </gml:pos>
+            </gml:Point>
+	    </gml:pointMember>
+              <gml:pointMember>
+              <gml:Point gml:id="point-100951" srsName="http://www.opengis.net/def/crs/EPSG/0/4258" srsDimension="2">
+                <gml:name>Trotby</gml:name>
+                <gml:pos>60.17150 22.75757 </gml:pos>
+            </gml:Point>
+	    </gml:pointMember>
+              <gml:pointMember>
+              <gml:Point gml:id="point-100955" srsName="http://www.opengis.net/def/crs/EPSG/0/4258" srsDimension="2">
+                <gml:name>Kankare</gml:name>
+                <gml:pos>60.37373 23.11284 </gml:pos>
+            </gml:Point>
+	    </gml:pointMember>
+              <gml:pointMember>
+              <gml:Point gml:id="point-100967" srsName="http://www.opengis.net/def/crs/EPSG/0/4258" srsDimension="2">
+                <gml:name>Hidaisenpyöli</gml:name>
+                <gml:pos>60.46414 23.64981 </gml:pos>
+            </gml:Point>
+	    </gml:pointMember>
+              <gml:pointMember>
+              <gml:Point gml:id="point-101059" srsName="http://www.opengis.net/def/crs/EPSG/0/4258" srsDimension="2">
+                <gml:name>Isokari</gml:name>
+                <gml:pos>60.72230 21.02674 </gml:pos>
+            </gml:Point>
+	    </gml:pointMember>
+              <gml:pointMember>
+              <gml:Point gml:id="point-101061" srsName="http://www.opengis.net/def/crs/EPSG/0/4258" srsDimension="2">
+                <gml:name>Kylmä-Pihlava</gml:name>
+                <gml:pos>61.14477 21.30273 </gml:pos>
+            </gml:Point>
+	    </gml:pointMember>
+              <gml:pointMember>
+              <gml:Point gml:id="point-101064" srsName="http://www.opengis.net/def/crs/EPSG/0/4258" srsDimension="2">
+                <gml:name>Tiilimäki</gml:name>
+                <gml:pos>61.47892 21.78320 </gml:pos>
+            </gml:Point>
+	    </gml:pointMember>
+              <gml:pointMember>
+              <gml:Point gml:id="point-101103" srsName="http://www.opengis.net/def/crs/EPSG/0/4258" srsDimension="2">
+                <gml:name>Tulkkila</gml:name>
+                <gml:pos>61.25294 22.34613 </gml:pos>
+            </gml:Point>
+	    </gml:pointMember>
+              <gml:pointMember>
+              <gml:Point gml:id="point-101104" srsName="http://www.opengis.net/def/crs/EPSG/0/4258" srsDimension="2">
+                <gml:name>Jokioinen</gml:name>
+                <gml:pos>60.81401 23.49761 </gml:pos>
+            </gml:Point>
+	    </gml:pointMember>
+              <gml:pointMember>
+              <gml:Point gml:id="point-101124" srsName="http://www.opengis.net/def/crs/EPSG/0/4258" srsDimension="2">
+                <gml:name>Härmälä</gml:name>
+                <gml:pos>61.46572 23.74654 </gml:pos>
+            </gml:Point>
+	    </gml:pointMember>
+              <gml:pointMember>
+              <gml:Point gml:id="point-101128" srsName="http://www.opengis.net/def/crs/EPSG/0/4258" srsDimension="2">
+                <gml:name>Salkola</gml:name>
+                <gml:pos>60.64655 23.80589 </gml:pos>
+            </gml:Point>
+	    </gml:pointMember>
+              <gml:pointMember>
+              <gml:Point gml:id="point-101267" srsName="http://www.opengis.net/def/crs/EPSG/0/4258" srsDimension="2">
+                <gml:name>Kupeli</gml:name>
+                <gml:pos>61.63040 21.37592 </gml:pos>
+            </gml:Point>
+	    </gml:pointMember>
+              <gml:pointMember>
+              <gml:Point gml:id="point-101268" srsName="http://www.opengis.net/def/crs/EPSG/0/4258" srsDimension="2">
+                <gml:name>Murgrund</gml:name>
+                <gml:pos>62.20348 21.16971 </gml:pos>
+            </gml:Point>
+	    </gml:pointMember>
+              <gml:pointMember>
+              <gml:Point gml:id="point-101272" srsName="http://www.opengis.net/def/crs/EPSG/0/4258" srsDimension="2">
+                <gml:name>Alkkia</gml:name>
+                <gml:pos>62.18325 22.79972 </gml:pos>
+            </gml:Point>
+	    </gml:pointMember>
+              <gml:pointMember>
+              <gml:Point gml:id="point-101289" srsName="http://www.opengis.net/def/crs/EPSG/0/4258" srsDimension="2">
+                <gml:name>Koski</gml:name>
+                <gml:pos>62.41345 22.18372 </gml:pos>
+            </gml:Point>
+	    </gml:pointMember>
+              <gml:pointMember>
+              <gml:Point gml:id="point-101291" srsName="http://www.opengis.net/def/crs/EPSG/0/4258" srsDimension="2">
+                <gml:name>Niinisalo</gml:name>
+                <gml:pos>61.83849 22.46374 </gml:pos>
+            </gml:Point>
+	    </gml:pointMember>
+              <gml:pointMember>
+              <gml:Point gml:id="point-101310" srsName="http://www.opengis.net/def/crs/EPSG/0/4258" srsDimension="2">
+                <gml:name>Äijänneva</gml:name>
+                <gml:pos>62.32783 23.54228 </gml:pos>
+            </gml:Point>
+	    </gml:pointMember>
+              <gml:pointMember>
+              <gml:Point gml:id="point-101311" srsName="http://www.opengis.net/def/crs/EPSG/0/4258" srsDimension="2">
+                <gml:name>Pispala</gml:name>
+                <gml:pos>61.51757 23.75369 </gml:pos>
+            </gml:Point>
+	    </gml:pointMember>
+              <gml:pointMember>
+              <gml:Point gml:id="point-101464" srsName="http://www.opengis.net/def/crs/EPSG/0/4258" srsDimension="2">
+                <gml:name>Lappörarna</gml:name>
+                <gml:pos>63.43548 21.06455 </gml:pos>
+            </gml:Point>
+	    </gml:pointMember>
+              <gml:pointMember>
+              <gml:Point gml:id="point-101479" srsName="http://www.opengis.net/def/crs/EPSG/0/4258" srsDimension="2">
+                <gml:name>Skagelbådan</gml:name>
+                <gml:pos>62.93433 21.18525 </gml:pos>
+            </gml:Point>
+	    </gml:pointMember>
+              <gml:pointMember>
+              <gml:Point gml:id="point-101485" srsName="http://www.opengis.net/def/crs/EPSG/0/4258" srsDimension="2">
+                <gml:name>Huutoniemi</gml:name>
+                <gml:pos>63.09875 21.63952 </gml:pos>
+            </gml:Point>
+	    </gml:pointMember>
+              <gml:pointMember>
+              <gml:Point gml:id="point-101486" srsName="http://www.opengis.net/def/crs/EPSG/0/4258" srsDimension="2">
+                <gml:name>Pelmaa</gml:name>
+                <gml:pos>62.93808 22.48878 </gml:pos>
+            </gml:Point>
+	    </gml:pointMember>
+              <gml:pointMember>
+              <gml:Point gml:id="point-101519" srsName="http://www.opengis.net/def/crs/EPSG/0/4258" srsDimension="2">
+                <gml:name>Kauhava keskus</gml:name>
+                <gml:pos>63.12023 23.04360 </gml:pos>
+            </gml:Point>
+	    </gml:pointMember>
+              <gml:pointMember>
+              <gml:Point gml:id="point-101660" srsName="http://www.opengis.net/def/crs/EPSG/0/4258" srsDimension="2">
+                <gml:name>Kallan</gml:name>
+                <gml:pos>63.75146 22.52290 </gml:pos>
+            </gml:Point>
+	    </gml:pointMember>
+              <gml:pointMember>
+              <gml:Point gml:id="point-101661" srsName="http://www.opengis.net/def/crs/EPSG/0/4258" srsDimension="2">
+                <gml:name>Tankar</gml:name>
+                <gml:pos>63.95087 22.84439 </gml:pos>
+            </gml:Point>
+	    </gml:pointMember>
+              <gml:pointMember>
+              <gml:Point gml:id="point-101673" srsName="http://www.opengis.net/def/crs/EPSG/0/4258" srsDimension="2">
+                <gml:name>Maakalla</gml:name>
+                <gml:pos>64.33104 23.44647 </gml:pos>
+            </gml:Point>
+	    </gml:pointMember>
+              <gml:pointMember>
+              <gml:Point gml:id="point-101675" srsName="http://www.opengis.net/def/crs/EPSG/0/4258" srsDimension="2">
+                <gml:name>Kokkola</gml:name>
+                <gml:pos>63.84444 23.12433 </gml:pos>
+            </gml:Point>
+	    </gml:pointMember>
+              <gml:pointMember>
+              <gml:Point gml:id="point-101775" srsName="http://www.opengis.net/def/crs/EPSG/0/4258" srsDimension="2">
+                <gml:name>Pyhäluoto</gml:name>
+                <gml:pos>64.61199 23.89622 </gml:pos>
+            </gml:Point>
+	    </gml:pointMember>
+              <gml:pointMember>
+              <gml:Point gml:id="point-151049" srsName="http://www.opengis.net/def/crs/EPSG/0/4258" srsDimension="2">
+                <gml:name>Juhannuskylä</gml:name>
+                <gml:pos>61.50123 23.76468 </gml:pos>
+            </gml:Point>
+	    </gml:pointMember>
+	    </gml:MultiPoint>
+          </sams:shape>
+        </sams:SF_SpatialSamplingFeature>
+      </om:featureOfInterest>
+
+           <om:result>
+        <gmlcov:MultiPointCoverage gml:id="mpcv1-1-1">
+          <gml:domainSet>
+            <gmlcov:SimpleMultiPoint gml:id="mp1-1-1" srsName="http://xml.fmi.fi/gml/crs/compoundCRS.php?crs=4258&amp;time=unixtime" srsDimension="3">
+              <gmlcov:positions>
+                60.11163 21.69939  1368172800
+                60.11163 21.69939  1368176400
+                60.11163 21.69939  1368180000
+                60.11163 21.69939  1368183600
+                60.11163 21.69939  1368187200
+                60.11163 21.69939  1368190800
+                60.11163 21.69939  1368194400
+                60.11163 21.69939  1368198000
+                60.11163 21.69939  1368201600
+                60.11163 21.69939  1368205200
+                60.11163 21.69939  1368208800
+                60.11163 21.69939  1368212400
+                60.11163 21.69939  1368216000
+                60.11163 21.69939  1368219600
+                60.11163 21.69939  1368223200
+                60.11163 21.69939  1368226800
+                60.11163 21.69939  1368230400
+                60.11163 21.69939  1368234000
+                60.11163 21.69939  1368237600
+                60.11163 21.69939  1368241200
+                60.11163 21.69939  1368244800
+                60.11163 21.69939  1368248400
+                60.11163 21.69939  1368252000
+                60.11163 21.69939  1368255600
+                60.11163 21.69939  1368259200
+                60.11163 21.69939  1368262800
+                60.11163 21.69939  1368266400
+                60.11163 21.69939  1368270000
+                60.11163 21.69939  1368273600
+                60.11163 21.69939  1368277200
+                60.11163 21.69939  1368280800
+                60.11163 21.69939  1368284400
+                60.11163 21.69939  1368288000
+                60.11163 21.69939  1368291600
+                60.11163 21.69939  1368295200
+                60.11163 21.69939  1368298800
+                60.11163 21.69939  1368302400
+                60.11163 21.69939  1368306000
+                60.11163 21.69939  1368309600
+                60.11163 21.69939  1368313200
+                60.11163 21.69939  1368316800
+                60.11163 21.69939  1368320400
+                60.11163 21.69939  1368324000
+                60.11163 21.69939  1368327600
+                60.11163 21.69939  1368331200
+                60.11163 21.69939  1368334800
+                60.11163 21.69939  1368338400
+                60.11163 21.69939  1368342000
+                60.11163 21.69939  1368345600
+                60.11163 21.69939  1368349200
+                60.11163 21.69939  1368352800
+                60.38678 22.55142  1368172800
+                60.38678 22.55142  1368176400
+                60.38678 22.55142  1368180000
+                60.38678 22.55142  1368183600
+                60.38678 22.55142  1368187200
+                60.38678 22.55142  1368190800
+                60.38678 22.55142  1368194400
+                60.38678 22.55142  1368198000
+                60.38678 22.55142  1368201600
+                60.38678 22.55142  1368205200
+                60.38678 22.55142  1368208800
+                60.38678 22.55142  1368212400
+                60.38678 22.55142  1368216000
+                60.38678 22.55142  1368219600
+                60.38678 22.55142  1368223200
+                60.38678 22.55142  1368226800
+                60.38678 22.55142  1368230400
+                60.38678 22.55142  1368234000
+                60.38678 22.55142  1368237600
+                60.38678 22.55142  1368241200
+                60.38678 22.55142  1368244800
+                60.38678 22.55142  1368248400
+                60.38678 22.55142  1368252000
+                60.38678 22.55142  1368255600
+                60.38678 22.55142  1368259200
+                60.38678 22.55142  1368262800
+                60.38678 22.55142  1368266400
+                60.38678 22.55142  1368270000
+                60.38678 22.55142  1368273600
+                60.38678 22.55142  1368277200
+                60.38678 22.55142  1368280800
+                60.38678 22.55142  1368284400
+                60.38678 22.55142  1368288000
+                60.38678 22.55142  1368291600
+                60.38678 22.55142  1368295200
+                60.38678 22.55142  1368298800
+                60.38678 22.55142  1368302400
+                60.38678 22.55142  1368306000
+                60.38678 22.55142  1368309600
+                60.38678 22.55142  1368313200
+                60.38678 22.55142  1368316800
+                60.38678 22.55142  1368320400
+                60.38678 22.55142  1368324000
+                60.38678 22.55142  1368327600
+                60.38678 22.55142  1368331200
+                60.38678 22.55142  1368334800
+                60.38678 22.55142  1368338400
+                60.38678 22.55142  1368342000
+                60.38678 22.55142  1368345600
+                60.38678 22.55142  1368349200
+                60.38678 22.55142  1368352800
+                60.37788 22.09640  1368172800
+                60.37788 22.09640  1368176400
+                60.37788 22.09640  1368180000
+                60.37788 22.09640  1368183600
+                60.37788 22.09640  1368187200
+                60.37788 22.09640  1368190800
+                60.37788 22.09640  1368194400
+                60.37788 22.09640  1368198000
+                60.37788 22.09640  1368201600
+                60.37788 22.09640  1368205200
+                60.37788 22.09640  1368208800
+                60.37788 22.09640  1368212400
+                60.37788 22.09640  1368216000
+                60.37788 22.09640  1368219600
+                60.37788 22.09640  1368223200
+                60.37788 22.09640  1368226800
+                60.37788 22.09640  1368230400
+                60.37788 22.09640  1368234000
+                60.37788 22.09640  1368237600
+                60.37788 22.09640  1368241200
+                60.37788 22.09640  1368244800
+                60.37788 22.09640  1368248400
+                60.37788 22.09640  1368252000
+                60.37788 22.09640  1368255600
+                60.37788 22.09640  1368259200
+                60.37788 22.09640  1368262800
+                60.37788 22.09640  1368266400
+                60.37788 22.09640  1368270000
+                60.37788 22.09640  1368273600
+                60.37788 22.09640  1368277200
+                60.37788 22.09640  1368280800
+                60.37788 22.09640  1368284400
+                60.37788 22.09640  1368288000
+                60.37788 22.09640  1368291600
+                60.37788 22.09640  1368295200
+                60.37788 22.09640  1368298800
+                60.37788 22.09640  1368302400
+                60.37788 22.09640  1368306000
+                60.37788 22.09640  1368309600
+                60.37788 22.09640  1368313200
+                60.37788 22.09640  1368316800
+                60.37788 22.09640  1368320400
+                60.37788 22.09640  1368324000
+                60.37788 22.09640  1368327600
+                60.37788 22.09640  1368331200
+                60.37788 22.09640  1368334800
+                60.37788 22.09640  1368338400
+                60.37788 22.09640  1368342000
+                60.37788 22.09640  1368345600
+                60.37788 22.09640  1368349200
+                60.37788 22.09640  1368352800
+                60.45454 22.17835  1368172800
+                60.45454 22.17835  1368176400
+                60.45454 22.17835  1368180000
+                60.45454 22.17835  1368183600
+                60.45454 22.17835  1368187200
+                60.45454 22.17835  1368190800
+                60.45454 22.17835  1368194400
+                60.45454 22.17835  1368198000
+                60.45454 22.17835  1368201600
+                60.45454 22.17835  1368205200
+                60.45454 22.17835  1368208800
+                60.45454 22.17835  1368212400
+                60.45454 22.17835  1368216000
+                60.45454 22.17835  1368219600
+                60.45454 22.17835  1368223200
+                60.45454 22.17835  1368226800
+                60.45454 22.17835  1368230400
+                60.45454 22.17835  1368234000
+                60.45454 22.17835  1368237600
+                60.45454 22.17835  1368241200
+                60.45454 22.17835  1368244800
+                60.45454 22.17835  1368248400
+                60.45454 22.17835  1368252000
+                60.45454 22.17835  1368255600
+                60.45454 22.17835  1368259200
+                60.45454 22.17835  1368262800
+                60.45454 22.17835  1368266400
+                60.45454 22.17835  1368270000
+                60.45454 22.17835  1368273600
+                60.45454 22.17835  1368277200
+                60.45454 22.17835  1368280800
+                60.45454 22.17835  1368284400
+                60.45454 22.17835  1368288000
+                60.45454 22.17835  1368291600
+                60.45454 22.17835  1368295200
+                60.45454 22.17835  1368298800
+                60.45454 22.17835  1368302400
+                60.45454 22.17835  1368306000
+                60.45454 22.17835  1368309600
+                60.45454 22.17835  1368313200
+                60.45454 22.17835  1368316800
+                60.45454 22.17835  1368320400
+                60.45454 22.17835  1368324000
+                60.45454 22.17835  1368327600
+                60.45454 22.17835  1368331200
+                60.45454 22.17835  1368334800
+                60.45454 22.17835  1368338400
+                60.45454 22.17835  1368342000
+                60.45454 22.17835  1368345600
+                60.45454 22.17835  1368349200
+                60.45454 22.17835  1368352800
+                60.17150 22.75757  1368172800
+                60.17150 22.75757  1368176400
+                60.17150 22.75757  1368180000
+                60.17150 22.75757  1368183600
+                60.17150 22.75757  1368187200
+                60.17150 22.75757  1368190800
+                60.17150 22.75757  1368194400
+                60.17150 22.75757  1368198000
+                60.17150 22.75757  1368201600
+                60.17150 22.75757  1368205200
+                60.17150 22.75757  1368208800
+                60.17150 22.75757  1368212400
+                60.17150 22.75757  1368216000
+                60.17150 22.75757  1368219600
+                60.17150 22.75757  1368223200
+                60.17150 22.75757  1368226800
+                60.17150 22.75757  1368230400
+                60.17150 22.75757  1368234000
+                60.17150 22.75757  1368237600
+                60.17150 22.75757  1368241200
+                60.17150 22.75757  1368244800
+                60.17150 22.75757  1368248400
+                60.17150 22.75757  1368252000
+                60.17150 22.75757  1368255600
+                60.17150 22.75757  1368259200
+                60.17150 22.75757  1368262800
+                60.17150 22.75757  1368266400
+                60.17150 22.75757  1368270000
+                60.17150 22.75757  1368273600
+                60.17150 22.75757  1368277200
+                60.17150 22.75757  1368280800
+                60.17150 22.75757  1368284400
+                60.17150 22.75757  1368288000
+                60.17150 22.75757  1368291600
+                60.17150 22.75757  1368295200
+                60.17150 22.75757  1368298800
+                60.17150 22.75757  1368302400
+                60.17150 22.75757  1368306000
+                60.17150 22.75757  1368309600
+                60.17150 22.75757  1368313200
+                60.17150 22.75757  1368316800
+                60.17150 22.75757  1368320400
+                60.17150 22.75757  1368324000
+                60.17150 22.75757  1368327600
+                60.17150 22.75757  1368331200
+                60.17150 22.75757  1368334800
+                60.17150 22.75757  1368338400
+                60.17150 22.75757  1368342000
+                60.17150 22.75757  1368345600
+                60.17150 22.75757  1368349200
+                60.17150 22.75757  1368352800
+                60.37373 23.11284  1368172800
+                60.37373 23.11284  1368176400
+                60.37373 23.11284  1368180000
+                60.37373 23.11284  1368183600
+                60.37373 23.11284  1368187200
+                60.37373 23.11284  1368190800
+                60.37373 23.11284  1368194400
+                60.37373 23.11284  1368198000
+                60.37373 23.11284  1368201600
+                60.37373 23.11284  1368205200
+                60.37373 23.11284  1368208800
+                60.37373 23.11284  1368212400
+                60.37373 23.11284  1368216000
+                60.37373 23.11284  1368219600
+                60.37373 23.11284  1368223200
+                60.37373 23.11284  1368226800
+                60.37373 23.11284  1368230400
+                60.37373 23.11284  1368234000
+                60.37373 23.11284  1368237600
+                60.37373 23.11284  1368241200
+                60.37373 23.11284  1368244800
+                60.37373 23.11284  1368248400
+                60.37373 23.11284  1368252000
+                60.37373 23.11284  1368255600
+                60.37373 23.11284  1368259200
+                60.37373 23.11284  1368262800
+                60.37373 23.11284  1368266400
+                60.37373 23.11284  1368270000
+                60.37373 23.11284  1368273600
+                60.37373 23.11284  1368277200
+                60.37373 23.11284  1368280800
+                60.37373 23.11284  1368284400
+                60.37373 23.11284  1368288000
+                60.37373 23.11284  1368291600
+                60.37373 23.11284  1368295200
+                60.37373 23.11284  1368298800
+                60.37373 23.11284  1368302400
+                60.37373 23.11284  1368306000
+                60.37373 23.11284  1368309600
+                60.37373 23.11284  1368313200
+                60.37373 23.11284  1368316800
+                60.37373 23.11284  1368320400
+                60.37373 23.11284  1368324000
+                60.37373 23.11284  1368327600
+                60.37373 23.11284  1368331200
+                60.37373 23.11284  1368334800
+                60.37373 23.11284  1368338400
+                60.37373 23.11284  1368342000
+                60.37373 23.11284  1368345600
+                60.37373 23.11284  1368349200
+                60.37373 23.11284  1368352800
+                60.46414 23.64981  1368172800
+                60.46414 23.64981  1368176400
+                60.46414 23.64981  1368180000
+                60.46414 23.64981  1368183600
+                60.46414 23.64981  1368187200
+                60.46414 23.64981  1368190800
+                60.46414 23.64981  1368194400
+                60.46414 23.64981  1368198000
+                60.46414 23.64981  1368201600
+                60.46414 23.64981  1368205200
+                60.46414 23.64981  1368208800
+                60.46414 23.64981  1368212400
+                60.46414 23.64981  1368216000
+                60.46414 23.64981  1368219600
+                60.46414 23.64981  1368223200
+                60.46414 23.64981  1368226800
+                60.46414 23.64981  1368230400
+                60.46414 23.64981  1368234000
+                60.46414 23.64981  1368237600
+                60.46414 23.64981  1368241200
+                60.46414 23.64981  1368244800
+                60.46414 23.64981  1368248400
+                60.46414 23.64981  1368252000
+                60.46414 23.64981  1368255600
+                60.46414 23.64981  1368259200
+                60.46414 23.64981  1368262800
+                60.46414 23.64981  1368266400
+                60.46414 23.64981  1368270000
+                60.46414 23.64981  1368273600
+                60.46414 23.64981  1368277200
+                60.46414 23.64981  1368280800
+                60.46414 23.64981  1368284400
+                60.46414 23.64981  1368288000
+                60.46414 23.64981  1368291600
+                60.46414 23.64981  1368295200
+                60.46414 23.64981  1368298800
+                60.46414 23.64981  1368302400
+                60.46414 23.64981  1368306000
+                60.46414 23.64981  1368309600
+                60.46414 23.64981  1368313200
+                60.46414 23.64981  1368316800
+                60.46414 23.64981  1368320400
+                60.46414 23.64981  1368324000
+                60.46414 23.64981  1368327600
+                60.46414 23.64981  1368331200
+                60.46414 23.64981  1368334800
+                60.46414 23.64981  1368338400
+                60.46414 23.64981  1368342000
+                60.46414 23.64981  1368345600
+                60.46414 23.64981  1368349200
+                60.46414 23.64981  1368352800
+                60.72230 21.02674  1368172800
+                60.72230 21.02674  1368176400
+                60.72230 21.02674  1368180000
+                60.72230 21.02674  1368183600
+                60.72230 21.02674  1368187200
+                60.72230 21.02674  1368190800
+                60.72230 21.02674  1368194400
+                60.72230 21.02674  1368198000
+                60.72230 21.02674  1368201600
+                60.72230 21.02674  1368205200
+                60.72230 21.02674  1368208800
+                60.72230 21.02674  1368212400
+                60.72230 21.02674  1368216000
+                60.72230 21.02674  1368219600
+                60.72230 21.02674  1368223200
+                60.72230 21.02674  1368226800
+                60.72230 21.02674  1368230400
+                60.72230 21.02674  1368234000
+                60.72230 21.02674  1368237600
+                60.72230 21.02674  1368241200
+                60.72230 21.02674  1368244800
+                60.72230 21.02674  1368248400
+                60.72230 21.02674  1368252000
+                60.72230 21.02674  1368255600
+                60.72230 21.02674  1368259200
+                60.72230 21.02674  1368262800
+                60.72230 21.02674  1368266400
+                60.72230 21.02674  1368270000
+                60.72230 21.02674  1368273600
+                60.72230 21.02674  1368277200
+                60.72230 21.02674  1368280800
+                60.72230 21.02674  1368284400
+                60.72230 21.02674  1368288000
+                60.72230 21.02674  1368291600
+                60.72230 21.02674  1368295200
+                60.72230 21.02674  1368298800
+                60.72230 21.02674  1368302400
+                60.72230 21.02674  1368306000
+                60.72230 21.02674  1368309600
+                60.72230 21.02674  1368313200
+                60.72230 21.02674  1368316800
+                60.72230 21.02674  1368320400
+                60.72230 21.02674  1368324000
+                60.72230 21.02674  1368327600
+                60.72230 21.02674  1368331200
+                60.72230 21.02674  1368334800
+                60.72230 21.02674  1368338400
+                60.72230 21.02674  1368342000
+                60.72230 21.02674  1368345600
+                60.72230 21.02674  1368349200
+                60.72230 21.02674  1368352800
+                61.14477 21.30273  1368172800
+                61.14477 21.30273  1368176400
+                61.14477 21.30273  1368180000
+                61.14477 21.30273  1368183600
+                61.14477 21.30273  1368187200
+                61.14477 21.30273  1368190800
+                61.14477 21.30273  1368194400
+                61.14477 21.30273  1368198000
+                61.14477 21.30273  1368201600
+                61.14477 21.30273  1368205200
+                61.14477 21.30273  1368208800
+                61.14477 21.30273  1368212400
+                61.14477 21.30273  1368216000
+                61.14477 21.30273  1368219600
+                61.14477 21.30273  1368223200
+                61.14477 21.30273  1368226800
+                61.14477 21.30273  1368230400
+                61.14477 21.30273  1368234000
+                61.14477 21.30273  1368237600
+                61.14477 21.30273  1368241200
+                61.14477 21.30273  1368244800
+                61.14477 21.30273  1368248400
+                61.14477 21.30273  1368252000
+                61.14477 21.30273  1368255600
+                61.14477 21.30273  1368259200
+                61.14477 21.30273  1368262800
+                61.14477 21.30273  1368266400
+                61.14477 21.30273  1368270000
+                61.14477 21.30273  1368273600
+                61.14477 21.30273  1368277200
+                61.14477 21.30273  1368280800
+                61.14477 21.30273  1368284400
+                61.14477 21.30273  1368288000
+                61.14477 21.30273  1368291600
+                61.14477 21.30273  1368295200
+                61.14477 21.30273  1368298800
+                61.14477 21.30273  1368302400
+                61.14477 21.30273  1368306000
+                61.14477 21.30273  1368309600
+                61.14477 21.30273  1368313200
+                61.14477 21.30273  1368316800
+                61.14477 21.30273  1368320400
+                61.14477 21.30273  1368324000
+                61.14477 21.30273  1368327600
+                61.14477 21.30273  1368331200
+                61.14477 21.30273  1368334800
+                61.14477 21.30273  1368338400
+                61.14477 21.30273  1368342000
+                61.14477 21.30273  1368345600
+                61.14477 21.30273  1368349200
+                61.14477 21.30273  1368352800
+                61.47892 21.78320  1368172800
+                61.47892 21.78320  1368176400
+                61.47892 21.78320  1368180000
+                61.47892 21.78320  1368183600
+                61.47892 21.78320  1368187200
+                61.47892 21.78320  1368190800
+                61.47892 21.78320  1368194400
+                61.47892 21.78320  1368198000
+                61.47892 21.78320  1368201600
+                61.47892 21.78320  1368205200
+                61.47892 21.78320  1368208800
+                61.47892 21.78320  1368212400
+                61.47892 21.78320  1368216000
+                61.47892 21.78320  1368219600
+                61.47892 21.78320  1368223200
+                61.47892 21.78320  1368226800
+                61.47892 21.78320  1368230400
+                61.47892 21.78320  1368234000
+                61.47892 21.78320  1368237600
+                61.47892 21.78320  1368241200
+                61.47892 21.78320  1368244800
+                61.47892 21.78320  1368248400
+                61.47892 21.78320  1368252000
+                61.47892 21.78320  1368255600
+                61.47892 21.78320  1368259200
+                61.47892 21.78320  1368262800
+                61.47892 21.78320  1368266400
+                61.47892 21.78320  1368270000
+                61.47892 21.78320  1368273600
+                61.47892 21.78320  1368277200
+                61.47892 21.78320  1368280800
+                61.47892 21.78320  1368284400
+                61.47892 21.78320  1368288000
+                61.47892 21.78320  1368291600
+                61.47892 21.78320  1368295200
+                61.47892 21.78320  1368298800
+                61.47892 21.78320  1368302400
+                61.47892 21.78320  1368306000
+                61.47892 21.78320  1368309600
+                61.47892 21.78320  1368313200
+                61.47892 21.78320  1368316800
+                61.47892 21.78320  1368320400
+                61.47892 21.78320  1368324000
+                61.47892 21.78320  1368327600
+                61.47892 21.78320  1368331200
+                61.47892 21.78320  1368334800
+                61.47892 21.78320  1368338400
+                61.47892 21.78320  1368342000
+                61.47892 21.78320  1368345600
+                61.47892 21.78320  1368349200
+                61.47892 21.78320  1368352800
+                61.25294 22.34613  1368172800
+                61.25294 22.34613  1368176400
+                61.25294 22.34613  1368180000
+                61.25294 22.34613  1368183600
+                61.25294 22.34613  1368187200
+                61.25294 22.34613  1368190800
+                61.25294 22.34613  1368194400
+                61.25294 22.34613  1368198000
+                61.25294 22.34613  1368201600
+                61.25294 22.34613  1368205200
+                61.25294 22.34613  1368208800
+                61.25294 22.34613  1368212400
+                61.25294 22.34613  1368216000
+                61.25294 22.34613  1368219600
+                61.25294 22.34613  1368223200
+                61.25294 22.34613  1368226800
+                61.25294 22.34613  1368230400
+                61.25294 22.34613  1368234000
+                61.25294 22.34613  1368237600
+                61.25294 22.34613  1368241200
+                61.25294 22.34613  1368244800
+                61.25294 22.34613  1368248400
+                61.25294 22.34613  1368252000
+                61.25294 22.34613  1368255600
+                61.25294 22.34613  1368259200
+                61.25294 22.34613  1368262800
+                61.25294 22.34613  1368266400
+                61.25294 22.34613  1368270000
+                61.25294 22.34613  1368273600
+                61.25294 22.34613  1368277200
+                61.25294 22.34613  1368280800
+                61.25294 22.34613  1368284400
+                61.25294 22.34613  1368288000
+                61.25294 22.34613  1368291600
+                61.25294 22.34613  1368295200
+                61.25294 22.34613  1368298800
+                61.25294 22.34613  1368302400
+                61.25294 22.34613  1368306000
+                61.25294 22.34613  1368309600
+                61.25294 22.34613  1368313200
+                61.25294 22.34613  1368316800
+                61.25294 22.34613  1368320400
+                61.25294 22.34613  1368324000
+                61.25294 22.34613  1368327600
+                61.25294 22.34613  1368331200
+                61.25294 22.34613  1368334800
+                61.25294 22.34613  1368338400
+                61.25294 22.34613  1368342000
+                61.25294 22.34613  1368345600
+                61.25294 22.34613  1368349200
+                61.25294 22.34613  1368352800
+                60.81401 23.49761  1368172800
+                60.81401 23.49761  1368176400
+                60.81401 23.49761  1368180000
+                60.81401 23.49761  1368183600
+                60.81401 23.49761  1368187200
+                60.81401 23.49761  1368190800
+                60.81401 23.49761  1368194400
+                60.81401 23.49761  1368198000
+                60.81401 23.49761  1368201600
+                60.81401 23.49761  1368205200
+                60.81401 23.49761  1368208800
+                60.81401 23.49761  1368212400
+                60.81401 23.49761  1368216000
+                60.81401 23.49761  1368219600
+                60.81401 23.49761  1368223200
+                60.81401 23.49761  1368226800
+                60.81401 23.49761  1368230400
+                60.81401 23.49761  1368234000
+                60.81401 23.49761  1368237600
+                60.81401 23.49761  1368241200
+                60.81401 23.49761  1368244800
+                60.81401 23.49761  1368248400
+                60.81401 23.49761  1368252000
+                60.81401 23.49761  1368255600
+                60.81401 23.49761  1368259200
+                60.81401 23.49761  1368262800
+                60.81401 23.49761  1368266400
+                60.81401 23.49761  1368270000
+                60.81401 23.49761  1368273600
+                60.81401 23.49761  1368277200
+                60.81401 23.49761  1368280800
+                60.81401 23.49761  1368284400
+                60.81401 23.49761  1368288000
+                60.81401 23.49761  1368291600
+                60.81401 23.49761  1368295200
+                60.81401 23.49761  1368298800
+                60.81401 23.49761  1368302400
+                60.81401 23.49761  1368306000
+                60.81401 23.49761  1368309600
+                60.81401 23.49761  1368313200
+                60.81401 23.49761  1368316800
+                60.81401 23.49761  1368320400
+                60.81401 23.49761  1368324000
+                60.81401 23.49761  1368327600
+                60.81401 23.49761  1368331200
+                60.81401 23.49761  1368334800
+                60.81401 23.49761  1368338400
+                60.81401 23.49761  1368342000
+                60.81401 23.49761  1368345600
+                60.81401 23.49761  1368349200
+                60.81401 23.49761  1368352800
+                61.46572 23.74654  1368172800
+                61.46572 23.74654  1368176400
+                61.46572 23.74654  1368180000
+                61.46572 23.74654  1368183600
+                61.46572 23.74654  1368187200
+                61.46572 23.74654  1368190800
+                61.46572 23.74654  1368194400
+                61.46572 23.74654  1368198000
+                61.46572 23.74654  1368201600
+                61.46572 23.74654  1368205200
+                61.46572 23.74654  1368208800
+                61.46572 23.74654  1368212400
+                61.46572 23.74654  1368216000
+                61.46572 23.74654  1368219600
+                61.46572 23.74654  1368223200
+                61.46572 23.74654  1368226800
+                61.46572 23.74654  1368230400
+                61.46572 23.74654  1368234000
+                61.46572 23.74654  1368237600
+                61.46572 23.74654  1368241200
+                61.46572 23.74654  1368244800
+                61.46572 23.74654  1368248400
+                61.46572 23.74654  1368252000
+                61.46572 23.74654  1368255600
+                61.46572 23.74654  1368259200
+                61.46572 23.74654  1368262800
+                61.46572 23.74654  1368266400
+                61.46572 23.74654  1368270000
+                61.46572 23.74654  1368273600
+                61.46572 23.74654  1368277200
+                61.46572 23.74654  1368280800
+                61.46572 23.74654  1368284400
+                61.46572 23.74654  1368288000
+                61.46572 23.74654  1368291600
+                61.46572 23.74654  1368295200
+                61.46572 23.74654  1368298800
+                61.46572 23.74654  1368302400
+                61.46572 23.74654  1368306000
+                61.46572 23.74654  1368309600
+                61.46572 23.74654  1368313200
+                61.46572 23.74654  1368316800
+                61.46572 23.74654  1368320400
+                61.46572 23.74654  1368324000
+                61.46572 23.74654  1368327600
+                61.46572 23.74654  1368331200
+                61.46572 23.74654  1368334800
+                61.46572 23.74654  1368338400
+                61.46572 23.74654  1368342000
+                61.46572 23.74654  1368345600
+                61.46572 23.74654  1368349200
+                61.46572 23.74654  1368352800
+                60.64655 23.80589  1368172800
+                60.64655 23.80589  1368176400
+                60.64655 23.80589  1368180000
+                60.64655 23.80589  1368183600
+                60.64655 23.80589  1368187200
+                60.64655 23.80589  1368190800
+                60.64655 23.80589  1368194400
+                60.64655 23.80589  1368198000
+                60.64655 23.80589  1368201600
+                60.64655 23.80589  1368205200
+                60.64655 23.80589  1368208800
+                60.64655 23.80589  1368212400
+                60.64655 23.80589  1368216000
+                60.64655 23.80589  1368219600
+                60.64655 23.80589  1368223200
+                60.64655 23.80589  1368226800
+                60.64655 23.80589  1368230400
+                60.64655 23.80589  1368234000
+                60.64655 23.80589  1368237600
+                60.64655 23.80589  1368241200
+                60.64655 23.80589  1368244800
+                60.64655 23.80589  1368248400
+                60.64655 23.80589  1368252000
+                60.64655 23.80589  1368255600
+                60.64655 23.80589  1368259200
+                60.64655 23.80589  1368262800
+                60.64655 23.80589  1368266400
+                60.64655 23.80589  1368270000
+                60.64655 23.80589  1368273600
+                60.64655 23.80589  1368277200
+                60.64655 23.80589  1368280800
+                60.64655 23.80589  1368284400
+                60.64655 23.80589  1368288000
+                60.64655 23.80589  1368291600
+                60.64655 23.80589  1368295200
+                60.64655 23.80589  1368298800
+                60.64655 23.80589  1368302400
+                60.64655 23.80589  1368306000
+                60.64655 23.80589  1368309600
+                60.64655 23.80589  1368313200
+                60.64655 23.80589  1368316800
+                60.64655 23.80589  1368320400
+                60.64655 23.80589  1368324000
+                60.64655 23.80589  1368327600
+                60.64655 23.80589  1368331200
+                60.64655 23.80589  1368334800
+                60.64655 23.80589  1368338400
+                60.64655 23.80589  1368342000
+                60.64655 23.80589  1368345600
+                60.64655 23.80589  1368349200
+                60.64655 23.80589  1368352800
+                61.63040 21.37592  1368172800
+                61.63040 21.37592  1368176400
+                61.63040 21.37592  1368180000
+                61.63040 21.37592  1368183600
+                61.63040 21.37592  1368187200
+                61.63040 21.37592  1368190800
+                61.63040 21.37592  1368194400
+                61.63040 21.37592  1368198000
+                61.63040 21.37592  1368201600
+                61.63040 21.37592  1368205200
+                61.63040 21.37592  1368208800
+                61.63040 21.37592  1368212400
+                61.63040 21.37592  1368216000
+                61.63040 21.37592  1368219600
+                61.63040 21.37592  1368223200
+                61.63040 21.37592  1368226800
+                61.63040 21.37592  1368230400
+                61.63040 21.37592  1368234000
+                61.63040 21.37592  1368237600
+                61.63040 21.37592  1368241200
+                61.63040 21.37592  1368244800
+                61.63040 21.37592  1368248400
+                61.63040 21.37592  1368252000
+                61.63040 21.37592  1368255600
+                61.63040 21.37592  1368259200
+                61.63040 21.37592  1368262800
+                61.63040 21.37592  1368266400
+                61.63040 21.37592  1368270000
+                61.63040 21.37592  1368273600
+                61.63040 21.37592  1368277200
+                61.63040 21.37592  1368280800
+                61.63040 21.37592  1368284400
+                61.63040 21.37592  1368288000
+                61.63040 21.37592  1368291600
+                61.63040 21.37592  1368295200
+                61.63040 21.37592  1368298800
+                61.63040 21.37592  1368302400
+                61.63040 21.37592  1368306000
+                61.63040 21.37592  1368309600
+                61.63040 21.37592  1368313200
+                61.63040 21.37592  1368316800
+                61.63040 21.37592  1368320400
+                61.63040 21.37592  1368324000
+                61.63040 21.37592  1368327600
+                61.63040 21.37592  1368331200
+                61.63040 21.37592  1368334800
+                61.63040 21.37592  1368338400
+                61.63040 21.37592  1368342000
+                61.63040 21.37592  1368345600
+                61.63040 21.37592  1368349200
+                61.63040 21.37592  1368352800
+                62.20348 21.16971  1368172800
+                62.20348 21.16971  1368176400
+                62.20348 21.16971  1368180000
+                62.20348 21.16971  1368183600
+                62.20348 21.16971  1368187200
+                62.20348 21.16971  1368190800
+                62.20348 21.16971  1368194400
+                62.20348 21.16971  1368198000
+                62.20348 21.16971  1368201600
+                62.20348 21.16971  1368205200
+                62.20348 21.16971  1368208800
+                62.20348 21.16971  1368212400
+                62.20348 21.16971  1368216000
+                62.20348 21.16971  1368219600
+                62.20348 21.16971  1368223200
+                62.20348 21.16971  1368226800
+                62.20348 21.16971  1368230400
+                62.20348 21.16971  1368234000
+                62.20348 21.16971  1368237600
+                62.20348 21.16971  1368241200
+                62.20348 21.16971  1368244800
+                62.20348 21.16971  1368248400
+                62.20348 21.16971  1368252000
+                62.20348 21.16971  1368255600
+                62.20348 21.16971  1368259200
+                62.20348 21.16971  1368262800
+                62.20348 21.16971  1368266400
+                62.20348 21.16971  1368270000
+                62.20348 21.16971  1368273600
+                62.20348 21.16971  1368277200
+                62.20348 21.16971  1368280800
+                62.20348 21.16971  1368284400
+                62.20348 21.16971  1368288000
+                62.20348 21.16971  1368291600
+                62.20348 21.16971  1368295200
+                62.20348 21.16971  1368298800
+                62.20348 21.16971  1368302400
+                62.20348 21.16971  1368306000
+                62.20348 21.16971  1368309600
+                62.20348 21.16971  1368313200
+                62.20348 21.16971  1368316800
+                62.20348 21.16971  1368320400
+                62.20348 21.16971  1368324000
+                62.20348 21.16971  1368327600
+                62.20348 21.16971  1368331200
+                62.20348 21.16971  1368334800
+                62.20348 21.16971  1368338400
+                62.20348 21.16971  1368342000
+                62.20348 21.16971  1368345600
+                62.20348 21.16971  1368349200
+                62.20348 21.16971  1368352800
+                62.18325 22.79972  1368172800
+                62.18325 22.79972  1368176400
+                62.18325 22.79972  1368180000
+                62.18325 22.79972  1368183600
+                62.18325 22.79972  1368187200
+                62.18325 22.79972  1368190800
+                62.18325 22.79972  1368194400
+                62.18325 22.79972  1368198000
+                62.18325 22.79972  1368201600
+                62.18325 22.79972  1368205200
+                62.18325 22.79972  1368208800
+                62.18325 22.79972  1368212400
+                62.18325 22.79972  1368216000
+                62.18325 22.79972  1368219600
+                62.18325 22.79972  1368223200
+                62.18325 22.79972  1368226800
+                62.18325 22.79972  1368230400
+                62.18325 22.79972  1368234000
+                62.18325 22.79972  1368237600
+                62.18325 22.79972  1368241200
+                62.18325 22.79972  1368244800
+                62.18325 22.79972  1368248400
+                62.18325 22.79972  1368252000
+                62.18325 22.79972  1368255600
+                62.18325 22.79972  1368259200
+                62.18325 22.79972  1368262800
+                62.18325 22.79972  1368266400
+                62.18325 22.79972  1368270000
+                62.18325 22.79972  1368273600
+                62.18325 22.79972  1368277200
+                62.18325 22.79972  1368280800
+                62.18325 22.79972  1368284400
+                62.18325 22.79972  1368288000
+                62.18325 22.79972  1368291600
+                62.18325 22.79972  1368295200
+                62.18325 22.79972  1368298800
+                62.18325 22.79972  1368302400
+                62.18325 22.79972  1368306000
+                62.18325 22.79972  1368309600
+                62.18325 22.79972  1368313200
+                62.18325 22.79972  1368316800
+                62.18325 22.79972  1368320400
+                62.18325 22.79972  1368324000
+                62.18325 22.79972  1368327600
+                62.18325 22.79972  1368331200
+                62.18325 22.79972  1368334800
+                62.18325 22.79972  1368338400
+                62.18325 22.79972  1368342000
+                62.18325 22.79972  1368345600
+                62.18325 22.79972  1368349200
+                62.18325 22.79972  1368352800
+                62.41345 22.18372  1368172800
+                62.41345 22.18372  1368176400
+                62.41345 22.18372  1368180000
+                62.41345 22.18372  1368183600
+                62.41345 22.18372  1368187200
+                62.41345 22.18372  1368190800
+                62.41345 22.18372  1368194400
+                62.41345 22.18372  1368198000
+                62.41345 22.18372  1368201600
+                62.41345 22.18372  1368205200
+                62.41345 22.18372  1368208800
+                62.41345 22.18372  1368212400
+                62.41345 22.18372  1368216000
+                62.41345 22.18372  1368219600
+                62.41345 22.18372  1368223200
+                62.41345 22.18372  1368226800
+                62.41345 22.18372  1368230400
+                62.41345 22.18372  1368234000
+                62.41345 22.18372  1368237600
+                62.41345 22.18372  1368241200
+                62.41345 22.18372  1368244800
+                62.41345 22.18372  1368248400
+                62.41345 22.18372  1368252000
+                62.41345 22.18372  1368255600
+                62.41345 22.18372  1368259200
+                62.41345 22.18372  1368262800
+                62.41345 22.18372  1368266400
+                62.41345 22.18372  1368270000
+                62.41345 22.18372  1368273600
+                62.41345 22.18372  1368277200
+                62.41345 22.18372  1368280800
+                62.41345 22.18372  1368284400
+                62.41345 22.18372  1368288000
+                62.41345 22.18372  1368291600
+                62.41345 22.18372  1368295200
+                62.41345 22.18372  1368298800
+                62.41345 22.18372  1368302400
+                62.41345 22.18372  1368306000
+                62.41345 22.18372  1368309600
+                62.41345 22.18372  1368313200
+                62.41345 22.18372  1368316800
+                62.41345 22.18372  1368320400
+                62.41345 22.18372  1368324000
+                62.41345 22.18372  1368327600
+                62.41345 22.18372  1368331200
+                62.41345 22.18372  1368334800
+                62.41345 22.18372  1368338400
+                62.41345 22.18372  1368342000
+                62.41345 22.18372  1368345600
+                62.41345 22.18372  1368349200
+                62.41345 22.18372  1368352800
+                61.83849 22.46374  1368172800
+                61.83849 22.46374  1368176400
+                61.83849 22.46374  1368180000
+                61.83849 22.46374  1368183600
+                61.83849 22.46374  1368187200
+                61.83849 22.46374  1368190800
+                61.83849 22.46374  1368194400
+                61.83849 22.46374  1368198000
+                61.83849 22.46374  1368201600
+                61.83849 22.46374  1368205200
+                61.83849 22.46374  1368208800
+                61.83849 22.46374  1368212400
+                61.83849 22.46374  1368216000
+                61.83849 22.46374  1368219600
+                61.83849 22.46374  1368223200
+                61.83849 22.46374  1368226800
+                61.83849 22.46374  1368230400
+                61.83849 22.46374  1368234000
+                61.83849 22.46374  1368237600
+                61.83849 22.46374  1368241200
+                61.83849 22.46374  1368244800
+                61.83849 22.46374  1368248400
+                61.83849 22.46374  1368252000
+                61.83849 22.46374  1368255600
+                61.83849 22.46374  1368259200
+                61.83849 22.46374  1368262800
+                61.83849 22.46374  1368266400
+                61.83849 22.46374  1368270000
+                61.83849 22.46374  1368273600
+                61.83849 22.46374  1368277200
+                61.83849 22.46374  1368280800
+                61.83849 22.46374  1368284400
+                61.83849 22.46374  1368288000
+                61.83849 22.46374  1368291600
+                61.83849 22.46374  1368295200
+                61.83849 22.46374  1368298800
+                61.83849 22.46374  1368302400
+                61.83849 22.46374  1368306000
+                61.83849 22.46374  1368309600
+                61.83849 22.46374  1368313200
+                61.83849 22.46374  1368316800
+                61.83849 22.46374  1368320400
+                61.83849 22.46374  1368324000
+                61.83849 22.46374  1368327600
+                61.83849 22.46374  1368331200
+                61.83849 22.46374  1368334800
+                61.83849 22.46374  1368338400
+                61.83849 22.46374  1368342000
+                61.83849 22.46374  1368345600
+                61.83849 22.46374  1368349200
+                61.83849 22.46374  1368352800
+                62.32783 23.54228  1368172800
+                62.32783 23.54228  1368176400
+                62.32783 23.54228  1368180000
+                62.32783 23.54228  1368183600
+                62.32783 23.54228  1368187200
+                62.32783 23.54228  1368190800
+                62.32783 23.54228  1368194400
+                62.32783 23.54228  1368198000
+                62.32783 23.54228  1368201600
+                62.32783 23.54228  1368205200
+                62.32783 23.54228  1368208800
+                62.32783 23.54228  1368212400
+                62.32783 23.54228  1368216000
+                62.32783 23.54228  1368219600
+                62.32783 23.54228  1368223200
+                62.32783 23.54228  1368226800
+                62.32783 23.54228  1368230400
+                62.32783 23.54228  1368234000
+                62.32783 23.54228  1368237600
+                62.32783 23.54228  1368241200
+                62.32783 23.54228  1368244800
+                62.32783 23.54228  1368248400
+                62.32783 23.54228  1368252000
+                62.32783 23.54228  1368255600
+                62.32783 23.54228  1368259200
+                62.32783 23.54228  1368262800
+                62.32783 23.54228  1368266400
+                62.32783 23.54228  1368270000
+                62.32783 23.54228  1368273600
+                62.32783 23.54228  1368277200
+                62.32783 23.54228  1368280800
+                62.32783 23.54228  1368284400
+                62.32783 23.54228  1368288000
+                62.32783 23.54228  1368291600
+                62.32783 23.54228  1368295200
+                62.32783 23.54228  1368298800
+                62.32783 23.54228  1368302400
+                62.32783 23.54228  1368306000
+                62.32783 23.54228  1368309600
+                62.32783 23.54228  1368313200
+                62.32783 23.54228  1368316800
+                62.32783 23.54228  1368320400
+                62.32783 23.54228  1368324000
+                62.32783 23.54228  1368327600
+                62.32783 23.54228  1368331200
+                62.32783 23.54228  1368334800
+                62.32783 23.54228  1368338400
+                62.32783 23.54228  1368342000
+                62.32783 23.54228  1368345600
+                62.32783 23.54228  1368349200
+                62.32783 23.54228  1368352800
+                61.51757 23.75369  1368172800
+                61.51757 23.75369  1368176400
+                61.51757 23.75369  1368180000
+                61.51757 23.75369  1368183600
+                61.51757 23.75369  1368187200
+                61.51757 23.75369  1368190800
+                61.51757 23.75369  1368194400
+                61.51757 23.75369  1368198000
+                61.51757 23.75369  1368201600
+                61.51757 23.75369  1368205200
+                61.51757 23.75369  1368208800
+                61.51757 23.75369  1368212400
+                61.51757 23.75369  1368216000
+                61.51757 23.75369  1368219600
+                61.51757 23.75369  1368223200
+                61.51757 23.75369  1368226800
+                61.51757 23.75369  1368230400
+                61.51757 23.75369  1368234000
+                61.51757 23.75369  1368237600
+                61.51757 23.75369  1368241200
+                61.51757 23.75369  1368244800
+                61.51757 23.75369  1368248400
+                61.51757 23.75369  1368252000
+                61.51757 23.75369  1368255600
+                61.51757 23.75369  1368259200
+                61.51757 23.75369  1368262800
+                61.51757 23.75369  1368266400
+                61.51757 23.75369  1368270000
+                61.51757 23.75369  1368273600
+                61.51757 23.75369  1368277200
+                61.51757 23.75369  1368280800
+                61.51757 23.75369  1368284400
+                61.51757 23.75369  1368288000
+                61.51757 23.75369  1368291600
+                61.51757 23.75369  1368295200
+                61.51757 23.75369  1368298800
+                61.51757 23.75369  1368302400
+                61.51757 23.75369  1368306000
+                61.51757 23.75369  1368309600
+                61.51757 23.75369  1368313200
+                61.51757 23.75369  1368316800
+                61.51757 23.75369  1368320400
+                61.51757 23.75369  1368324000
+                61.51757 23.75369  1368327600
+                61.51757 23.75369  1368331200
+                61.51757 23.75369  1368334800
+                61.51757 23.75369  1368338400
+                61.51757 23.75369  1368342000
+                61.51757 23.75369  1368345600
+                61.51757 23.75369  1368349200
+                61.51757 23.75369  1368352800
+                63.43548 21.06455  1368172800
+                63.43548 21.06455  1368176400
+                63.43548 21.06455  1368180000
+                63.43548 21.06455  1368183600
+                63.43548 21.06455  1368187200
+                63.43548 21.06455  1368190800
+                63.43548 21.06455  1368194400
+                63.43548 21.06455  1368198000
+                63.43548 21.06455  1368201600
+                63.43548 21.06455  1368205200
+                63.43548 21.06455  1368208800
+                63.43548 21.06455  1368212400
+                63.43548 21.06455  1368216000
+                63.43548 21.06455  1368219600
+                63.43548 21.06455  1368223200
+                63.43548 21.06455  1368226800
+                63.43548 21.06455  1368230400
+                63.43548 21.06455  1368234000
+                63.43548 21.06455  1368237600
+                63.43548 21.06455  1368241200
+                63.43548 21.06455  1368244800
+                63.43548 21.06455  1368248400
+                63.43548 21.06455  1368252000
+                63.43548 21.06455  1368255600
+                63.43548 21.06455  1368259200
+                63.43548 21.06455  1368262800
+                63.43548 21.06455  1368266400
+                63.43548 21.06455  1368270000
+                63.43548 21.06455  1368273600
+                63.43548 21.06455  1368277200
+                63.43548 21.06455  1368280800
+                63.43548 21.06455  1368284400
+                63.43548 21.06455  1368288000
+                63.43548 21.06455  1368291600
+                63.43548 21.06455  1368295200
+                63.43548 21.06455  1368298800
+                63.43548 21.06455  1368302400
+                63.43548 21.06455  1368306000
+                63.43548 21.06455  1368309600
+                63.43548 21.06455  1368313200
+                63.43548 21.06455  1368316800
+                63.43548 21.06455  1368320400
+                63.43548 21.06455  1368324000
+                63.43548 21.06455  1368327600
+                63.43548 21.06455  1368331200
+                63.43548 21.06455  1368334800
+                63.43548 21.06455  1368338400
+                63.43548 21.06455  1368342000
+                63.43548 21.06455  1368345600
+                63.43548 21.06455  1368349200
+                63.43548 21.06455  1368352800
+                62.93433 21.18525  1368172800
+                62.93433 21.18525  1368176400
+                62.93433 21.18525  1368180000
+                62.93433 21.18525  1368183600
+                62.93433 21.18525  1368187200
+                62.93433 21.18525  1368190800
+                62.93433 21.18525  1368194400
+                62.93433 21.18525  1368198000
+                62.93433 21.18525  1368201600
+                62.93433 21.18525  1368205200
+                62.93433 21.18525  1368208800
+                62.93433 21.18525  1368212400
+                62.93433 21.18525  1368216000
+                62.93433 21.18525  1368219600
+                62.93433 21.18525  1368223200
+                62.93433 21.18525  1368226800
+                62.93433 21.18525  1368230400
+                62.93433 21.18525  1368234000
+                62.93433 21.18525  1368237600
+                62.93433 21.18525  1368241200
+                62.93433 21.18525  1368244800
+                62.93433 21.18525  1368248400
+                62.93433 21.18525  1368252000
+                62.93433 21.18525  1368255600
+                62.93433 21.18525  1368259200
+                62.93433 21.18525  1368262800
+                62.93433 21.18525  1368266400
+                62.93433 21.18525  1368270000
+                62.93433 21.18525  1368273600
+                62.93433 21.18525  1368277200
+                62.93433 21.18525  1368280800
+                62.93433 21.18525  1368284400
+                62.93433 21.18525  1368288000
+                62.93433 21.18525  1368291600
+                62.93433 21.18525  1368295200
+                62.93433 21.18525  1368298800
+                62.93433 21.18525  1368302400
+                62.93433 21.18525  1368306000
+                62.93433 21.18525  1368309600
+                62.93433 21.18525  1368313200
+                62.93433 21.18525  1368316800
+                62.93433 21.18525  1368320400
+                62.93433 21.18525  1368324000
+                62.93433 21.18525  1368327600
+                62.93433 21.18525  1368331200
+                62.93433 21.18525  1368334800
+                62.93433 21.18525  1368338400
+                62.93433 21.18525  1368342000
+                62.93433 21.18525  1368345600
+                62.93433 21.18525  1368349200
+                62.93433 21.18525  1368352800
+                63.09875 21.63952  1368172800
+                63.09875 21.63952  1368176400
+                63.09875 21.63952  1368180000
+                63.09875 21.63952  1368183600
+                63.09875 21.63952  1368187200
+                63.09875 21.63952  1368190800
+                63.09875 21.63952  1368194400
+                63.09875 21.63952  1368198000
+                63.09875 21.63952  1368201600
+                63.09875 21.63952  1368205200
+                63.09875 21.63952  1368208800
+                63.09875 21.63952  1368212400
+                63.09875 21.63952  1368216000
+                63.09875 21.63952  1368219600
+                63.09875 21.63952  1368223200
+                63.09875 21.63952  1368226800
+                63.09875 21.63952  1368230400
+                63.09875 21.63952  1368234000
+                63.09875 21.63952  1368237600
+                63.09875 21.63952  1368241200
+                63.09875 21.63952  1368244800
+                63.09875 21.63952  1368248400
+                63.09875 21.63952  1368252000
+                63.09875 21.63952  1368255600
+                63.09875 21.63952  1368259200
+                63.09875 21.63952  1368262800
+                63.09875 21.63952  1368266400
+                63.09875 21.63952  1368270000
+                63.09875 21.63952  1368273600
+                63.09875 21.63952  1368277200
+                63.09875 21.63952  1368280800
+                63.09875 21.63952  1368284400
+                63.09875 21.63952  1368288000
+                63.09875 21.63952  1368291600
+                63.09875 21.63952  1368295200
+                63.09875 21.63952  1368298800
+                63.09875 21.63952  1368302400
+                63.09875 21.63952  1368306000
+                63.09875 21.63952  1368309600
+                63.09875 21.63952  1368313200
+                63.09875 21.63952  1368316800
+                63.09875 21.63952  1368320400
+                63.09875 21.63952  1368324000
+                63.09875 21.63952  1368327600
+                63.09875 21.63952  1368331200
+                63.09875 21.63952  1368334800
+                63.09875 21.63952  1368338400
+                63.09875 21.63952  1368342000
+                63.09875 21.63952  1368345600
+                63.09875 21.63952  1368349200
+                63.09875 21.63952  1368352800
+                62.93808 22.48878  1368172800
+                62.93808 22.48878  1368176400
+                62.93808 22.48878  1368180000
+                62.93808 22.48878  1368183600
+                62.93808 22.48878  1368187200
+                62.93808 22.48878  1368190800
+                62.93808 22.48878  1368194400
+                62.93808 22.48878  1368198000
+                62.93808 22.48878  1368201600
+                62.93808 22.48878  1368205200
+                62.93808 22.48878  1368208800
+                62.93808 22.48878  1368212400
+                62.93808 22.48878  1368216000
+                62.93808 22.48878  1368219600
+                62.93808 22.48878  1368223200
+                62.93808 22.48878  1368226800
+                62.93808 22.48878  1368230400
+                62.93808 22.48878  1368234000
+                62.93808 22.48878  1368237600
+                62.93808 22.48878  1368241200
+                62.93808 22.48878  1368244800
+                62.93808 22.48878  1368248400
+                62.93808 22.48878  1368252000
+                62.93808 22.48878  1368255600
+                62.93808 22.48878  1368259200
+                62.93808 22.48878  1368262800
+                62.93808 22.48878  1368266400
+                62.93808 22.48878  1368270000
+                62.93808 22.48878  1368273600
+                62.93808 22.48878  1368277200
+                62.93808 22.48878  1368280800
+                62.93808 22.48878  1368284400
+                62.93808 22.48878  1368288000
+                62.93808 22.48878  1368291600
+                62.93808 22.48878  1368295200
+                62.93808 22.48878  1368298800
+                62.93808 22.48878  1368302400
+                62.93808 22.48878  1368306000
+                62.93808 22.48878  1368309600
+                62.93808 22.48878  1368313200
+                62.93808 22.48878  1368316800
+                62.93808 22.48878  1368320400
+                62.93808 22.48878  1368324000
+                62.93808 22.48878  1368327600
+                62.93808 22.48878  1368331200
+                62.93808 22.48878  1368334800
+                62.93808 22.48878  1368338400
+                62.93808 22.48878  1368342000
+                62.93808 22.48878  1368345600
+                62.93808 22.48878  1368349200
+                62.93808 22.48878  1368352800
+                63.12023 23.04360  1368172800
+                63.12023 23.04360  1368176400
+                63.12023 23.04360  1368180000
+                63.12023 23.04360  1368183600
+                63.12023 23.04360  1368187200
+                63.12023 23.04360  1368190800
+                63.12023 23.04360  1368194400
+                63.12023 23.04360  1368198000
+                63.12023 23.04360  1368201600
+                63.12023 23.04360  1368205200
+                63.12023 23.04360  1368208800
+                63.12023 23.04360  1368212400
+                63.12023 23.04360  1368216000
+                63.12023 23.04360  1368219600
+                63.12023 23.04360  1368223200
+                63.12023 23.04360  1368226800
+                63.12023 23.04360  1368230400
+                63.12023 23.04360  1368234000
+                63.12023 23.04360  1368237600
+                63.12023 23.04360  1368241200
+                63.12023 23.04360  1368244800
+                63.12023 23.04360  1368248400
+                63.12023 23.04360  1368252000
+                63.12023 23.04360  1368255600
+                63.12023 23.04360  1368259200
+                63.12023 23.04360  1368262800
+                63.12023 23.04360  1368266400
+                63.12023 23.04360  1368270000
+                63.12023 23.04360  1368273600
+                63.12023 23.04360  1368277200
+                63.12023 23.04360  1368280800
+                63.12023 23.04360  1368284400
+                63.12023 23.04360  1368288000
+                63.12023 23.04360  1368291600
+                63.12023 23.04360  1368295200
+                63.12023 23.04360  1368298800
+                63.12023 23.04360  1368302400
+                63.12023 23.04360  1368306000
+                63.12023 23.04360  1368309600
+                63.12023 23.04360  1368313200
+                63.12023 23.04360  1368316800
+                63.12023 23.04360  1368320400
+                63.12023 23.04360  1368324000
+                63.12023 23.04360  1368327600
+                63.12023 23.04360  1368331200
+                63.12023 23.04360  1368334800
+                63.12023 23.04360  1368338400
+                63.12023 23.04360  1368342000
+                63.12023 23.04360  1368345600
+                63.12023 23.04360  1368349200
+                63.12023 23.04360  1368352800
+                63.75146 22.52290  1368172800
+                63.75146 22.52290  1368176400
+                63.75146 22.52290  1368180000
+                63.75146 22.52290  1368183600
+                63.75146 22.52290  1368187200
+                63.75146 22.52290  1368190800
+                63.75146 22.52290  1368194400
+                63.75146 22.52290  1368198000
+                63.75146 22.52290  1368201600
+                63.75146 22.52290  1368205200
+                63.75146 22.52290  1368208800
+                63.75146 22.52290  1368212400
+                63.75146 22.52290  1368216000
+                63.75146 22.52290  1368219600
+                63.75146 22.52290  1368223200
+                63.75146 22.52290  1368226800
+                63.75146 22.52290  1368230400
+                63.75146 22.52290  1368234000
+                63.75146 22.52290  1368237600
+                63.75146 22.52290  1368241200
+                63.75146 22.52290  1368244800
+                63.75146 22.52290  1368248400
+                63.75146 22.52290  1368252000
+                63.75146 22.52290  1368255600
+                63.75146 22.52290  1368259200
+                63.75146 22.52290  1368262800
+                63.75146 22.52290  1368266400
+                63.75146 22.52290  1368270000
+                63.75146 22.52290  1368273600
+                63.75146 22.52290  1368277200
+                63.75146 22.52290  1368280800
+                63.75146 22.52290  1368284400
+                63.75146 22.52290  1368288000
+                63.75146 22.52290  1368291600
+                63.75146 22.52290  1368295200
+                63.75146 22.52290  1368298800
+                63.75146 22.52290  1368302400
+                63.75146 22.52290  1368306000
+                63.75146 22.52290  1368309600
+                63.75146 22.52290  1368313200
+                63.75146 22.52290  1368316800
+                63.75146 22.52290  1368320400
+                63.75146 22.52290  1368324000
+                63.75146 22.52290  1368327600
+                63.75146 22.52290  1368331200
+                63.75146 22.52290  1368334800
+                63.75146 22.52290  1368338400
+                63.75146 22.52290  1368342000
+                63.75146 22.52290  1368345600
+                63.75146 22.52290  1368349200
+                63.75146 22.52290  1368352800
+                63.95087 22.84439  1368172800
+                63.95087 22.84439  1368176400
+                63.95087 22.84439  1368180000
+                63.95087 22.84439  1368183600
+                63.95087 22.84439  1368187200
+                63.95087 22.84439  1368190800
+                63.95087 22.84439  1368194400
+                63.95087 22.84439  1368198000
+                63.95087 22.84439  1368201600
+                63.95087 22.84439  1368205200
+                63.95087 22.84439  1368208800
+                63.95087 22.84439  1368212400
+                63.95087 22.84439  1368216000
+                63.95087 22.84439  1368219600
+                63.95087 22.84439  1368223200
+                63.95087 22.84439  1368226800
+                63.95087 22.84439  1368230400
+                63.95087 22.84439  1368234000
+                63.95087 22.84439  1368237600
+                63.95087 22.84439  1368241200
+                63.95087 22.84439  1368244800
+                63.95087 22.84439  1368248400
+                63.95087 22.84439  1368252000
+                63.95087 22.84439  1368255600
+                63.95087 22.84439  1368259200
+                63.95087 22.84439  1368262800
+                63.95087 22.84439  1368266400
+                63.95087 22.84439  1368270000
+                63.95087 22.84439  1368273600
+                63.95087 22.84439  1368277200
+                63.95087 22.84439  1368280800
+                63.95087 22.84439  1368284400
+                63.95087 22.84439  1368288000
+                63.95087 22.84439  1368291600
+                63.95087 22.84439  1368295200
+                63.95087 22.84439  1368298800
+                63.95087 22.84439  1368302400
+                63.95087 22.84439  1368306000
+                63.95087 22.84439  1368309600
+                63.95087 22.84439  1368313200
+                63.95087 22.84439  1368316800
+                63.95087 22.84439  1368320400
+                63.95087 22.84439  1368324000
+                63.95087 22.84439  1368327600
+                63.95087 22.84439  1368331200
+                63.95087 22.84439  1368334800
+                63.95087 22.84439  1368338400
+                63.95087 22.84439  1368342000
+                63.95087 22.84439  1368345600
+                63.95087 22.84439  1368349200
+                63.95087 22.84439  1368352800
+                64.33104 23.44647  1368172800
+                64.33104 23.44647  1368176400
+                64.33104 23.44647  1368180000
+                64.33104 23.44647  1368183600
+                64.33104 23.44647  1368187200
+                64.33104 23.44647  1368190800
+                64.33104 23.44647  1368194400
+                64.33104 23.44647  1368198000
+                64.33104 23.44647  1368201600
+                64.33104 23.44647  1368205200
+                64.33104 23.44647  1368208800
+                64.33104 23.44647  1368212400
+                64.33104 23.44647  1368216000
+                64.33104 23.44647  1368219600
+                64.33104 23.44647  1368223200
+                64.33104 23.44647  1368226800
+                64.33104 23.44647  1368230400
+                64.33104 23.44647  1368234000
+                64.33104 23.44647  1368237600
+                64.33104 23.44647  1368241200
+                64.33104 23.44647  1368244800
+                64.33104 23.44647  1368248400
+                64.33104 23.44647  1368252000
+                64.33104 23.44647  1368255600
+                64.33104 23.44647  1368259200
+                64.33104 23.44647  1368262800
+                64.33104 23.44647  1368266400
+                64.33104 23.44647  1368270000
+                64.33104 23.44647  1368273600
+                64.33104 23.44647  1368277200
+                64.33104 23.44647  1368280800
+                64.33104 23.44647  1368284400
+                64.33104 23.44647  1368288000
+                64.33104 23.44647  1368291600
+                64.33104 23.44647  1368295200
+                64.33104 23.44647  1368298800
+                64.33104 23.44647  1368302400
+                64.33104 23.44647  1368306000
+                64.33104 23.44647  1368309600
+                64.33104 23.44647  1368313200
+                64.33104 23.44647  1368316800
+                64.33104 23.44647  1368320400
+                64.33104 23.44647  1368324000
+                64.33104 23.44647  1368327600
+                64.33104 23.44647  1368331200
+                64.33104 23.44647  1368334800
+                64.33104 23.44647  1368338400
+                64.33104 23.44647  1368342000
+                64.33104 23.44647  1368345600
+                64.33104 23.44647  1368349200
+                64.33104 23.44647  1368352800
+                63.84444 23.12433  1368172800
+                63.84444 23.12433  1368176400
+                63.84444 23.12433  1368180000
+                63.84444 23.12433  1368183600
+                63.84444 23.12433  1368187200
+                63.84444 23.12433  1368190800
+                63.84444 23.12433  1368194400
+                63.84444 23.12433  1368198000
+                63.84444 23.12433  1368201600
+                63.84444 23.12433  1368205200
+                63.84444 23.12433  1368208800
+                63.84444 23.12433  1368212400
+                63.84444 23.12433  1368216000
+                63.84444 23.12433  1368219600
+                63.84444 23.12433  1368223200
+                63.84444 23.12433  1368226800
+                63.84444 23.12433  1368230400
+                63.84444 23.12433  1368234000
+                63.84444 23.12433  1368237600
+                63.84444 23.12433  1368241200
+                63.84444 23.12433  1368244800
+                63.84444 23.12433  1368248400
+                63.84444 23.12433  1368252000
+                63.84444 23.12433  1368255600
+                63.84444 23.12433  1368259200
+                63.84444 23.12433  1368262800
+                63.84444 23.12433  1368266400
+                63.84444 23.12433  1368270000
+                63.84444 23.12433  1368273600
+                63.84444 23.12433  1368277200
+                63.84444 23.12433  1368280800
+                63.84444 23.12433  1368284400
+                63.84444 23.12433  1368288000
+                63.84444 23.12433  1368291600
+                63.84444 23.12433  1368295200
+                63.84444 23.12433  1368298800
+                63.84444 23.12433  1368302400
+                63.84444 23.12433  1368306000
+                63.84444 23.12433  1368309600
+                63.84444 23.12433  1368313200
+                63.84444 23.12433  1368316800
+                63.84444 23.12433  1368320400
+                63.84444 23.12433  1368324000
+                63.84444 23.12433  1368327600
+                63.84444 23.12433  1368331200
+                63.84444 23.12433  1368334800
+                63.84444 23.12433  1368338400
+                63.84444 23.12433  1368342000
+                63.84444 23.12433  1368345600
+                63.84444 23.12433  1368349200
+                63.84444 23.12433  1368352800
+                64.61199 23.89622  1368172800
+                64.61199 23.89622  1368176400
+                64.61199 23.89622  1368180000
+                64.61199 23.89622  1368183600
+                64.61199 23.89622  1368187200
+                64.61199 23.89622  1368190800
+                64.61199 23.89622  1368194400
+                64.61199 23.89622  1368198000
+                64.61199 23.89622  1368201600
+                64.61199 23.89622  1368205200
+                64.61199 23.89622  1368208800
+                64.61199 23.89622  1368212400
+                64.61199 23.89622  1368216000
+                64.61199 23.89622  1368219600
+                64.61199 23.89622  1368223200
+                64.61199 23.89622  1368226800
+                64.61199 23.89622  1368230400
+                64.61199 23.89622  1368234000
+                64.61199 23.89622  1368237600
+                64.61199 23.89622  1368241200
+                64.61199 23.89622  1368244800
+                64.61199 23.89622  1368248400
+                64.61199 23.89622  1368252000
+                64.61199 23.89622  1368255600
+                64.61199 23.89622  1368259200
+                64.61199 23.89622  1368262800
+                64.61199 23.89622  1368266400
+                64.61199 23.89622  1368270000
+                64.61199 23.89622  1368273600
+                64.61199 23.89622  1368277200
+                64.61199 23.89622  1368280800
+                64.61199 23.89622  1368284400
+                64.61199 23.89622  1368288000
+                64.61199 23.89622  1368291600
+                64.61199 23.89622  1368295200
+                64.61199 23.89622  1368298800
+                64.61199 23.89622  1368302400
+                64.61199 23.89622  1368306000
+                64.61199 23.89622  1368309600
+                64.61199 23.89622  1368313200
+                64.61199 23.89622  1368316800
+                64.61199 23.89622  1368320400
+                64.61199 23.89622  1368324000
+                64.61199 23.89622  1368327600
+                64.61199 23.89622  1368331200
+                64.61199 23.89622  1368334800
+                64.61199 23.89622  1368338400
+                64.61199 23.89622  1368342000
+                64.61199 23.89622  1368345600
+                64.61199 23.89622  1368349200
+                64.61199 23.89622  1368352800
+                61.50123 23.76468  1368172800
+                61.50123 23.76468  1368176400
+                61.50123 23.76468  1368180000
+                61.50123 23.76468  1368183600
+                61.50123 23.76468  1368187200
+                61.50123 23.76468  1368190800
+                61.50123 23.76468  1368194400
+                61.50123 23.76468  1368198000
+                61.50123 23.76468  1368201600
+                61.50123 23.76468  1368205200
+                61.50123 23.76468  1368208800
+                61.50123 23.76468  1368212400
+                61.50123 23.76468  1368216000
+                61.50123 23.76468  1368219600
+                61.50123 23.76468  1368223200
+                61.50123 23.76468  1368226800
+                61.50123 23.76468  1368230400
+                61.50123 23.76468  1368234000
+                61.50123 23.76468  1368237600
+                61.50123 23.76468  1368241200
+                61.50123 23.76468  1368244800
+                61.50123 23.76468  1368248400
+                61.50123 23.76468  1368252000
+                61.50123 23.76468  1368255600
+                61.50123 23.76468  1368259200
+                61.50123 23.76468  1368262800
+                61.50123 23.76468  1368266400
+                61.50123 23.76468  1368270000
+                61.50123 23.76468  1368273600
+                61.50123 23.76468  1368277200
+                61.50123 23.76468  1368280800
+                61.50123 23.76468  1368284400
+                61.50123 23.76468  1368288000
+                61.50123 23.76468  1368291600
+                61.50123 23.76468  1368295200
+                61.50123 23.76468  1368298800
+                61.50123 23.76468  1368302400
+                61.50123 23.76468  1368306000
+                61.50123 23.76468  1368309600
+                61.50123 23.76468  1368313200
+                61.50123 23.76468  1368316800
+                61.50123 23.76468  1368320400
+                61.50123 23.76468  1368324000
+                61.50123 23.76468  1368327600
+                61.50123 23.76468  1368331200
+                61.50123 23.76468  1368334800
+                61.50123 23.76468  1368338400
+                61.50123 23.76468  1368342000
+                61.50123 23.76468  1368345600
+                61.50123 23.76468  1368349200
+                61.50123 23.76468  1368352800
+                </gmlcov:positions>
+            </gmlcov:SimpleMultiPoint>
+          </gml:domainSet>
+          <gml:rangeSet>
+            <gml:DataBlock>
+              <gml:rangeParameters/>
+              <gml:doubleOrNilReasonTupleList>
+                6.4 3.4 
+                6.7 2.7 
+                6.6 3.0 
+                6.4 4.0 
+                7.7 3.1 
+                8.0 3.3 
+                6.5 3.9 
+                7.1 3.1 
+                6.5 2.4 
+                6.4 1.9 
+                6.4 2.0 
+                6.1 2.2 
+                5.5 2.4 
+                5.9 2.7 
+                5.6 3.0 
+                5.4 2.8 
+                5.4 2.9 
+                5.0 1.8 
+                4.9 2.3 
+                5.2 1.5 
+                4.8 2.1 
+                4.7 2.4 
+                5.5 2.5 
+                6.0 2.4 
+                7.4 2.6 
+                9.3 1.4 
+                8.9 4.2 
+                7.8 4.6 
+                7.4 5.2 
+                6.4 5.8 
+                4.8 5.0 
+                5.7 4.6 
+                5.5 2.0 
+                5.7 1.2 
+                5.5 2.3 
+                5.5 2.5 
+                5.5 2.3 
+                5.4 1.9 
+                5.5 2.0 
+                5.4 2.4 
+                5.6 2.9 
+                5.4 2.4 
+                5.3 2.3 
+                5.8 3.0 
+                6.0 3.5 
+                6.2 2.9 
+                6.2 3.5 
+                6.3 3.2 
+                6.6 3.4 
+                5.8 3.0 
+                5.6 3.5 
+                11.2 1.3 
+                9.8 2.8 
+                9.6 2.7 
+                9.9 3.4 
+                10.3 2.5 
+                9.4 2.6 
+                10.2 2.5 
+                9.9 2.9 
+                9.8 1.9 
+                9.3 2.5 
+                9.1 1.4 
+                9.3 1.4 
+                8.6 0.8 
+                8.1 0.5 
+                8.1 0.3 
+                7.7 1.1 
+                7.0 1.8 
+                6.5 0.7 
+                6.0 1.3 
+                5.5 0.9 
+                5.8 1.3 
+                6.1 0.3 
+                7.1 1.1 
+                7.1 1.8 
+                8.9 1.6 
+                8.5 2.1 
+                9.3 2.0 
+                9.4 2.8 
+                5.4 3.1 
+                5.8 2.4 
+                6.1 2.5 
+                5.7 1.8 
+                4.3 1.9 
+                5.9 1.9 
+                6.6 0.8 
+                6.4 0.2 
+                5.7 0.3 
+                5.1 0.0 
+                4.2 0.0 
+                3.9 0.2 
+                3.1 0.0 
+                3.2 0.0 
+                3.2 0.1 
+                4.1 0.0 
+                6.5 0.2 
+                6.1 1.2 
+                7.1 0.8 
+                7.1 1.2 
+                7.3 1.9 
+                7.9 2.3 
+                7.5 1.7 
+                7.5 4.6 
+                7.7 3.9 
+                7.8 4.6 
+                7.9 5.6 
+                8.4 6.3 
+                8.5 5.8 
+                9.1 5.0 
+                8.8 4.7 
+                7.9 5.9 
+                7.6 6.7 
+                7.8 5.5 
+                7.7 4.4 
+                6.9 2.7 
+                7.2 1.3 
+                7.7 3.4 
+                6.6 4.8 
+                6.0 3.3 
+                5.6 3.2 
+                5.0 2.9 
+                5.2 2.0 
+                4.8 1.9 
+                5.7 0.7 
+                4.7 5.4 
+                5.4 3.7 
+                6.1 4.8 
+                7.4 5.5 
+                8.6 5.2 
+                8.0 5.0 
+                6.7 4.3 
+                6.9 4.5 
+                5.5 5.1 
+                5.2 4.6 
+                6.0 4.0 
+                6.5 4.6 
+                6.2 3.0 
+                6.1 2.1 
+                6.1 1.8 
+                6.8 2.6 
+                6.9 2.4 
+                6.3 3.0 
+                6.0 1.8 
+                6.4 2.3 
+                6.0 2.5 
+                5.9 2.7 
+                5.9 3.0 
+                6.4 3.0 
+                6.4 1.9 
+                6.6 4.2 
+                6.7 6.1 
+                6.8 5.1 
+                6.7 4.5 
+                9.2 3.2 
+                9.7 2.4 
+                10.3 2.0 
+                10.5 3.4 
+                9.9 4.0 
+                10.5 3.7 
+                11.3 3.8 
+                11.3 3.0 
+                11.6 1.9 
+                9.5 3.5 
+                9.4 5.1 
+                9.5 1.2 
+                9.3 0.9 
+                9.0 0.4 
+                9.1 1.1 
+                8.6 2.2 
+                7.8 1.4 
+                7.2 0.4 
+                6.4 1.2 
+                6.0 1.5 
+                6.1 1.4 
+                6.7 1.3 
+                7.5 2.2 
+                6.9 1.5 
+                7.8 2.0 
+                8.3 2.7 
+                9.2 4.0 
+                7.0 3.1 
+                5.5 4.3 
+                6.0 4.8 
+                5.4 3.3 
+                3.5 3.0 
+                4.6 2.1 
+                5.3 2.1 
+                6.2 2.4 
+                6.1 2.4 
+                5.8 1.9 
+                5.7 0.9 
+                5.5 0.0 
+                4.9 1.2 
+                5.0 1.2 
+                5.4 1.1 
+                5.5 1.1 
+                5.5 1.5 
+                5.7 1.1 
+                6.4 1.9 
+                6.3 2.5 
+                6.9 2.7 
+                6.9 3.7 
+                6.9 3.4 
+                6.9 2.7 
+                10.0 2.7 
+                11.1 2.8 
+                11.5 1.8 
+                12.4 1.6 
+                13.2 3.6 
+                12.6 4.7 
+                12.9 3.5 
+                12.2 3.2 
+                11.9 2.5 
+                11.2 2.8 
+                10.4 2.6 
+                10.2 2.4 
+                9.7 1.6 
+                9.3 1.4 
+                8.6 1.7 
+                8.2 2.5 
+                7.9 2.4 
+                7.3 1.3 
+                6.7 2.4 
+                6.2 1.7 
+                6.4 1.4 
+                6.7 0.9 
+                8.1 3.0 
+                9.6 2.0 
+                11.1 2.6 
+                10.7 2.6 
+                10.5 4.1 
+                9.3 5.3 
+                7.6 4.7 
+                8.1 4.9 
+                9.1 4.6 
+                8.3 4.8 
+                7.1 5.0 
+                6.1 4.0 
+                5.9 3.9 
+                5.8 2.9 
+                5.5 1.9 
+                4.1 2.2 
+                3.7 0.8 
+                3.1 0.6 
+                2.4 0.6 
+                2.9 0.0 
+                2.3 0.0 
+                3.1 0.6 
+                5.5 0.0 
+                7.3 1.4 
+                7.5 2.6 
+                7.2 4.2 
+                8.2 3.1 
+                8.3 3.2 
+                6.3 4.0 
+                12.4 NaN 
+                12.3 NaN 
+                11.9 NaN 
+                11.6 NaN 
+                12.4 NaN 
+                12.7 NaN 
+                12.3 NaN 
+                12.6 NaN 
+                12.0 NaN 
+                12.1 NaN 
+                11.6 NaN 
+                10.4 NaN 
+                10.5 NaN 
+                10.0 NaN 
+                10.0 NaN 
+                9.9 NaN 
+                9.6 NaN 
+                9.3 NaN 
+                8.5 NaN 
+                8.2 NaN 
+                7.8 NaN 
+                8.1 NaN 
+                8.9 NaN 
+                8.9 NaN 
+                9.3 NaN 
+                9.4 NaN 
+                9.5 NaN 
+                9.6 NaN 
+                7.4 NaN 
+                4.2 NaN 
+                6.3 NaN 
+                5.8 NaN 
+                5.1 NaN 
+                6.3 NaN 
+                7.1 NaN 
+                6.5 NaN 
+                6.2 NaN 
+                6.5 NaN 
+                4.4 NaN 
+                3.6 NaN 
+                3.2 NaN 
+                3.0 NaN 
+                3.1 NaN 
+                3.1 NaN 
+                4.5 NaN 
+                5.8 NaN 
+                6.5 NaN 
+                5.3 NaN 
+                4.3 NaN 
+                5.7 NaN 
+                6.1 NaN 
+                12.4 1.9 
+                12.5 3.0 
+                12.6 3.6 
+                12.8 3.1 
+                12.1 3.8 
+                12.0 4.2 
+                11.3 4.3 
+                11.0 3.7 
+                11.4 4.8 
+                11.4 3.8 
+                11.6 1.9 
+                11.3 1.6 
+                11.0 2.0 
+                10.6 1.9 
+                9.9 1.1 
+                9.4 0.8 
+                9.4 1.2 
+                9.1 1.5 
+                8.7 1.5 
+                8.6 0.7 
+                8.2 1.4 
+                8.7 1.6 
+                11.4 0.8 
+                10.1 0.8 
+                8.8 3.6 
+                8.2 4.5 
+                6.7 4.3 
+                6.3 4.5 
+                5.8 5.9 
+                4.4 5.6 
+                3.1 5.2 
+                4.2 4.6 
+                4.6 5.0 
+                4.7 4.4 
+                4.4 2.4 
+                4.5 2.2 
+                6.1 2.5 
+                6.1 2.0 
+                5.2 1.6 
+                4.4 1.3 
+                3.8 0.9 
+                2.2 1.5 
+                2.3 0.9 
+                3.9 0.7 
+                6.0 0.2 
+                6.0 1.2 
+                5.4 2.0 
+                5.8 2.4 
+                4.7 3.0 
+                4.8 2.1 
+                3.5 1.6 
+                7.5 2.9 
+                6.7 3.5 
+                7.1 2.9 
+                7.1 3.4 
+                7.0 5.7 
+                7.9 3.2 
+                7.7 2.9 
+                5.0 2.4 
+                6.6 3.6 
+                6.5 5.8 
+                6.6 8.9 
+                6.5 8.4 
+                6.3 8.5 
+                5.5 7.1 
+                5.0 6.6 
+                4.9 5.9 
+                4.9 6.4 
+                5.2 6.8 
+                4.5 6.3 
+                4.8 2.1 
+                5.0 4.2 
+                5.4 5.6 
+                5.2 5.8 
+                5.3 6.6 
+                5.8 5.8 
+                10.0 4.4 
+                8.7 6.2 
+                7.9 6.4 
+                6.6 5.2 
+                5.7 4.0 
+                4.2 5.3 
+                5.8 2.9 
+                4.7 2.5 
+                4.2 2.1 
+                4.5 2.2 
+                4.6 0.7 
+                3.9 1.5 
+                4.3 3.5 
+                4.7 4.8 
+                5.1 5.5 
+                5.2 5.3 
+                5.2 5.1 
+                5.1 4.9 
+                5.0 3.9 
+                5.4 4.4 
+                5.6 3.8 
+                5.7 5.0 
+                5.8 5.7 
+                6.1 6.7 
+                5.9 8.0 
+                6.4 5.8 
+                9.2 3.5 
+                9.4 1.7 
+                7.7 3.4 
+                6.5 6.6 
+                7.2 1.5 
+                7.1 3.5 
+                6.7 4.2 
+                6.6 1.9 
+                6.5 1.8 
+                6.3 2.8 
+                5.9 3.0 
+                6.0 1.1 
+                6.5 1.9 
+                6.3 2.2 
+                6.6 3.3 
+                6.7 6.3 
+                7.7 5.1 
+                8.0 3.5 
+                6.4 4.9 
+                5.8 6.6 
+                6.9 4.2 
+                7.6 4.3 
+                8.1 4.0 
+                6.4 5.8 
+                6.5 8.4 
+                7.7 8.0 
+                7.1 8.0 
+                6.3 6.9 
+                5.9 8.0 
+                6.2 7.5 
+                5.9 7.3 
+                6.4 6.5 
+                5.3 6.5 
+                5.0 3.5 
+                4.9 3.3 
+                5.1 3.0 
+                5.2 5.3 
+                5.3 5.8 
+                5.7 3.4 
+                6.0 0.8 
+                6.4 1.7 
+                5.5 4.2 
+                5.2 3.5 
+                5.2 3.4 
+                5.3 4.5 
+                5.9 4.0 
+                6.3 2.7 
+                6.9 2.1 
+                7.5 2.1 
+                7.6 5.1 
+                6.7 9.4 
+                10.1 1.3 
+                10.2 1.1 
+                10.6 1.2 
+                11.4 1.2 
+                11.4 0.8 
+                11.3 1.0 
+                12.2 1.5 
+                10.6 2.9 
+                10.2 2.5 
+                10.1 1.5 
+                9.8 1.5 
+                9.9 1.6 
+                9.9 1.0 
+                10.2 1.2 
+                10.0 1.7 
+                9.2 2.2 
+                8.7 1.5 
+                8.6 2.1 
+                8.1 1.9 
+                7.5 1.7 
+                7.2 1.2 
+                7.9 1.8 
+                8.2 1.8 
+                8.4 1.7 
+                7.8 2.4 
+                5.4 1.9 
+                8.1 3.4 
+                5.6 3.9 
+                6.3 5.2 
+                5.6 5.2 
+                4.9 5.1 
+                5.5 3.9 
+                4.7 3.8 
+                4.6 3.5 
+                4.3 2.3 
+                4.9 0.9 
+                4.8 1.1 
+                4.5 0.6 
+                4.4 1.0 
+                4.3 0.6 
+                4.0 1.2 
+                3.2 0.9 
+                3.2 2.0 
+                3.6 1.6 
+                4.2 1.8 
+                5.3 2.3 
+                5.3 2.7 
+                6.1 3.0 
+                6.3 2.6 
+                5.1 2.7 
+                4.7 2.3 
+                10.3 0.0 
+                11.2 2.6 
+                11.1 0.9 
+                11.7 0.9 
+                11.5 2.2 
+                11.8 2.6 
+                12.3 1.4 
+                11.8 2.7 
+                12.3 3.5 
+                11.3 3.4 
+                11.2 2.8 
+                11.0 1.9 
+                10.6 1.3 
+                10.0 0.7 
+                9.5 0.8 
+                9.1 1.2 
+                9.8 1.4 
+                9.3 2.1 
+                8.9 1.8 
+                8.3 1.2 
+                7.9 2.1 
+                8.1 1.8 
+                7.9 2.2 
+                8.7 2.0 
+                7.6 1.0 
+                6.6 3.8 
+                7.0 5.7 
+                6.9 6.1 
+                6.8 7.2 
+                6.1 7.4 
+                4.9 6.8 
+                4.5 5.9 
+                3.4 4.7 
+                4.8 4.3 
+                4.8 3.4 
+                4.4 2.2 
+                5.0 1.9 
+                4.1 0.7 
+                3.8 1.2 
+                3.4 1.1 
+                2.7 1.0 
+                2.2 1.5 
+                1.9 1.4 
+                2.7 1.3 
+                3.9 1.0 
+                4.8 2.3 
+                5.7 2.1 
+                6.4 1.7 
+                5.4 3.3 
+                5.6 2.6 
+                5.7 4.3 
+                11.7 1.3 
+                12.0 1.4 
+                12.6 3.1 
+                12.5 2.7 
+                12.0 4.4 
+                12.5 3.6 
+                12.3 3.6 
+                11.6 4.6 
+                11.6 3.9 
+                11.6 4.1 
+                11.8 2.6 
+                11.6 3.0 
+                11.4 2.2 
+                11.2 2.9 
+                10.7 2.8 
+                9.7 1.9 
+                9.0 0.8 
+                8.9 1.2 
+                8.4 2.0 
+                8.4 2.0 
+                8.6 2.1 
+                8.8 1.1 
+                9.2 2.3 
+                10.9 0.7 
+                11.1 1.4 
+                8.6 3.8 
+                8.2 5.7 
+                7.3 4.9 
+                6.9 4.8 
+                7.0 4.3 
+                4.7 4.8 
+                4.7 2.9 
+                3.8 4.1 
+                3.2 3.4 
+                2.8 2.5 
+                3.3 2.5 
+                3.8 2.3 
+                4.0 2.0 
+                3.8 2.2 
+                3.9 2.3 
+                2.8 1.0 
+                2.5 0.9 
+                2.2 0.7 
+                3.1 1.4 
+                5.3 0.6 
+                5.2 2.4 
+                5.5 1.5 
+                5.6 2.5 
+                5.4 3.8 
+                4.6 3.2 
+                3.9 2.1 
+                9.8 NaN 
+                9.9 NaN 
+                10.3 NaN 
+                10.5 NaN 
+                10.9 NaN 
+                11.8 NaN 
+                11.8 NaN 
+                12.0 NaN 
+                11.5 NaN 
+                11.4 NaN 
+                11.6 NaN 
+                10.5 NaN 
+                10.1 NaN 
+                9.6 NaN 
+                8.9 NaN 
+                8.2 NaN 
+                7.7 NaN 
+                8.0 NaN 
+                8.0 NaN 
+                8.6 NaN 
+                8.3 NaN 
+                10.6 NaN 
+                10.2 NaN 
+                10.2 NaN 
+                4.5 NaN 
+                3.4 NaN 
+                4.0 NaN 
+                4.6 NaN 
+                6.4 NaN 
+                5.7 NaN 
+                5.2 NaN 
+                4.5 NaN 
+                3.7 NaN 
+                2.7 NaN 
+                2.6 NaN 
+                3.5 NaN 
+                3.7 NaN 
+                3.5 NaN 
+                3.1 NaN 
+                2.5 NaN 
+                1.8 NaN 
+                1.3 NaN 
+                1.3 NaN 
+                2.1 NaN 
+                4.2 NaN 
+                5.2 NaN 
+                3.7 NaN 
+                3.8 NaN 
+                3.9 NaN 
+                4.4 NaN 
+                4.1 NaN 
+                12.3 1.9 
+                12.4 1.7 
+                12.6 2.9 
+                12.2 3.4 
+                12.4 2.7 
+                11.7 2.9 
+                11.8 2.5 
+                11.7 2.9 
+                11.9 3.0 
+                11.4 3.5 
+                11.6 2.5 
+                11.1 2.1 
+                10.7 2.2 
+                10.6 2.7 
+                10.3 2.0 
+                9.6 1.5 
+                9.3 1.3 
+                9.1 1.2 
+                8.9 1.5 
+                8.7 1.4 
+                8.6 1.0 
+                8.9 1.2 
+                9.7 1.4 
+                10.8 0.6 
+                9.9 3.6 
+                9.4 3.6 
+                7.7 3.2 
+                6.3 4.7 
+                7.1 3.2 
+                5.4 4.4 
+                4.5 3.0 
+                4.0 3.8 
+                2.8 3.8 
+                4.4 2.9 
+                4.1 2.4 
+                3.6 2.4 
+                3.5 2.8 
+                3.3 2.1 
+                3.5 2.3 
+                3.6 2.3 
+                3.5 2.4 
+                3.7 2.2 
+                2.4 2.1 
+                3.6 1.5 
+                4.5 1.6 
+                5.6 1.3 
+                4.3 1.8 
+                4.2 2.1 
+                4.2 1.5 
+                4.5 2.5 
+                4.0 1.8 
+                6.8 2.5 
+                7.1 1.3 
+                7.3 2.3 
+                7.2 1.6 
+                7.8 2.1 
+                7.8 1.6 
+                8.1 2.3 
+                7.4 1.4 
+                7.3 0.0 
+                8.1 1.1 
+                7.7 1.7 
+                7.7 3.1 
+                8.2 1.9 
+                8.6 4.1 
+                8.6 3.4 
+                8.5 4.0 
+                7.8 4.7 
+                7.8 4.5 
+                7.6 3.0 
+                5.8 6.8 
+                5.2 4.8 
+                6.3 3.7 
+                7.5 2.8 
+                7.9 2.3 
+                8.5 4.2 
+                5.7 4.5 
+                5.9 3.8 
+                6.1 5.5 
+                6.1 6.1 
+                6.1 4.3 
+                6.2 4.2 
+                6.2 3.5 
+                6.0 3.8 
+                5.6 3.3 
+                5.2 4.0 
+                5.1 4.1 
+                5.4 4.2 
+                5.6 4.3 
+                4.8 4.3 
+                5.3 2.3 
+                6.0 2.2 
+                6.2 2.4 
+                6.4 2.7 
+                6.4 3.0 
+                5.8 2.5 
+                6.5 2.7 
+                6.7 2.4 
+                6.9 2.9 
+                7.0 2.2 
+                6.6 2.5 
+                7.3 2.8 
+                2.8 3.6 
+                3.1 2.8 
+                3.7 1.7 
+                4.3 0.0 
+                4.8 2.1 
+                5.0 1.5 
+                5.5 2.0 
+                5.5 2.2 
+                5.7 1.6 
+                5.7 1.6 
+                6.3 1.0 
+                8.5 2.0 
+                7.5 1.0 
+                8.1 3.1 
+                9.2 4.3 
+                7.0 3.9 
+                7.2 2.7 
+                6.1 6.1 
+                5.3 6.9 
+                5.7 5.3 
+                3.7 4.3 
+                3.9 3.5 
+                5.3 3.3 
+                5.6 6.4 
+                5.1 5.8 
+                3.4 5.2 
+                3.5 4.8 
+                4.0 5.9 
+                3.7 5.4 
+                3.5 4.0 
+                3.7 2.2 
+                4.1 2.9 
+                4.3 2.4 
+                4.4 5.6 
+                4.1 5.6 
+                3.8 6.2 
+                3.5 5.2 
+                3.6 4.4 
+                3.8 4.6 
+                3.8 3.3 
+                4.2 5.4 
+                3.8 4.1 
+                4.7 3.3 
+                5.0 3.4 
+                4.6 2.8 
+                4.8 4.5 
+                5.3 4.0 
+                4.7 4.3 
+                4.2 4.0 
+                4.3 3.4 
+                5.2 6.1 
+                8.3 NaN 
+                8.3 NaN 
+                9.0 NaN 
+                9.1 NaN 
+                9.5 NaN 
+                9.9 NaN 
+                10.2 NaN 
+                10.2 NaN 
+                10.3 NaN 
+                10.3 NaN 
+                10.2 NaN 
+                9.8 NaN 
+                8.4 NaN 
+                8.6 NaN 
+                8.5 NaN 
+                7.8 NaN 
+                6.5 NaN 
+                7.3 NaN 
+                9.2 NaN 
+                8.1 NaN 
+                9.1 NaN 
+                8.1 NaN 
+                7.0 NaN 
+                6.7 NaN 
+                6.1 NaN 
+                5.0 NaN 
+                3.1 NaN 
+                3.6 NaN 
+                5.2 NaN 
+                5.2 NaN 
+                4.5 NaN 
+                4.5 NaN 
+                3.7 NaN 
+                3.3 NaN 
+                3.5 NaN 
+                3.9 NaN 
+                3.2 NaN 
+                2.9 NaN 
+                2.0 NaN 
+                1.6 NaN 
+                1.3 NaN 
+                0.5 NaN 
+                -0.1 NaN 
+                0.4 NaN 
+                2.9 NaN 
+                5.5 NaN 
+                4.8 NaN 
+                3.9 NaN 
+                4.1 NaN 
+                4.3 NaN 
+                4.9 NaN 
+                7.0 1.8 
+                7.2 1.6 
+                7.7 1.3 
+                8.8 1.6 
+                8.5 1.7 
+                9.1 0.8 
+                9.2 0.5 
+                9.8 1.3 
+                9.9 1.5 
+                10.2 1.5 
+                10.0 1.3 
+                9.9 0.6 
+                9.3 1.5 
+                9.2 1.4 
+                9.0 1.6 
+                8.7 1.7 
+                8.3 0.9 
+                8.4 0.4 
+                8.4 0.5 
+                7.8 1.7 
+                8.0 2.3 
+                7.4 3.5 
+                7.0 2.7 
+                7.5 1.8 
+                8.4 2.0 
+                6.3 3.7 
+                5.9 4.5 
+                6.7 3.9 
+                7.0 3.9 
+                6.2 4.8 
+                5.5 5.5 
+                5.1 4.6 
+                4.7 4.7 
+                4.5 3.1 
+                5.0 1.7 
+                4.8 1.3 
+                4.6 1.7 
+                3.9 2.0 
+                3.4 1.4 
+                2.1 1.3 
+                1.5 1.6 
+                1.1 1.4 
+                0.9 0.8 
+                1.8 1.4 
+                3.8 0.9 
+                4.8 0.9 
+                5.8 1.8 
+                5.0 2.5 
+                4.5 2.8 
+                4.5 1.7 
+                4.9 1.1 
+                9.5 1.3 
+                9.8 2.0 
+                9.9 2.0 
+                10.8 1.7 
+                10.7 2.8 
+                10.9 1.5 
+                10.9 1.9 
+                11.1 1.6 
+                11.0 1.9 
+                10.8 2.1 
+                10.7 0.8 
+                10.6 0.0 
+                10.6 1.8 
+                10.5 0.5 
+                9.9 1.3 
+                9.5 1.9 
+                9.5 0.2 
+                9.3 1.3 
+                8.6 2.2 
+                8.1 1.2 
+                7.7 1.7 
+                8.0 2.3 
+                8.3 0.6 
+                8.1 0.9 
+                8.3 0.6 
+                3.6 2.2 
+                4.1 4.3 
+                5.2 5.1 
+                5.2 5.3 
+                6.0 4.7 
+                4.6 4.9 
+                3.7 4.0 
+                3.7 4.1 
+                3.8 3.5 
+                3.9 2.5 
+                4.2 1.5 
+                4.4 1.3 
+                4.2 1.4 
+                3.5 0.5 
+                3.4 0.6 
+                2.4 0.5 
+                1.2 0.8 
+                0.7 0.8 
+                1.5 1.1 
+                3.8 0.9 
+                5.7 1.0 
+                6.2 0.7 
+                4.3 3.2 
+                4.3 3.7 
+                4.5 3.0 
+                4.1 2.7 
+                9.1 3.3 
+                9.4 3.7 
+                9.6 3.6 
+                9.6 2.8 
+                9.6 2.8 
+                9.6 4.1 
+                10.4 1.8 
+                10.3 2.4 
+                10.4 1.3 
+                10.2 1.5 
+                10.3 1.3 
+                10.1 0.0 
+                8.9 0.0 
+                6.8 1.4 
+                8.0 0.0 
+                8.8 1.3 
+                6.5 0.9 
+                5.8 0.5 
+                5.7 0.6 
+                7.2 1.5 
+                9.3 1.5 
+                9.9 2.1 
+                5.5 2.2 
+                6.8 3.8 
+                7.4 1.9 
+                5.8 1.9 
+                5.9 1.1 
+                5.4 2.7 
+                6.2 5.1 
+                5.7 4.8 
+                5.8 6.1 
+                5.0 6.3 
+                5.0 4.2 
+                4.5 4.4 
+                4.4 4.8 
+                4.1 3.2 
+                3.9 1.0 
+                3.2 0.0 
+                1.6 0.5 
+                1.6 0.0 
+                0.4 0.6 
+                -0.4 0.0 
+                -0.9 0.0 
+                -0.3 0.0 
+                1.9 0.0 
+                4.9 0.0 
+                5.2 2.1 
+                5.3 2.3 
+                4.8 3.0 
+                4.0 2.9 
+                3.1 2.1 
+                9.8 2.4 
+                9.7 3.0 
+                9.9 3.1 
+                10.1 0.5 
+                10.0 3.0 
+                9.7 3.2 
+                11.3 4.7 
+                11.3 2.9 
+                11.1 2.3 
+                11.3 2.6 
+                11.2 1.6 
+                11.6 1.3 
+                11.2 0.0 
+                9.5 0.6 
+                8.8 1.2 
+                9.6 1.4 
+                10.7 2.3 
+                9.4 0.0 
+                9.0 0.7 
+                9.9 1.5 
+                7.6 0.5 
+                7.7 0.9 
+                8.8 2.8 
+                9.8 2.5 
+                7.5 3.2 
+                6.7 2.0 
+                3.1 1.2 
+                4.3 7.1 
+                6.0 6.4 
+                5.4 9.4 
+                5.6 7.6 
+                5.1 7.0 
+                4.9 7.6 
+                3.6 6.5 
+                3.2 5.8 
+                4.0 4.7 
+                4.3 2.6 
+                4.4 3.9 
+                4.5 3.1 
+                4.4 1.1 
+                3.7 0.0 
+                5.0 0.0 
+                3.7 1.0 
+                3.8 0.6 
+                3.9 0.6 
+                4.5 1.1 
+                4.8 1.6 
+                5.6 1.0 
+                4.8 1.6 
+                4.8 0.6 
+                5.2 1.7 
+                4.1 5.7 
+                4.6 4.3 
+                5.1 4.3 
+                5.1 2.7 
+                4.7 1.8 
+                4.3 2.6 
+                4.4 1.6 
+                4.3 1.4 
+                3.8 1.9 
+                3.9 2.2 
+                3.8 2.0 
+                3.5 2.7 
+                3.3 2.4 
+                3.1 3.0 
+                3.2 3.1 
+                3.0 4.2 
+                2.9 5.0 
+                2.5 4.3 
+                2.4 7.2 
+                2.4 5.5 
+                2.5 6.4 
+                2.5 7.2 
+                2.4 5.5 
+                2.6 5.1 
+                2.7 5.2 
+                2.8 4.5 
+                3.0 4.3 
+                3.1 2.0 
+                3.0 2.6 
+                4.0 3.8 
+                5.2 0.5 
+                5.3 2.4 
+                5.1 3.2 
+                4.7 2.3 
+                4.6 2.7 
+                4.0 2.5 
+                3.5 2.1 
+                3.3 1.4 
+                3.3 0.5 
+                3.0 1.1 
+                2.6 0.0 
+                2.1 0.0 
+                1.7 0.0 
+                1.9 1.1 
+                2.2 1.1 
+                2.2 1.2 
+                2.3 1.6 
+                3.1 1.2 
+                5.9 1.0 
+                4.8 1.0 
+                4.3 1.3 
+                5.5 1.6 
+                5.3 3.6 
+                5.4 2.6 
+                5.3 4.1 
+                5.1 2.9 
+                5.3 3.8 
+                5.6 3.5 
+                5.8 4.3 
+                5.7 3.9 
+                5.4 3.6 
+                5.9 3.2 
+                5.7 4.1 
+                5.3 4.7 
+                5.1 4.8 
+                4.9 5.7 
+                4.9 5.8 
+                4.8 5.9 
+                4.7 6.2 
+                4.9 6.0 
+                4.9 5.8 
+                5.1 4.7 
+                5.8 2.8 
+                5.0 3.8 
+                5.1 5.1 
+                5.0 4.4 
+                5.0 5.1 
+                5.3 7.3 
+                4.8 5.9 
+                4.5 3.9 
+                4.5 4.0 
+                4.6 6.7 
+                4.0 5.8 
+                3.5 4.8 
+                3.1 3.4 
+                3.3 4.7 
+                2.9 2.7 
+                2.7 1.5 
+                2.5 1.1 
+                2.7 0.9 
+                2.8 0.8 
+                3.5 2.9 
+                3.2 2.0 
+                3.2 1.1 
+                4.4 1.6 
+                4.9 1.4 
+                6.3 1.6 
+                6.5 0.7 
+                6.4 4.1 
+                6.2 4.1 
+                6.1 4.7 
+                6.5 2.9 
+                5.3 2.6 
+                4.7 3.2 
+                4.7 3.5 
+                4.5 2.6 
+                5.0 2.3 
+                5.3 2.7 
+                5.5 1.9 
+                5.2 3.0 
+                5.2 2.5 
+                5.1 3.1 
+                4.9 3.0 
+                4.1 3.0 
+                3.7 3.5 
+                3.7 3.4 
+                3.6 3.2 
+                3.5 3.0 
+                3.5 3.2 
+                3.5 3.1 
+                3.6 3.4 
+                3.8 2.5 
+                4.3 2.6 
+                5.4 2.5 
+                5.8 1.2 
+                7.3 1.8 
+                7.7 2.3 
+                7.7 2.6 
+                7.4 2.9 
+                6.6 5.3 
+                5.1 6.3 
+                5.1 3.4 
+                6.4 3.7 
+                5.8 4.7 
+                4.7 4.6 
+                4.9 3.7 
+                4.6 2.4 
+                4.3 2.4 
+                3.7 2.1 
+                3.5 1.8 
+                3.4 1.1 
+                3.3 1.0 
+                3.0 0.7 
+                2.7 0.8 
+                2.4 1.0 
+                1.9 1.3 
+                2.3 1.2 
+                4.0 1.8 
+                4.9 2.0 
+                5.6 1.9 
+                5.7 3.5 
+                5.7 2.8 
+                5.5 3.3 
+                7.0 1.7 
+                7.8 1.9 
+                8.2 2.1 
+                8.4 1.6 
+                7.8 1.6 
+                7.5 0.9 
+                7.8 1.2 
+                7.6 1.5 
+                7.3 1.5 
+                6.8 0.9 
+                6.6 1.3 
+                6.2 0.8 
+                6.1 0.7 
+                5.6 0.6 
+                5.7 0.9 
+                5.7 1.8 
+                5.8 1.1 
+                5.7 1.0 
+                5.6 1.2 
+                5.8 0.6 
+                6.1 0.1 
+                6.8 0.5 
+                7.8 0.5 
+                9.1 3.3 
+                8.9 1.6 
+                7.9 2.4 
+                8.3 3.2 
+                8.9 3.5 
+                8.9 4.3 
+                7.6 7.0 
+                8.3 1.6 
+                6.7 5.5 
+                6.4 4.8 
+                5.3 4.0 
+                5.9 2.1 
+                5.9 0.9 
+                4.9 0.2 
+                4.1 0.4 
+                3.2 0.4 
+                2.4 0.3 
+                1.4 0.8 
+                1.0 0.2 
+                1.2 0.5 
+                0.6 0.3 
+                2.5 0.5 
+                5.2 0.5 
+                4.9 0.5 
+                6.2 0.9 
+                6.5 1.7 
+                5.4 1.1 
+                4.4 0.8 
+                6.8 NaN 
+                7.0 NaN 
+                7.2 NaN 
+                7.9 NaN 
+                7.9 NaN 
+                7.9 NaN 
+                7.6 NaN 
+                7.8 NaN 
+                7.1 NaN 
+                6.5 NaN 
+                6.2 NaN 
+                5.8 NaN 
+                5.7 NaN 
+                5.3 NaN 
+                5.2 NaN 
+                5.2 NaN 
+                5.4 NaN 
+                5.4 NaN 
+                5.3 NaN 
+                5.5 NaN 
+                6.1 NaN 
+                6.8 NaN 
+                7.8 NaN 
+                8.5 NaN 
+                9.5 NaN 
+                8.4 NaN 
+                7.5 NaN 
+                7.0 NaN 
+                5.7 NaN 
+                7.4 NaN 
+                10.2 NaN 
+                7.9 NaN 
+                7.1 NaN 
+                5.8 NaN 
+                4.5 NaN 
+                4.6 NaN 
+                4.7 NaN 
+                4.5 NaN 
+                3.1 NaN 
+                2.0 NaN 
+                1.6 NaN 
+                1.2 NaN 
+                0.6 NaN 
+                0.9 NaN 
+                1.8 NaN 
+                2.5 NaN 
+                4.2 NaN 
+                7.3 NaN 
+                5.3 NaN 
+                5.5 NaN 
+                5.0 NaN 
+                2.5 3.2 
+                2.6 2.5 
+                2.3 3.9 
+                2.3 5.3 
+                2.4 5.3 
+                2.5 5.3 
+                2.5 4.8 
+                2.6 4.7 
+                2.5 4.7 
+                2.5 1.4 
+                2.5 3.5 
+                2.3 3.5 
+                2.3 3.4 
+                1.6 4.5 
+                1.7 3.6 
+                1.4 2.1 
+                1.3 1.9 
+                1.5 1.6 
+                1.8 0.5 
+                2.1 4.0 
+                2.9 3.2 
+                3.2 1.5 
+                2.8 3.6 
+                3.1 4.9 
+                3.3 3.4 
+                2.7 5.5 
+                2.9 4.3 
+                3.4 4.2 
+                3.8 2.9 
+                3.1 3.1 
+                3.3 2.6 
+                4.7 0.1 
+                3.6 2.1 
+                2.3 2.3 
+                1.6 3.0 
+                1.9 2.2 
+                2.2 2.6 
+                2.9 2.6 
+                2.9 3.7 
+                2.6 3.5 
+                2.3 2.7 
+                2.4 2.2 
+                2.3 2.6 
+                2.6 2.6 
+                2.5 2.3 
+                2.8 2.3 
+                2.9 2.6 
+                3.7 1.6 
+                4.8 1.6 
+                4.5 0.3 
+                3.8 1.6 
+                4.0 0.9 
+                4.1 1.0 
+                4.3 2.2 
+                4.3 4.5 
+                3.4 5.0 
+                3.3 4.7 
+                2.9 5.0 
+                2.8 4.2 
+                2.6 4.5 
+                2.6 3.9 
+                2.6 5.3 
+                2.3 4.7 
+                2.1 4.7 
+                2.1 4.4 
+                1.9 3.8 
+                1.6 4.0 
+                1.2 3.1 
+                1.2 1.9 
+                1.3 1.0 
+                1.7 1.3 
+                1.7 3.7 
+                1.6 1.8 
+                1.7 1.7 
+                1.9 2.8 
+                2.1 3.2 
+                2.1 4.4 
+                2.2 2.0 
+                2.5 2.5 
+                2.3 3.5 
+                2.5 1.9 
+                2.5 1.4 
+                2.8 1.4 
+                2.4 1.6 
+                2.6 1.0 
+                2.7 4.4 
+                2.2 2.7 
+                2.0 2.3 
+                1.8 4.0 
+                2.1 4.6 
+                2.5 4.7 
+                2.5 4.2 
+                2.5 3.1 
+                -2.8 2.7 
+                -2.6 3.1 
+                -2.0 3.3 
+                -2.8 2.7 
+                -2.2 1.9 
+                -1.9 1.6 
+                -1.3 1.9 
+                -0.3 1.5 
+                -1.8 2.8 
+                2.8 6.8 
+                2.8 4.1 
+                3.5 1.5 
+                3.2 3.3 
+                3.6 2.9 
+                4.2 2.7 
+                2.4 4.6 
+                2.2 3.7 
+                1.7 4.0 
+                1.2 5.2 
+                1.2 5.3 
+                1.1 5.2 
+                1.0 4.0 
+                1.0 4.8 
+                1.0 5.5 
+                1.0 5.9 
+                0.9 5.9 
+                0.8 6.4 
+                0.5 4.9 
+                0.6 4.4 
+                0.4 5.6 
+                0.8 2.4 
+                0.9 1.7 
+                1.1 1.9 
+                1.3 0.9 
+                1.4 2.4 
+                1.8 2.9 
+                1.8 2.9 
+                2.2 2.0 
+                2.2 1.9 
+                2.2 2.7 
+                1.9 0.8 
+                2.3 0.4 
+                2.3 1.1 
+                1.8 3.8 
+                1.7 3.6 
+                1.6 2.5 
+                1.6 2.4 
+                1.6 4.1 
+                1.0 5.3 
+                0.9 5.4 
+                1.2 4.9 
+                1.5 4.0 
+                1.4 4.1 
+                1.6 4.9 
+                1.7 4.5 
+                1.5 4.0 
+                1.8 5.2 
+                1.9 3.8 
+                2.0 2.7 
+                2.4 1.9 
+                7.1 1.7 
+                7.5 1.7 
+                7.6 2.9 
+                6.5 3.9 
+                5.4 3.9 
+                5.6 3.7 
+                5.4 3.3 
+                5.3 2.3 
+                4.8 3.3 
+                4.5 2.5 
+                4.1 3.1 
+                3.7 3.1 
+                3.4 2.1 
+                3.1 2.1 
+                2.7 1.6 
+                2.6 3.0 
+                2.5 1.6 
+                2.5 0.0 
+                2.7 0.5 
+                3.3 0.8 
+                3.4 2.3 
+                3.8 0.7 
+                3.9 0.9 
+                4.7 1.8 
+                4.6 1.8 
+                5.5 1.2 
+                5.2 2.3 
+                5.1 2.7 
+                5.6 2.3 
+                5.5 1.8 
+                5.7 3.2 
+                6.1 0.8 
+                6.5 1.3 
+                5.9 1.8 
+                4.9 1.1 
+                4.2 2.4 
+                3.3 1.2 
+                3.3 1.2 
+                2.9 2.2 
+                3.3 1.5 
+                3.3 1.7 
+                3.0 0.9 
+                3.1 1.4 
+                2.2 3.3 
+                2.1 1.6 
+                2.5 1.8 
+                3.5 2.6 
+                4.7 1.8 
+                6.7 1.3 
+                7.0 1.1 
+                7.8 1.5 
+                3.8 8.1 
+                3.6 7.6 
+                3.8 8.1 
+                4.0 7.8 
+                3.8 8.1 
+                4.4 8.4 
+                3.9 7.8 
+                4.3 8.5 
+                3.9 7.4 
+                3.6 3.3 
+                2.6 5.8 
+                2.1 4.7 
+                1.5 6.3 
+                1.3 6.0 
+                1.0 5.8 
+                0.9 4.9 
+                0.8 4.7 
+                0.8 6.2 
+                0.6 6.0 
+                0.5 5.3 
+                0.4 6.2 
+                0.5 5.4 
+                0.5 4.2 
+                0.5 2.7 
+                1.3 2.9 
+                1.6 3.0 
+                1.5 2.8 
+                1.5 2.9 
+                1.6 2.4 
+                1.5 1.6 
+                0.9 0.9 
+                0.6 4.8 
+                0.6 5.1 
+                0.9 2.0 
+                0.7 4.2 
+                0.7 4.7 
+                1.4 3.2 
+                1.4 3.7 
+                0.7 4.5 
+                0.8 5.1 
+                0.5 4.5 
+                0.3 4.5 
+                0.5 3.5 
+                0.8 5.1 
+                0.9 4.6 
+                0.8 6.0 
+                0.9 5.4 
+                0.8 3.9 
+                0.6 2.9 
+                0.6 3.7 
+                0.7 3.4 
+                9.1 1.3 
+                9.6 0.8 
+                9.7 0.7 
+                11.0 0.6 
+                10.4 1.0 
+                10.2 1.1 
+                11.3 1.3 
+                11.7 0.8 
+                11.1 1.0 
+                11.2 0.9 
+                11.2 0.5 
+                11.0 0.0 
+                9.6 0.0 
+                10.8 0.0 
+                10.3 0.0 
+                10.5 0.0 
+                10.2 0.5 
+                10.1 0.7 
+                9.7 0.8 
+                9.5 0.5 
+                9.8 0.7 
+                9.7 0.7 
+                9.5 0.6 
+                8.0 1.5 
+                1.9 1.1 
+                4.6 1.2 
+                4.0 1.0 
+                4.9 3.1 
+                6.2 1.9 
+                5.6 2.1 
+                6.0 2.4 
+                4.7 1.9 
+                4.5 1.7 
+                3.4 1.3 
+                2.7 1.3 
+                3.9 1.0 
+                4.3 0.7 
+                4.3 0.8 
+                4.3 0.5 
+                4.3 0.6 
+                4.2 0.0 
+                4.6 0.5 
+                4.2 0.0 
+                4.0 0.6 
+                4.3 0.5 
+                4.9 0.8 
+                5.3 0.5 
+                4.5 0.9 
+                4.8 0.7 
+                4.5 0.9 
+                4.6 0.7 
+                </gml:doubleOrNilReasonTupleList>
+            </gml:DataBlock>
+          </gml:rangeSet>
+          <gml:coverageFunction>
+            <gml:CoverageMappingRule>
+              <gml:ruleDefinition>Linear</gml:ruleDefinition>
+            </gml:CoverageMappingRule>
+          </gml:coverageFunction>
+          <gmlcov:rangeType>
+            <swe:DataRecord>
+              <swe:field name="td"  xlink:href="http://data.fmi.fi/fmi-apikey/REPLACE-WITH-YOUR-OWN-APIKEY/meta?observableProperty=observation&amp;param=td&amp;language=eng"/>
+              <swe:field name="ws_10min"  xlink:href="http://data.fmi.fi/fmi-apikey/REPLACE-WITH-YOUR-OWN-APIKEY/meta?observableProperty=observation&amp;param=ws_10min&amp;language=eng"/>
+              </swe:DataRecord>
+          </gmlcov:rangeType>
+        </gmlcov:MultiPointCoverage>
+      </om:result>
+
+    </omso:GridSeriesObservation>
+  </wfs:member>
+</wfs:FeatureCollection>
