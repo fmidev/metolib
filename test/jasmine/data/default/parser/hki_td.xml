@@ -61,7 +61,7 @@
 		    <target:member>
 		    <target:Location gml:id="obsloc-fmisid-101007-pos">
 		        <gml:identifier codeSpace="http://xml.fmi.fi/namespace/stationcode/fmisid">101007</gml:identifier>
-			<gml:name codeSpace="http://xml.fmi.fi/namespace/locationcode/name">Rautatientori</gml:name>
+			<gml:name codeSpace="http://xml.fmi.fi/namespace/locationcode/name">Helsinki Rautatientori</gml:name>
 			
 			<gml:name codeSpace="http://xml.fmi.fi/namespace/locationcode/wmo">2934</gml:name>
 			<target:representativePoint xlink:href="#point-101007"/>					

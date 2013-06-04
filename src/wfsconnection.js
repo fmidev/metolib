@@ -117,6 +117,14 @@ fi.fmi.metoclient.metolib.WfsConnection = (function() {
     /**
      * @private
      *
+     * Location name and region strings may be separated by this string
+     * in server responses.
+     */
+    var LOCATION_NAME_REGION_SEPARATOR = " ";
+
+    /**
+     * @private
+     *
      * General text that describes an error that has been found in cache.
      */
     var CACHE_ERROR_TEXT = "ERROR: Cache found error(s)!";
@@ -169,7 +177,7 @@ fi.fmi.metoclient.metolib.WfsConnection = (function() {
      * If taskDef does not contain location that matches the combined name and region, then region is returned.
      * If taskDef contains location that matches the given name and region, then corresponding name is returned.
      *
-     * @param {Array(String)} taskDef May be {undefined} or {null}.
+     * @param {Object} taskDef Contains location information. May be {undefined} or {null}.
      * @param {String} name Location name string. May be {undefined} or {null}.
      * @param {String} region Location region string. May be {undefined} or {null}.
      * @return {String} Proper location name for cache. May be {undefined} or {null} if region is.
@@ -177,13 +185,27 @@ fi.fmi.metoclient.metolib.WfsConnection = (function() {
     function locationNameForCache(taskDef, name, region) {
         var locationName = region;
         if (taskDef && taskDef.location && name && region) {
+            // Server may also include region as prefix into location name.
+            // Therefore, take this into account when comparing server response
+            // to taskDef locations that contain name and region combination string
+            // as recognized by the cache.
+            var regionPrefix = region + LOCATION_NAME_REGION_SEPARATOR;
+            var regionIndex = name.indexOf(regionPrefix);
+            if (0 === regionIndex) {
+                // Remove region substring from name and trim possible whitespaces.
+                // Then, values can be compared to taskDef locations.
+                name = jQuery.trim(name.slice(regionPrefix.length));
+            }
+            // TaskDef locations have been created before for cache by combining name and region
+            // that have been given through the API. TaskDef locations are compared to the name
+            // and region values that are given as parameters for this function.
             var combinedLocationName = name + PARAMETER_SEPARATOR + region;
+            // Locations are given as string array in taskDef.
             for (var i = 0; i < taskDef.location.length; ++i) {
                 var loc = taskDef.location[i];
                 if (-1 !== loc.indexOf(PARAMETER_SEPARATOR) && loc === combinedLocationName) {
-                    // Create combined location name because originally given location contains
-                    // both name and region and the checked name and region matches it.
-                    locationName = combinedLocationName;
+                    // Matching location for cache was found from taskDef locations.
+                    locationName = loc;
                     break;
                 }
             }
@@ -337,9 +359,9 @@ fi.fmi.metoclient.metolib.WfsConnection = (function() {
      * objects instead in the common parts in the middle of the structure. Then, data will
      * always be available when data is requested from the cache.
      *
-     * @para taskDef {Object} Definition object to describe cache blocks of the operation.
-     * @para data
-     * @param errors Errors that have occurred during loading and parsing data.
+     * @param {Object} taskDef Definition object to describe cache blocks of the operation.
+     * @param {Object} data Data from the parser.
+     * @param {Object} errors Errors that have occurred during loading and parsing data.
      * @return {Object} Object that contains converted errors and converted data.
      *                  {@link fi.fmi.metoclient.metolib.SplitterCache#fillWith} function describes
      *                  the object structure of the converted data.
