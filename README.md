@@ -12,8 +12,6 @@ http://inspire.ec.europa.eu/schemas/omso/2.0rc3. The WfsRequestParser creates
 the WFS GetFeature request and parses the XML response into
 JS response object.
 
-Below are general description of MetOLib and links to simple examples that show how MetOLib may be used.
-
 MetOLib folder structure
 ------------------------
 
