@@ -20,15 +20,7 @@ Put the grunt command in your system path, allowing it to be run from any direct
 * npm install -g grunt-cli
 
 Browse into *metolib* -folder. Then, required Grunt modules can be installed in there by using:
-* npm install grunt --save-dev
-* npm install grunt-contrib-clean --save-dev
-* npm install grunt-contrib-concat --save-dev
-* npm install grunt-contrib-uglify --save-dev
-* npm install grunt-contrib-jshint --save-dev
-* npm install grunt-contrib-jasmine --save-dev
-* npm install grunt-contrib-connect --save-dev
-* npm install grunt-string-replace --save-dev
-* npm install karma --save-dev
+* npm install
 
 Notice, above commands copy necessary module files into *node_modules* -folder. These are .gitignored when git is used.
 
