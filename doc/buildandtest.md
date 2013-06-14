@@ -4,12 +4,12 @@ MetOLib: Build And Test
 Grunt initialization commands
 -----------------------------
 
-Notice, *lib* -folder already contains minimized and combined files of the current version.
-Use of Grunt is not necessary for normal use of the library.
+Notice, *lib* -folder already contains minimized and combined files of the current version. 
+Use of Grunt is not necessary for normal use of the library. 
 But, you may use Grunt to minimize library content and test content if source is edited.
 
 MetOLib project uses [Grunt](http://gruntjs.com) to build release versions of the source code. 
-See, [Grunt guide](http://gruntjs.com/getting-started) for more information about Grunt.
+See, [Grunt guide](http://gruntjs.com/getting-started) for more information about Grunt. 
 Also, notice that Grunt and gruntplugins are installed and managed via [npm](https://npmjs.org/), 
 the [Node.js](http://nodejs.org/) package manager.
 
