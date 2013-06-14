@@ -637,8 +637,8 @@
           </gml:coverageFunction>
           <gmlcov:rangeType>
             <swe:DataRecord>
-              <swe:field name="td"  xlink:href="http://data.fmi.fi/fmi-apikey/REPLACE-WITH-YOUR-OWN-APIKEY/meta?observableProperty=observation&amp;param=td&amp;language=eng"/>
-              <swe:field name="ws_10min"  xlink:href="http://data.fmi.fi/fmi-apikey/REPLACE-WITH-YOUR-OWN-APIKEY/meta?observableProperty=observation&amp;param=ws_10min&amp;language=eng"/>
+              <swe:field name="td"  xlink:href="http://data.fmi.fi/fmi-apikey/insert-your-apikey-here/meta?observableProperty=observation&amp;param=td&amp;language=eng"/>
+              <swe:field name="ws_10min"  xlink:href="http://data.fmi.fi/fmi-apikey/insert-your-apikey-here/meta?observableProperty=observation&amp;param=ws_10min&amp;language=eng"/>
               </swe:DataRecord>
           </gmlcov:rangeType>
         </gmlcov:MultiPointCoverage>

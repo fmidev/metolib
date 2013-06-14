@@ -204,7 +204,7 @@
           </gml:coverageFunction>
           <gmlcov:rangeType>
             <swe:DataRecord>
-              <swe:field name="windspeedms"  xlink:href="http://data.fmi.fi/fmi-apikey/REPLACE-WITH-YOUR-OWN-APIKEY/meta?observableProperty=forecast&amp;param=windspeedms&amp;language=eng"/>
+              <swe:field name="windspeedms"  xlink:href="http://data.fmi.fi/fmi-apikey/insert-your-apikey-here/meta?observableProperty=forecast&amp;param=windspeedms&amp;language=eng"/>
               </swe:DataRecord>
           </gmlcov:rangeType>
         </gmlcov:MultiPointCoverage>

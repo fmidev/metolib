@@ -25,6 +25,6 @@ fi.fmi.metoclient.test.SpecConfig = {
      * and only local data files are used for tests.
      * See SPEC_RUNNER_ONLY_LOCAL_TESTS flag above.
      */
-    SPEC_RUNNER_TEST_SERVER_URL : "http://data.fmi.fi/fmi-apikey/REPLACE-WITH-YOUR-OWN-APIKEY/wfs"
+    SPEC_RUNNER_TEST_SERVER_URL : "http://data.fmi.fi/fmi-apikey/insert-your-apikey-here/wfs"
 
 };
