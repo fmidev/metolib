@@ -611,7 +611,7 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
                         //We only do if we are at the last block and our interesting step sequence ends after this block ends:
                         if ((index === (cachedBlocks.length - 1)) && (blEnd < fetchEnd)) {
                             //create new blocks until the end of the our interesting step sequence:
-                            newBlocksAfter = allocateAndPrepareContinuousBlocks(taskDef, (blEnd+block.getResolution()), fetchEnd);
+                            newBlocksAfter = allocateAndPrepareContinuousBlocks(taskDef, (blEnd+taskDef.resolution), fetchEnd);
                             Array.prototype.push.apply(newCachedBlocks, newBlocksAfter);
                             async.reduce(newBlocksAfter, cacheMisses, function(memo, block, callback) {
                                 callback(null, memo + block.getDataSize());
