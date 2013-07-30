@@ -174,6 +174,66 @@ describe("Cache", function() {
 
     });
 
+		it('should create blocks with continuous time steps', function(){
+			var resolution = 1;
+
+			var taskDef1 = {
+					service : 'obs',
+					parameter : 'temp',
+					location : 'Rautatientori',
+					start : 0,
+					resolution : resolution,
+					end : 199
+			};
+			
+			
+			var taskDef2 = {
+					service : 'obs',
+					parameter : 'temp',
+					location : 'Rautatientori',
+					start : 200,
+					resolution : resolution,
+					end : 399
+			};
+			var expectedBlocks = {
+				'-50-149':false,
+				'150-299':false,
+				'300-499':false,
+			}
+
+			cache.addListener('blockPrepared', function(dataBlock){
+				var span = dataBlock.getStart()+'-'+dataBlock.getEnd();
+				if (expectedBlocks[span] === false){
+					expectedBlocks[span] = true;
+				}
+				else {
+					expectedBlocks[span] = false;
+				}
+			});
+			
+			runs(function() {
+				milkRun.call(this, taskDef1);
+			});
+
+			waitsFor(function() {
+				return this.finished;
+			}, 5000);
+			
+			runs(function() {
+				milkRun.call(this, taskDef2);
+			});
+
+			waitsFor(function() {
+				return this.finished;
+			}, 5000);
+				
+			runs(function(){
+				_.each(expectedBlocks, function(span){
+					expect(span).toBeTruthy();
+				});
+			});
+		});
+
     it("should delegate to two fetchers by round-robin", function() {
         /* ============================================= */
         var start = 0;
