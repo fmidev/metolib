@@ -235,7 +235,6 @@ describe("Cache", function() {
 				});
 			});
 
-
 		it("should delegate to two fetchers by round-robin", function() {
 				/* ============================================= */
 				var start = 0;
