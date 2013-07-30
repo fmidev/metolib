@@ -590,7 +590,7 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
 
 
 			function shouldBlocksBeMerged(block1, block2) {
-				//It's assumed that service, location and parameter equality has already been checked:	
+				//It's assumed that service, location and parameter equality has already been checked:
 				if (!block1.isWaitingMerging() && !block2.isWaitingMerging() && blocksAreContinuous(block1, block2) && ((block1.getPointCount() < minBlockDataPoints) || (block2.getPointCount() < minBlockDataPoints)) && (block1.getPointCount() + block2.getPointCount() < maxBlockDataPoints)) {
 					return true;
 				} else return false;
@@ -664,7 +664,7 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
 
 				cachedDataSize = 0;
 
-				//add all merged blocks that are ready:						 
+				//add all merged blocks that are ready:
 				while (mergedBlocks.length > 0) {
 					blockToMerge = mergedBlocks.shift();
 					mergeInd = _.sortedIndex(cachedBlocks, blockToMerge, function(bl) {
