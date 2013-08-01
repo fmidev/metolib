@@ -30,3 +30,10 @@ Root folder contains this README.md and Grunt files that may be used to build di
 * *examples* contains examples of how to use MetOLib
 * *test* contains general test files to test *src* and *lib* files
 * *testdeps* contains thirdparty libraries that are used by MetOClient tests. *Jasmine* is used for test cases.
+
+Browsers
+--------
+
+MetOLib works well with the major browsers.
+
+But notice, Internet Explorer version 8 or greater is required for cross-domain requests to work properly with MetOLib.

@@ -89,6 +89,84 @@ fi.fmi.metoclient.metolib.Utils = (function() {
     })();
 
     /**
+     * This function is called during the construction of this sigleton
+     * instance to provide at least a limited support for cross-domain request (XDR)
+     * when jQuery.ajax is used for IE 8 and 9.
+     *
+     * IE 6, 7, 8, and 9 do not support XHR2 CORS.
+     * It is not possible to make generalized cross-domain requests in these browsers.
+     * IE 8, 9 support an ActiveX control called XDomainRequest that only allows limited
+     * cross-domain requests compared to XHR2 CORS. IE 10 supports XHR2 CORS.
+     *
+     * For more information about this, see following links:
+     *    https://github.com/jaubourg/ajaxHooks/blob/master/src/xdr.js
+     *    http://stackoverflow.com/questions/14309037/ajax-no-transport-error-in-ie-8-9
+     *    http://bugs.jquery.com/ticket/8283#comment:43
+     *    http://bugs.jquery.com/ticket/8283#comment:44
+     *    http://bugs.jquery.com/ticket/8283#comment:45
+     *
+     * jQuery does not include XDomainRequest support because there are numerous
+     * and serious limitations to XDR. Many reasonable $.ajax requests would fail,
+     * including any cross-domain request made on IE6 and IE7 which are otherwise
+     * supported by jQuery. Developers would be confused that their content types
+     * and headers were ignored, or that IE8 users could not use XDR if the user was
+     * using InPrivate browsing for example.
+     *
+     * Even the crippled XDR can be useful if it is used by a knowledgeable developer.
+     * A jQuery team member has made an XDR ajax transport available. You must be aware
+     * of XDR limitations by reading this blog post or ask someone who has dealt with
+     * XDR problems and can mentor you through its successful use.
+     *
+     * For further help and other solutions, ask on the jQuery Forum, StackOverflow,
+     * or search "jQuery xdr transport".
+     */
+    (function() {
+        if (window.XDomainRequest) {
+            jQuery.ajaxTransport(function(s) {
+                if (s.crossDomain && s.async) {
+                    if (s.timeout) {
+                        s.xdrTimeout = s.timeout;
+                        delete s.timeout;
+                    }
+                    var xdr;
+                    return {
+                        send : function(_, complete) {
+                            function callback(status, statusText, responses, responseHeaders) {
+                                xdr.onload = xdr.onerror = xdr.ontimeout = jQuery.noop;
+                                xdr = undefined;
+                                complete(status, statusText, responses, responseHeaders);
+                            }
+
+                            xdr = new XDomainRequest();
+                            xdr.onload = function() {
+                                callback(200, "OK", {
+                                    text : xdr.responseText
+                                }, "Content-Type: " + xdr.contentType);
+                            };
+                            xdr.onerror = function() {
+                                callback(404, "Not Found");
+                            };
+                            xdr.onprogress = jQuery.noop;
+                            xdr.ontimeout = function() {
+                                callback(0, "timeout");
+                            };
+                            xdr.timeout = s.xdrTimeout || Number.MAX_VALUE;
+                            xdr.open(s.type, s.url);
+                            xdr.send((s.hasContent && s.data ) || null);
+                        },
+                        abort : function() {
+                            if (xdr) {
+                                xdr.onerror = jQuery.noop;
+                                xdr.abort();
+                            }
+                        }
+                    };
+                }
+            });
+        }
+    })();
+
+    /**
      * Function to set {toISOString} for {Date} objects if an older browser does not support it natively.
      *
      * See, http://stackoverflow.com/questions/11440569/converting-a-normal-date-to-iso-8601-format

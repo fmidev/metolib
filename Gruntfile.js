@@ -103,7 +103,8 @@ module.exports = function(grunt) {
                     "jasmine" : true,
                     "navigator" : true,
                     "window" : true,
-                    "fi" : true
+                    "fi" : true,
+                    "XDomainRequest" : true
                 }
             }
         },
