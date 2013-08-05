@@ -259,7 +259,7 @@ describe("Parser", function() {
     function testHkiQueryExtensionWmoKumpulaTd(url, cb) {
         fi.fmi.metoclient.metolib.WfsRequestParser.getData({
             url : url,
-            storedQueryId : STORED_QUERY_FORECAST,
+            storedQueryId : STORED_QUERY_OBSERVATION,
             requestParameter : "td",
             // Integer values are used to init dates for older browsers.
             // (new Date("2013-05-10T08:00:00Z")).getTime()
