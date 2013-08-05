@@ -542,6 +542,7 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
 					taskDef.pointCount = block1.getPointCount() + block2.getPointCount();
 					newBlock.prepare(taskDef, block1.getFetcher());
 					newBlock.setFetching(true);
+					fireEvent('blockCacheFetchStarted', newBlock);
 					async.parallel({
 						data1: function(cb) {
 							block1.getDataAsync(function(err, data) {
@@ -569,6 +570,7 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
 						newBlock.setData(combinedData);
 						newBlock.setFetching(false);
 						newBlock.setFetched(true);
+						fireEvent('blockCacheFetchFinished', newBlock);
 						callback(null, newBlock);
 					});
 				} else {
@@ -619,10 +621,10 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
 				return retval;
 			}
 
-			function createMissingBlocksBefore(blockIndex, prevBlockEnd, blockStart, fetchStart, fetchEnd, taskDef) {
+			function createMissingBlocksBefore(prevBlockEnd, blockStart, fetchStart, fetchEnd, taskDef) {
 				var retval = null;
 				//if at first block or we've just crossed a gap in steps between cached data blocks:
-				if ((blockIndex === 0) || (prevBlockEnd < (blockStart - taskDef.resolution))) {
+				if ((prevBlockEnd === null) || (prevBlockEnd < (blockStart - taskDef.resolution))) {
 					//The current block starts after our interesting step sequence starts:
 					if (blockStart > fetchStart) {
 						//the current block starts after or at the same step as our interesting step sequence ends:
@@ -638,16 +640,39 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
 						else {
 							//create new blocks until one step before the start of the current block:
 							if (prevBlockEnd === null) {
-								retval = allocateAndPrepareContinuousBlocks(taskDef, fetchStart, blockStart);
+								retval = allocateAndPrepareContinuousBlocks(taskDef, fetchStart, (blockStart-taskDef.resolution));
 							} else {
-								retval = allocateAndPrepareContinuousBlocks(taskDef, Math.max(prevBlockEnd, fetchStart), blockStart);
+								retval = allocateAndPrepareContinuousBlocks(taskDef, Math.max((prevBlockEnd+taskDef.resolution), fetchStart), (blockStart-taskDef.resolution));
 							}
 						}
 					}
 				}
 				return retval;
 			}
-
+			function recycleBlock(block){
+						if (block.isPinned()) {
+							async.whilst(function() {
+								return block.isPinned();
+							}, function(notify) {
+								setTimeout(notify, 500);
+							}, function(err) {
+								block.recycle();
+								emptyBlockPool.push(block);
+							});
+						} else {
+							block.recycle();
+							emptyBlockPool.push(block);
+						}
+			}
+			
+			function purge(){
+					_.each(cachedBlocks, function(block, index) {
+							if (block.isWaitingRecycling()) {
+								recycleBlock(block);
+							}
+					});
+			}
+			
 			function calculateDataBlocks(taskDef) {
 				var retval = [];
 				var requestedStart = taskDef.start;
@@ -660,10 +685,9 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
 				var newCachedBlocks = [];
 				var mergeInd = -1;
 				var blockToMerge = null;
-				var prevBlockInSeries = null;
+				var prevMatchingBlock = null;
 
 				cachedDataSize = 0;
-
 				//add all merged blocks that are ready:
 				while (mergedBlocks.length > 0) {
 					blockToMerge = mergedBlocks.shift();
@@ -678,35 +702,23 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
 						var selectThisBlock = false;
 						var newBlocksBefore = null;
 						var newBlocksAfter = null;
-						var prevBlockEnd = (index === 0) ? null : cachedBlocks[index - 1].getEnd();
+						var prevBlockEnd = null;
 						var blStart = block.getStart();
 						var blEnd = block.getEnd();
 
 						if (block.isWaitingRecycling()) {
-							if (block.isPinned()) {
-								async.whilst(function() {
-									return block.isPinned();
-								}, function(notify) {
-									setTimeout(notify, 500);
-								}, function(err) {
-									block.recycle();
-									emptyBlockPool.push(block);
-								});
-							} else {
-								block.recycle();
-								emptyBlockPool.push(block);
-							}
+							recycleBlock(block);
 							return; //=continue each loop;
 						}
 
-						//At this point we know that this block was not waiting to be recycled,
-						//so retain it in the cache also after this round:
-						newCachedBlocks.push(block);
-
 						//This block contains data for the relevant service, with the same locations and parameters:
 						if ((taskDef.service === block.getService()) && arrayEqualsAnyOrder(taskDef.location, block.getLocation()) && arrayEqualsAnyOrder(taskDef.parameter, block.getParameter())) {
-							//check if we should additionally create new data blocks before the current block:
-							newBlocksBefore = createMissingBlocksBefore(index, prevBlockEnd, blStart, fetchStart, fetchEnd, taskDef);
+							if (prevMatchingBlock !== null){
+								prevBlockEnd = prevMatchingBlock.getEnd();
+							}
+
+							//check if we should create new data blocks before the current block:
+							newBlocksBefore = createMissingBlocksBefore(prevBlockEnd, blStart, fetchStart, fetchEnd, taskDef);
 							if ((newBlocksBefore !== null) && (newBlocksBefore.length > 0)) {
 								Array.prototype.push.apply(newCachedBlocks, newBlocksBefore);
 								async.reduce(newBlocksBefore, cacheMisses, function(memo, block, callback) {
@@ -730,24 +742,11 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
 							} else {
 								block.increaseNotUsed();
 							}
-
-							//check if we should additionally create new data blocks after the current block.
-							//We only do if we are at the last block and our interesting step sequence ends after this block ends:
-							if ((index === (cachedBlocks.length - 1)) && ((blEnd + taskDef.resolution) < fetchEnd)) {
-								//create new blocks until the end of the our interesting step sequence:
-								newBlocksAfter = allocateAndPrepareContinuousBlocks(taskDef, (blEnd + taskDef.resolution), fetchEnd);
-								Array.prototype.push.apply(newCachedBlocks, newBlocksAfter);
-								async.reduce(newBlocksAfter, cacheMisses, function(memo, block, callback) {
-									callback(null, memo + block.getDataSize());
-								}, function(err, result) {
-									cacheMisses = result;
-								});
-								Array.prototype.push.apply(retval, newBlocksAfter);
-							}
+							newCachedBlocks.push(block);
 
 							//check if we should merge this block with the previous one:
-							if ((prevBlockInSeries !== null) && shouldBlocksBeMerged(prevBlockInSeries, block)) {
-								mergeBlocks(prevBlockInSeries, block, function(err, merged) {
+							if ((prevMatchingBlock !== null) && shouldBlocksBeMerged(prevMatchingBlock, block)) {
+								mergeBlocks(prevMatchingBlock, block, function(err, merged) {
 									if (err) {
 										if (console) console.log(err);
 									} else {
@@ -757,9 +756,30 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
 									}
 								});
 							}
-							prevBlockInSeries = block;
+							prevMatchingBlock = block;
 						} else {
 							block.increaseNotUsed();
+							//not matched in this cycle, keep in cache still:
+							newCachedBlocks.push(block);
+						}
+						
+						//If we are at the last cached block, check if we should additionally 
+						//create new data blocks after the last matching found block.
+						if (index == (cachedBlocks.length -1)){
+							//we've found at least one matching block in cache:
+							if (prevMatchingBlock !== null){
+								//If our interesting step sequence ends after the last matching found block ends:
+								if ((prevMatchingBlock.getEnd() + taskDef.resolution) < fetchEnd){
+									newBlocksAfter = allocateAndPrepareContinuousBlocks(taskDef, Math.max(blEnd + taskDef.resolution,fetchStart), fetchEnd);
+									Array.prototype.push.apply(newCachedBlocks, newBlocksAfter);
+									async.reduce(newBlocksAfter, cacheMisses, function(memo, block, callback) {
+										callback(null, memo + block.getDataSize());
+									}, function(err, result) {
+										cacheMisses = result;
+									});
+									Array.prototype.push.apply(retval, newBlocksAfter);
+								}
+							}
 						}
 
 						//Place the current block at the evictOrder list at the current place based on it's age:
@@ -814,7 +834,6 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
 				}, function() {
 					//NOOP
 				});
-
 				return retval;
 			}
 
@@ -850,6 +869,9 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
 
 			function fillWith(target, source, locations, parameters, targetIndex, sourceIndex, count, callback) {
 				var copyFromArray = _.isObject(source);
+				var ti=0;
+				var si=0;
+				var end=0;
 				async.each(locations, function(loc, locNotify) {
 					if (target[loc] === undefined) {
 						target[loc] = {};
@@ -870,18 +892,26 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
 								}
 							}
 						}
-						for (var i = 0; i < count; i++) {
-							if (copyFromArray) {
-								if (useErrorValues) {
-									target[loc][param][targetIndex + i] = NaN;
-								} else {
-									// Get the value object from the source object structure.
-									target[loc][param][targetIndex + i] = source[loc][param][sourceIndex + i];
-								}
-							} else {
-								// The source may be NaN value, for example, in error situations.
-								// In this case, use the value directly instead of trying to use the object hierarchy.
-								target[loc][param][targetIndex + i] = source;
+						if (useErrorValues) {
+							ti = targetIndex;
+							end = targetIndex+count;
+							while(ti<end){
+								target[loc][param][ti++] = NaN;
+							}
+						}
+						else if (copyFromArray){
+							ti = targetIndex;
+							si = sourceIndex;
+							end = targetIndex+count;
+							while(ti<end){
+								target[loc][param][ti++] = source[loc][param][si++];
+							}
+						}
+						else {
+							ti = targetIndex;
+							end = targetIndex+count;
+							while(ti<end){
+								target[loc][param][ti++] = source;
 							}
 						}
 						paramNotify();
@@ -1021,6 +1051,38 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
 				});
 				fireEvent('cacheCleared', service);
 			}
+			/*
+			function printCachedBlocks(){
+				_.each(fetchers,function(fetcher,service){
+					console.log('Blocks for service '+service);
+					_.each(cachedBlocks, function(block){
+						if (block.getService() == service){
+						var icon = '[#'+block.getId();
+						if (block.isWaitingRecycling()){
+							icon += 'R';
+						}
+						else {
+							icon += ' ';
+						}
+						if (block.isPinned()){
+							icon += 'P';
+						}
+						else {
+							icon += ' ';
+						}
+						if (block.isFetched()){
+							icon += 'F';
+						}
+						else {
+							icon += ' ';
+						}						
+						icon += block.getStart()+' - '+block.getEnd();
+						console.log(icon);
+						}
+					});
+				});
+			}
+			*/
 
 			//Privileged functions:
 			/**
@@ -1085,6 +1147,7 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
 			 */
 			this.clearCache = function() {
 				clear();
+				purge();
 				stepResolutions = [];
 				cacheHits = 0;
 				cacheMisses = 0;
