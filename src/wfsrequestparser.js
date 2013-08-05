@@ -98,6 +98,7 @@ fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
         // URL query delimiters.
         URL_QUERY_PREFIX_BEGIN : "?",
         URL_QUERY_PREFIX_AND : "&",
+        URL_QUERY_FIELD_VALUE_DELIMITER : "=",
 
         // REQUEST_GET_FEATURE is used as a first query that is added by this library to
         // the base URL. Delimiter & or ? is inserted in front of it depending on the given
@@ -1746,6 +1747,34 @@ fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
     }
 
     /**
+     * Creates URL query field-value-pairs string from the key-value-pairs of the object.
+     *
+     * @param {Object} queryExtension May be {undefined} or {null}.
+     *                                Property values may be {undefined}, {null} or {string}.
+     * @return {String} URL query field-value-pairs string.
+     *                  May not be {undefined} or {null}. May be an empty {string}.
+     *                  If content is provided, "&" is automatically included as a prefix.
+     */
+    function handleQueryExtension(queryExtension) {
+        var extension = "";
+        if (queryExtension) {
+            for (var key in queryExtension) {
+                if (queryExtension.hasOwnProperty(key)) {
+                    // Always include delimiter character even if value would not be given.
+                    extension += fi.fmi.metoclient.metolib.Utils.encodeUriComponent(key);
+                    extension += myConstants.URL_QUERY_FIELD_VALUE_DELIMITER;
+                    extension += fi.fmi.metoclient.metolib.Utils.encodeUriComponent(queryExtension[key] || "");
+                }
+            }
+            if (extension) {
+                // Include prefix into string.
+                extension = myConstants.URL_QUERY_PREFIX_AND + extension;
+            }
+        }
+        return extension;
+    }
+
+    /**
      * This function provides the actual implementation for the API functions
      * that request parsed data.
      *
@@ -1754,7 +1783,7 @@ fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
      * See API function {@link #getData()} for function and parameter descriptions.
      * @throws {String} Exception if parameters are not correct.
      */
-    function getParsedData(url, storedQueryId, requestParameter, begin, end, timestep, numOfTimesteps, denyTimeAdjusting, sites, bbox, crs, callback) {
+    function getParsedData(url, storedQueryId, requestParameter, begin, end, timestep, numOfTimesteps, denyTimeAdjusting, sites, bbox, crs, queryExtension, callback) {
         // Convert possible integer millisecond values of times into Date objects.
         if (!( begin instanceof Date) && !isNaN(begin)) {
             begin = new Date(begin);
@@ -1836,7 +1865,9 @@ fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
                 urlQueryDelimiter = "";
             }
 
-            var requestUrl = url + urlQueryDelimiter + myConstants.REQUEST_GET_FEATURE + storedQueryIdParameter + myConstants.REQUEST_PARAMETERS + requestParameter + myConstants.REQUEST_BEGIN + begin + myConstants.REQUEST_END + end + timeStepParameter + sitesParameter + bboxParameter + crsParameter;
+            var urlQueryExtension = handleQueryExtension(queryExtension);
+
+            var requestUrl = url + urlQueryDelimiter + myConstants.REQUEST_GET_FEATURE + storedQueryIdParameter + myConstants.REQUEST_PARAMETERS + requestParameter + myConstants.REQUEST_BEGIN + begin + myConstants.REQUEST_END + end + timeStepParameter + sitesParameter + bboxParameter + crsParameter + urlQueryExtension;
             requestAndParseXml(requestUrl, callback);
 
         } else {
@@ -1904,7 +1935,7 @@ fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
                 // Then, later if string or integer values are changed in the function, they are changed
                 // to function variables instead of changing property values of the original object. Notice,
                 // arrays and objects as function parameters still refere to the original arrays and objects.
-                getParsedData(options.url, options.storedQueryId, options.requestParameter, options.begin, options.end, options.timestep, options.numOfTimesteps, options.denyTimeAdjusting, options.sites, options.bbox, options.crs, function(data, errors) {
+                getParsedData(options.url, options.storedQueryId, options.requestParameter, options.begin, options.end, options.timestep, options.numOfTimesteps, options.denyTimeAdjusting, options.sites, options.bbox, options.crs, options.queryExtension, function(data, errors) {
                     // Notice, errors parameter is for the errors that occurred during the asynchronous flow.
                     dataCallback(options.callback, data, errors);
                 });
@@ -2071,6 +2102,16 @@ fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
          *         crs : {String}
          *               May be {undefined}, {null} or empty.
          *               Coordinate Reference System (CRS) string.
+         *         queryExtension : {Object}
+         *                          Optional. May be {undefined} or {null}.
+         *                          Property values may be {undefined}, {null} or {string}.
+         *                          This property is not needed in normal use cases of the API.
+         *                          But, this property may be used if API does not support field-value-pairs
+         *                          that need to be included into request URL query. The key-value-pairs of
+         *                          the property are URL encoded and included as URL query field-value-pairs
+         *                          in the request. If property value is {undefined} or {null}, it is interpreted
+         *                          as an empty string. Notice, other API properties should be used instead of this
+         *                          extension if possible.
          *         callback : {function(data, errors)}
          *                    Mandatory property. May not be {undefined} or {null}.
          *                    Callback is called with the parsed data and errors array when operation finishes.

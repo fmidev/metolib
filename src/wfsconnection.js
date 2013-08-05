@@ -532,6 +532,8 @@ fi.fmi.metoclient.metolib.WfsConnection = (function() {
             // Therefore, do not let parser do adjusting.
             denyTimeAdjusting : true,
             sites : taskDef.location,
+            crs : taskDef.crs,
+            queryExtension : taskDef.queryExtension,
             callback : function(data, errors) {
                 // Forward callback to the cache.
                 // Cache will forward the callback to callbacks given through the API when the retrieve flow has been started.
@@ -572,6 +574,8 @@ fi.fmi.metoclient.metolib.WfsConnection = (function() {
                 // When parser is used directly, it can handle time adjusting automatically if requested.
                 denyTimeAdjusting : options.denyTimeAdjusting,
                 sites : trimSites(options.sites),
+                crs : options.crs,
+                queryExtension : options.queryExtension,
                 callback : options.callback
             });
 
@@ -592,7 +596,9 @@ fi.fmi.metoclient.metolib.WfsConnection = (function() {
                 start : beginDate instanceof Date ? beginDate.getTime() : beginDate,
                 end : endDate instanceof Date ? endDate.getTime() : endDate,
                 resolution : resolution,
-                location : trimSites(options.sites)
+                location : trimSites(options.sites),
+                crs : options.crs,
+                queryExtension : options.queryExtension
             };
             this.cache.fetch(taskDef, function(errors, result) {
                 var converted = convertSitesDataFromCacheForApi(taskDef, result, errors);
@@ -630,6 +636,8 @@ fi.fmi.metoclient.metolib.WfsConnection = (function() {
             // When parser is used directly, it can handle time adjusting automatically if requested.
             denyTimeAdjusting : options.denyTimeAdjusting,
             bbox : options.bbox,
+            crs : options.crs,
+            queryExtension : options.queryExtension,
             callback : options.callback
         });
     };
@@ -1010,6 +1018,16 @@ fi.fmi.metoclient.metolib.WfsConnection = (function() {
          *         crs : {String}
          *               May be {undefined}, {null} or empty.
          *               Coordinate Reference System (CRS) string.
+         *         queryExtension : {Object}
+         *                          Optional. May be {undefined} or {null}.
+         *                          Property values may be {undefined}, {null} or {string}.
+         *                          This property is not needed in normal use cases of the API.
+         *                          But, this property may be used if API does not support field-value-pairs
+         *                          that need to be included into request URL query. The key-value-pairs of
+         *                          the property are URL encoded and included as URL query field-value-pairs
+         *                          in the request. If property value is {undefined} or {null}, it is interpreted
+         *                          as an empty string. Notice, other API properties should be used instead of this
+         *                          extension if possible.
          *         callback : {function(data, errors)}
          *                    Mandatory property. May not be {undefined} or {null}.
          *                    Callback is called with the parsed data and errors array when operation finishes.
