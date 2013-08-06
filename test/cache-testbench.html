@@ -26,7 +26,6 @@
                     var paper = new Raphael(document.getElementById('cachevis'),1024,400);
                     var minTime = 0;
                     var maxTime = 100;
-                    var recycledBlockCount = 0;
                     var existingBlockCount = 0;
                     var activeBlocks = {};
                     var activeFetches = [];
@@ -167,7 +166,6 @@
                         
                         cache.addListener('blockRecycled', function(block){
                             delete activeBlocks[block.getId()];
-                            recycledBlocks++;
                             delayedUpdateView();
                         });
                         
@@ -242,8 +240,10 @@
                         
                         var timeScale = paper.width/(maxTime-minTime);
                         paper.clear();
-                        paper.text(30,10,minTime);
+                        paper.text(30,10,'Time:'+minTime);
                         paper.text(paper.width-30,10,maxTime);
+                        paper.text(70,20,'Total blocks created:'+existingBlockCount);
+                        paper.text(250,20,'Active blocks:'+_.keys(activeBlocks).length);
                         var serviceLocParamCombinations = {};
                         var yOffset = -100;
                         _.each(activeBlocks,function(block){
