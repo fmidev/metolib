@@ -203,12 +203,16 @@ If there is need to keeping the data for the same parameters and locations in th
 Proactive cache filling (side fetch)
 ------------------------------------
  
-By default the SplitterCache tries to fetch more values to the cache than the ones included in the original request to anticipate future data fetching needs. This is effect is called side fetching, and it can be controlled by configuration parameters `sideFetchBeforeFactor` and `sideFetchAfterFactor`. The default values are 0.5 and 1 respectively. This means that the cache will try to fetch `pointCount` of extra values before `start`, and `0.5 * pointCount` of extra values after the `end`. Only values between the `start` and the `end` for any particular request will be returned as the results of the `fetch` operation however.
+By default the SplitterCache tries to fetch more values to the cache than the ones included in the original request to anticipate future data fetching needs. This is effect is called side fetching, and it can be controlled by configuration parameters `sideFetchBeforeFactor` and `sideFetchAfterFactor`. The default values are 0.5 and 1 respectively. This means that the cache will try to fetch 1 * `pointCount` of extra values before `start`, and `0.5 * pointCount` of extra values after the `end`. Only values between the `start` and the `end` for any particular request will be returned as the combined results of the `fetch` operation however.
+
+Side fetch can be disabled by setting the property value `sideFecthBeforeFactor` and/or `sideFetchAfterFactor` to value 0;
 
 Automatic defragmentation
 -------------------------
 
-The SplitterCache automatically tries to merge small continuous data blocks to avoid cache fragmentation. The defragmentation detection is done during every fetch cycle for previously fetched data blocks. If there are continuously positioned (by time) data blocks for the same service, locations and parameters, and either of them contains less than `minBlockDataPoints` time steps, these blocks are merged into a new blocks covering the data of both blocks. The merge is only done if the combined size would still be under `maxBlockDataPoint`. All the merged blocks created during a fetch cycle are added to the available cache blocks in the beginning of the next fetch cycle. It's done in next cycle because merging may take some (if not much) time, and the waiting for it before letting the fetch operation commence would delay things unnecessarily. The old merged blocks are marked for recycling, and will be recycled in the next fetch cycle.
+The SplitterCache automatically tries to merge small continuous data blocks to avoid cache fragmentation. The defragmentation detection is done during every fetch cycle for previously fetched data blocks. If there are continuously positioned (by time) data blocks for the same service, locations and parameters, and either of them contains less than `minBlockDataPoints` time steps, these blocks are merged into a new blocks covering the data of both blocks. The merge is only done if the combined size would still be under `maxBlockDataPoints`. All the merged blocks created during a fetch cycle are added to the available cache blocks in the beginning of the next fetch cycle. It's done in next cycle because merging may take some (if not much) time, and the waiting for it before letting the fetch operation commence would delay things unnecessarily. The old merged blocks are marked for recycling, and will be recycled in the next fetch cycle.
+
+The defragmentation can be disabled by setting the property `minBlockDataPoints` to value 0;
 
 Cache configuration
 -------------------
@@ -223,7 +227,7 @@ The following configuration properties can be given with the SplitterCache const
       maxCacheDataSize: 50000
     });
  
-Note: `maxCacheDataSize` is measured in approximate data size: A data block with 2 locations, 5 parameters and 10 time steps is calculated as 2 * 5 * 10 = 100 units.
+Note: `maxCacheDataSize` is measured in approximate data size: A data block with 2 locations, 5 parameters and 10 time steps is calculated as 2 * 5 * 10 = 100 units. `minBlockDataPoints` and `maxBlockDataPoints` are calculated as time steps.
 
 Introspecting internal cache events
 -----------------------------------
