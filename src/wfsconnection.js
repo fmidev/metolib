@@ -125,6 +125,20 @@ fi.fmi.metoclient.metolib.WfsConnection = (function() {
     /**
      * @private
      *
+     * WMO location name prefix for cache.
+     */
+    var LOCATION_WMO_PREFIX = "w_";
+
+    /**
+     * @private
+     *
+     * Sites location name prefix for cache.
+     */
+    var LOCATION_SITES_PREFIX = "s_";
+
+    /**
+     * @private
+     *
      * General text that describes an error that has been found in cache.
      */
     var CACHE_ERROR_TEXT = "ERROR: Cache found error(s)!";
@@ -149,21 +163,29 @@ fi.fmi.metoclient.metolib.WfsConnection = (function() {
      *
      * @param {Array(String)|String} Site strings in an array or one site may be given as a single string.
      *                               May be {udefined} or {null} but then operation is ignored.
+     * @param {String} prefix Prefix string that is used with the value(s).
+     *                        This is meant for cache but should not be used for parser.
+     *                        May be {udefined} or {null}. Then, empty string is used.
      * @return {Array(String)} Trimmed site(s) in an array. May not be {undefined} or {null}.
      */
-    function trimSites(sites) {
+    function trimSites(sites, prefix) {
         var trimmed = [];
-        if (_.isString(sites)) {
+        if (!_.isString(prefix)) {
+            // Make sure prefix is at least an empty string.
+            prefix = "";
+        }
+        // Handle sites as string(s).
+        if (sites && _.isString(sites)) {
             // Trim possible white spaces.
             // Location and its region may be separated by using comma but there should not be whitespaces after comma.
             // Then, later it is easier to compare server responses with given sites when data is handled for cache.
-            trimmed.push(trimSingleSite(sites));
+            trimmed.push(prefix + trimSingleSite(sites));
 
         } else if (_.isArray(sites)) {
             for (var i = 0; i < sites.length; ++i) {
                 var site = sites[i];
-                if (site) {
-                    trimmed.push(trimSingleSite(site));
+                if (site && _.isString(site)) {
+                    trimmed.push(prefix + trimSingleSite(site));
                 }
             }
         }
@@ -173,40 +195,137 @@ fi.fmi.metoclient.metolib.WfsConnection = (function() {
     /**
      * @private
      *
-     * Creates the proper location name for cache by checking if taskDef location contains both name and region.
-     * If taskDef does not contain location that matches the combined name and region, then region is returned.
-     * If taskDef contains location that matches the given name and region, then corresponding name is returned.
+     * Trim unnecessary white spaces from string(s).
+     *
+     * Notice, new content is returned. Then, original values are not changed if an array is given.
+     *
+     * @param {Array(String|int)|String|int} property Strings or integers in an array
+     *                                                or one item as a single string or integer.
+     *                                                May be {udefined} or {null}.
+     * @param {String} prefix Prefix string that is used with the value(s).
+     *                        This is meant for cache but should not be used for parser.
+     *                        May be {udefined} or {null}. Then, empty string is used.
+     * @return {Array(String)} Trimmed value(s) in an array. May not be {undefined} or {null}.
+     */
+    function trimProperty(property, prefix) {
+        var trimmed = [];
+        if (!_.isString(prefix)) {
+            // Make sure prefix is at least an empty string.
+            prefix = "";
+        }
+        if (_.isNumber(property) || property && _.isString(property)) {
+            trimmed.push(jQuery.trim(prefix + property));
+
+        } else if (_.isArray(property)) {
+            for (var i = 0; i < property.length; ++i) {
+                var tmp = property[i];
+                // Handle property as string.
+                if (_.isNumber(tmp) || tmp && _.isString(tmp)) {
+                    trimmed.push(jQuery.trim(prefix + tmp));
+                }
+            }
+        }
+        return trimmed;
+    }
+
+    /**
+     * @private
+     *
+     * Cache {taskDef} location should contain all the locations (not just sites names).
+     * This function combines all the location information into one array that is
+     * set as {location} -property for the cache {taskDef}. Also, other properties that
+     * are used for {taskDef} location property are set.
+     *
+     * @param {Object} taskDef Target for location settings.
+     *                         Operation is ignored if {undefined} or {null}.
+     * @param {Object} options Options object given through the API.
+     *                         Provides location data for {taskDef}.
+     *                         Operation is ignored if {undefined} or {null}.
+     */
+    function setTaskDefLocations(taskDef, options) {
+        if (taskDef && options) {
+            var location = [];
+            taskDef.location = location;
+            // Notice, these properties are used to provide additional information
+            // that can be given for the parser. The cache uses location property
+            // to create the cache hierarchy.
+            taskDef.wmo = trimProperty(options.wmo);
+            taskDef.sites = trimSites(options.sites);
+            // Combine locations information for taskDef location.
+            // Notice, prefix is used for cache. Then, it is sure that different location
+            // requests do not have same string for key (really rare case).
+            location.push.apply(location, trimProperty(options.wmo, LOCATION_WMO_PREFIX));
+            location.push.apply(location, trimSites(options.sites, LOCATION_SITES_PREFIX));
+        }
+    }
+
+    /**
+     * @private
+     *
+     * Creates the proper location name for cache by checking taskDef properties
+     * for location information that match the given values.
+     *
+     * Location name is checked in the following order and first match is used:
+     *   - WMO
+     *   - taskDef location contains both name and region.
+     *     - If taskDef contains location that matches the given name and region,
+     *       then corresponding name is returned.
+     *   - If taskDef location does not match the combined name and region,
+     *     then region is returned.
      *
      * @param {Object} taskDef Contains location information. May be {undefined} or {null}.
      * @param {String} name Location name string. May be {undefined} or {null}.
      * @param {String} region Location region string. May be {undefined} or {null}.
      * @return {String} Proper location name for cache. May be {undefined} or {null} if region is.
      */
-    function locationNameForCache(taskDef, name, region) {
-        var locationName = region;
-        if (taskDef && taskDef.location && name && region) {
-            // Server may also include region as prefix into location name.
-            // Therefore, take this into account when comparing server response
-            // to taskDef locations that contain name and region combination string
-            // as recognized by the cache.
-            var regionPrefix = region + LOCATION_NAME_REGION_SEPARATOR;
-            var regionIndex = name.indexOf(regionPrefix);
-            if (0 === regionIndex) {
-                // Remove region substring from name and trim possible whitespaces.
-                // Then, values can be compared to taskDef locations.
-                name = jQuery.trim(name.slice(regionPrefix.length));
+    function locationNameForCache(taskDef, name, region, wmo) {
+        // Default value is just region with site prefix.
+        var locationName = LOCATION_SITES_PREFIX + region;
+        if (taskDef) {
+            var matchFound = false;
+            var i;
+            // Check WMO.
+            if (taskDef.wmo && wmo) {
+                for ( i = 0; i < taskDef.wmo.length; ++i) {
+                    if (taskDef.wmo[i] === wmo) {
+                        // Notice, prefix is used with cache.
+                        locationName = LOCATION_WMO_PREFIX + wmo;
+                        matchFound = true;
+                        break;
+                    }
+                }
             }
-            // TaskDef locations have been created before for cache by combining name and region
-            // that have been given through the API. TaskDef locations are compared to the name
-            // and region values that are given as parameters for this function.
-            var combinedLocationName = name + PARAMETER_SEPARATOR + region;
-            // Locations are given as string array in taskDef.
-            for (var i = 0; i < taskDef.location.length; ++i) {
-                var loc = taskDef.location[i];
-                if (-1 !== loc.indexOf(PARAMETER_SEPARATOR) && loc === combinedLocationName) {
-                    // Matching location for cache was found from taskDef locations.
-                    locationName = loc;
-                    break;
+            // Check name and region.
+            // Notice, taskDef contains location property that contains all the location data.
+            // But, part of locations were already handled separately above. Therefore, also handle
+            // sites by using sites-property instead of location-property.
+            if (!matchFound && taskDef.sites && name && region) {
+                // Server may also include region as prefix into site name.
+                // Therefore, take this into account when comparing server response
+                // to taskDef sites that contain name and region combination string
+                // as recognized by the cache.
+                var regionPrefix = region + LOCATION_NAME_REGION_SEPARATOR;
+                var regionIndex = name.indexOf(regionPrefix);
+                if (0 === regionIndex) {
+                    // Remove region substring from name and trim possible whitespaces.
+                    // Then, values can be compared to taskDef locations.
+                    name = jQuery.trim(name.slice(regionPrefix.length));
+                }
+                // TaskDef sites and lcoations have been created before for cache by combining
+                // name and region that have been given through the API. TaskDef locations are
+                // compared to the name and region values that are given as parameters for this
+                // function.
+                var combinedLocationName = name + PARAMETER_SEPARATOR + region;
+                // Sites are given as string array in taskDef.
+                for ( i = 0; i < taskDef.sites.length; ++i) {
+                    var loc = taskDef.sites[i];
+                    if (-1 !== loc.indexOf(PARAMETER_SEPARATOR) && loc === combinedLocationName) {
+                        // Matching location for cache was found from taskDef locations.
+                        // Notice, prefix is used with cache.
+                        locationName = LOCATION_SITES_PREFIX + loc;
+                        matchFound = true;
+                        break;
+                    }
                 }
             }
         }
@@ -381,7 +500,7 @@ fi.fmi.metoclient.metolib.WfsConnection = (function() {
             // function for the corresponding structure that cache requires.
             _.each(data.locations, function(location) {
                 // Location name is used as a key for the location object.
-                var locationName = locationNameForCache(taskDef, location.info.name, location.info.region);
+                var locationName = locationNameForCache(taskDef, location.info.name, location.info.region, location.info.wmo);
                 if (!converted.data[locationName]) {
                     // Initialize converted data to contain location object identified by the location name.
                     converted.data[locationName] = {};
@@ -531,7 +650,10 @@ fi.fmi.metoclient.metolib.WfsConnection = (function() {
             // If time adjusting is requested, it has been done before giving times to cache.
             // Therefore, do not let parser do adjusting.
             denyTimeAdjusting : true,
-            sites : taskDef.location,
+            // Notice, instead of using taskDef.location for properties here,
+            // specific location related properties are used.
+            wmo : taskDef.wmo,
+            sites : taskDef.sites,
             crs : taskDef.crs,
             queryExtension : taskDef.queryExtension,
             callback : function(data, errors) {
@@ -573,6 +695,7 @@ fi.fmi.metoclient.metolib.WfsConnection = (function() {
                 timestep : options.timestep,
                 // When parser is used directly, it can handle time adjusting automatically if requested.
                 denyTimeAdjusting : options.denyTimeAdjusting,
+                wmo : trimProperty(options.wmo),
                 sites : trimSites(options.sites),
                 crs : options.crs,
                 queryExtension : options.queryExtension,
@@ -596,10 +719,12 @@ fi.fmi.metoclient.metolib.WfsConnection = (function() {
                 start : beginDate instanceof Date ? beginDate.getTime() : beginDate,
                 end : endDate instanceof Date ? endDate.getTime() : endDate,
                 resolution : resolution,
-                location : trimSites(options.sites),
                 crs : options.crs,
                 queryExtension : options.queryExtension
             };
+            // Because locations can be given in multiple ways, location relate properties are
+            // set separately for taskDef to combine all location informations for cache.
+            setTaskDefLocations(taskDef, options);
             this.cache.fetch(taskDef, function(errors, result) {
                 var converted = convertSitesDataFromCacheForApi(taskDef, result, errors);
                 options.callback(converted.data, converted.errors);
@@ -635,6 +760,10 @@ fi.fmi.metoclient.metolib.WfsConnection = (function() {
             timestep : options.timestep,
             // When parser is used directly, it can handle time adjusting automatically if requested.
             denyTimeAdjusting : options.denyTimeAdjusting,
+            // Include also other sites related options if they are given.
+            // But, bbox is the reason that all data is provided directly for the parser.
+            wmo : trimProperty(options.wmo),
+            sites : trimSites(options.sites),
             bbox : options.bbox,
             crs : options.crs,
             queryExtension : options.queryExtension,
@@ -770,11 +899,13 @@ fi.fmi.metoclient.metolib.WfsConnection = (function() {
      */
     var getData = function(options) {
         if (options) {
-            if (options.sites) {
-                retrieveSitesData.call(this, options);
-
-            } else if (options.bbox) {
+            if (options.bbox) {
+                // BBox is not supported by the cache at the moment.
+                // Thefore, pass the whole query to the parser.
                 retrieveSpatialData.call(this, options);
+
+            } else if (options.wmo || options.sites) {
+                retrieveSitesData.call(this, options);
 
             } else {
                 var errorStr = "ERROR: Either sites or bbox is mandatory in options!";
@@ -1006,15 +1137,18 @@ fi.fmi.metoclient.metolib.WfsConnection = (function() {
          *                             May be {undefined} or {null}.
          *                             If {true}, {begin} and {end} times are not adjusted for server but given values
          *                             are used exactly for requests. Otherwise, times are adjusted.
+         *         wmo : {Array(String|int)}/{String|int}
+         *               May be {undefined} or {null} or empty if {sites} or {bbox} is given.
+         *               Array of World Meteorological Organization (WMO) identifier strings or integers.
+         *               One wmo can be given as a single string or integer.
+         *               Notice, either {wmo}, {sites} or {bbox} is required.
          *         sites : {Array(String)}/{String}
-         *                 May be {undefined} or {null} or empty if {bbox} is given.
+         *                 May be {undefined} or {null} or empty if {wmo} or {bbox} is given.
          *                 Array of site name strings. One site can be given as a single string.
-         *                 Notice, either {sites} or {bbox} is required.
-         *                 Notice, cache is used for the sites data.
+         *                 Notice, either {wmo}, {sites} or {bbox} is required.
          *         bbox : {String}
-         *                May be {undefined}, {null} or empty if {sites} is given.
-         *                BBOX string. Notice, either {sites} or {bbox} is required.
-         *                Notice, cache is not used for the spatial data.
+         *                May be {undefined}, {null} or empty if {wmo} or {sites} is given.
+         *                BBOX string. Notice, either {wmo}, {sites} or {bbox} is required.
          *         crs : {String}
          *               May be {undefined}, {null} or empty.
          *               Coordinate Reference System (CRS) string.

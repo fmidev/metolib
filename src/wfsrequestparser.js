@@ -426,6 +426,7 @@ fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
                             result.locations.push({
                                 info : {
                                     // At least an empty string is set as property value.
+                                    // Notice, values are strings, not integers.
                                     id : contentLocation.id || contentLocation.geoid || "",
                                     wmo : contentLocation.wmo || "",
                                     name : contentLocation.name || position.name || "",
@@ -1809,12 +1810,12 @@ fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
         var storedQueryCheck = storedQueryId && _.isString(storedQueryId);
         var parameterCheck = requestParameter && _.isString(requestParameter);
         var periodCheck = begin instanceof Date && end instanceof Date && begin.getTime() <= end.getTime() && (!timestep || _.isNumber(timestep) );
-        var locationGivenCheck = sites || bbox || wmo || wmo === 0;
-        var wmoCheck = _.isUndefined(wmo) || _.isNull(wmo) || _.isNumber(wmo) || wmo && _.isString(wmo) || _.isArray(wmo) && wmo.length;
-        var sitesCheck = !sites || _.isString(sites) || _.isArray(sites) && sites.length;
-        var bboxCheck = !bbox || _.isString(bbox);
+        var wmoCheck = _.isNumber(wmo) || wmo && _.isString(wmo) || _.isArray(wmo) && wmo.length;
+        var sitesCheck = sites && _.isString(sites) || _.isArray(sites) && sites.length;
+        var bboxCheck = bbox && _.isString(bbox);
+        var locationGivenCheck = wmoCheck || sitesCheck || bboxCheck;
         var crsCheck = !crs || _.isString(crs);
-        if (urlCheck && storedQueryCheck && parameterCheck && periodCheck && locationGivenCheck && wmoCheck && sitesCheck && bboxCheck && crsCheck) {
+        if (urlCheck && storedQueryCheck && parameterCheck && periodCheck && locationGivenCheck && crsCheck) {
             // Check if begin and end times should be adjusted for server. They need to be exact for minutes.
             if (!denyTimeAdjusting) {
                 begin.setTime(adjustBeginTime(timestep, begin).getTime());
