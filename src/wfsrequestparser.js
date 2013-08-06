@@ -109,6 +109,7 @@ fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
         REQUEST_BEGIN : "&starttime=",
         REQUEST_END : "&endtime=",
         REQUEST_TIMESTEP : "&timestep=",
+        REQUEST_WMO : "&wmo=",
         REQUEST_PLACE : "&place=",
         REQUEST_BBOX : "&bbox=",
         REQUEST_CRS : "&crs=",
@@ -1783,7 +1784,7 @@ fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
      * See API function {@link #getData()} for function and parameter descriptions.
      * @throws {String} Exception if parameters are not correct.
      */
-    function getParsedData(url, storedQueryId, requestParameter, begin, end, timestep, numOfTimesteps, denyTimeAdjusting, sites, bbox, crs, queryExtension, callback) {
+    function getParsedData(url, storedQueryId, requestParameter, begin, end, timestep, numOfTimesteps, denyTimeAdjusting, wmo, sites, bbox, crs, queryExtension, callback) {
         // Convert possible integer millisecond values of times into Date objects.
         if (!( begin instanceof Date) && !isNaN(begin)) {
             begin = new Date(begin);
@@ -1804,7 +1805,16 @@ fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
         }
 
         // Check that required data is available and parameters are of the correct type.
-        if (url && _.isString(url) && storedQueryId && _.isString(storedQueryId) && requestParameter && _.isString(requestParameter) && begin instanceof Date && end instanceof Date && begin.getTime() <= end.getTime() && (!timestep || _.isNumber(timestep) ) && (sites || bbox) && (!sites || _.isString(sites) || _.isArray(sites)) && (!bbox || _.isString(bbox)) && (!crs || _.isString(crs))) {
+        var urlCheck = url && _.isString(url);
+        var storedQueryCheck = storedQueryId && _.isString(storedQueryId);
+        var parameterCheck = requestParameter && _.isString(requestParameter);
+        var periodCheck = begin instanceof Date && end instanceof Date && begin.getTime() <= end.getTime() && (!timestep || _.isNumber(timestep) );
+        var locationGivenCheck = sites || bbox || wmo || wmo === 0;
+        var wmoCheck = _.isUndefined(wmo) || _.isNull(wmo) || _.isNumber(wmo) || wmo && _.isString(wmo) || _.isArray(wmo) && wmo.length;
+        var sitesCheck = !sites || _.isString(sites) || _.isArray(sites) && sites.length;
+        var bboxCheck = !bbox || _.isString(bbox);
+        var crsCheck = !crs || _.isString(crs);
+        if (urlCheck && storedQueryCheck && parameterCheck && periodCheck && locationGivenCheck && wmoCheck && sitesCheck && bboxCheck && crsCheck) {
             // Check if begin and end times should be adjusted for server. They need to be exact for minutes.
             if (!denyTimeAdjusting) {
                 begin.setTime(adjustBeginTime(timestep, begin).getTime());
@@ -1830,16 +1840,33 @@ fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
             // contain illegal characters when inserted into the URL. Parameters that should
             // be numbers are checked above and numbers are always accepted.
             requestParameter = fi.fmi.metoclient.metolib.Utils.encodeUriComponent(requestParameter);
+
+            var wmoParameter = "";
+            if (wmo || wmo === 0) {
+                if (_.isNumber(wmo) || _.isString(wmo)) {
+                    // Insert wmo string into an array if only string was given.
+                    wmo = [wmo];
+                }
+                // There may be multiple wmos. Server accepts multiple wmo parameters.
+                for (var i = 0; i < wmo.length; ++i) {
+                    var tmpWmo = wmo[i];
+                    if (_.isNumber(tmpWmo) || tmpWmo && _.isString(tmpWmo)) {
+                        tmpWmo = fi.fmi.metoclient.metolib.Utils.encodeUriComponent(tmpWmo);
+                        wmoParameter += myConstants.REQUEST_WMO + tmpWmo;
+                    }
+                }
+            }
+
             var sitesParameter = "";
             if (sites) {
                 if (_.isString(sites)) {
-                    // Insert sites string into an array if only string was given.
+                    // Insert sites string into an array if only integer or string was given.
                     sites = [sites];
                 }
                 // There may be multiple places. Server accepts multiple place parameters.
-                for (var i = 0; i < sites.length; ++i) {
-                    var place = sites[i];
-                    if (place) {
+                for (var j = 0; j < sites.length; ++j) {
+                    var place = sites[j];
+                    if (place && _.isString(place)) {
                         place = fi.fmi.metoclient.metolib.Utils.encodeUriComponent(place);
                         sitesParameter += myConstants.REQUEST_PLACE + place;
                     }
@@ -1867,7 +1894,7 @@ fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
 
             var urlQueryExtension = handleQueryExtension(queryExtension);
 
-            var requestUrl = url + urlQueryDelimiter + myConstants.REQUEST_GET_FEATURE + storedQueryIdParameter + myConstants.REQUEST_PARAMETERS + requestParameter + myConstants.REQUEST_BEGIN + begin + myConstants.REQUEST_END + end + timeStepParameter + sitesParameter + bboxParameter + crsParameter + urlQueryExtension;
+            var requestUrl = url + urlQueryDelimiter + myConstants.REQUEST_GET_FEATURE + storedQueryIdParameter + myConstants.REQUEST_PARAMETERS + requestParameter + myConstants.REQUEST_BEGIN + begin + myConstants.REQUEST_END + end + timeStepParameter + wmoParameter + sitesParameter + bboxParameter + crsParameter + urlQueryExtension;
             requestAndParseXml(requestUrl, callback);
 
         } else {
@@ -1935,7 +1962,7 @@ fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
                 // Then, later if string or integer values are changed in the function, they are changed
                 // to function variables instead of changing property values of the original object. Notice,
                 // arrays and objects as function parameters still refere to the original arrays and objects.
-                getParsedData(options.url, options.storedQueryId, options.requestParameter, options.begin, options.end, options.timestep, options.numOfTimesteps, options.denyTimeAdjusting, options.sites, options.bbox, options.crs, options.queryExtension, function(data, errors) {
+                getParsedData(options.url, options.storedQueryId, options.requestParameter, options.begin, options.end, options.timestep, options.numOfTimesteps, options.denyTimeAdjusting, options.wmo, options.sites, options.bbox, options.crs, options.queryExtension, function(data, errors) {
                     // Notice, errors parameter is for the errors that occurred during the asynchronous flow.
                     dataCallback(options.callback, data, errors);
                 });
@@ -2092,13 +2119,18 @@ fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
          *                             May be {undefined} or {null}.
          *                             If {true}, {begin} and {end} times are not adjusted for server but given values
          *                             are used exactly for requests. Otherwise, times are adjusted.
+         *         wmo : {Array(String|int)}/{String|int}
+         *               May be {undefined} or {null} or empty if {sites} or {bbox} is given.
+         *               Array of World Meteorological Organization (WMO) identifier strings or integers.
+         *               One wmo can be given as a single string or integer.
+         *               Notice, either {wmo}, {sites} or {bbox} is required.
          *         sites : {Array(String)}/{String}
-         *                 May be {undefined} or {null} or empty if {bbox} is given.
+         *                 May be {undefined} or {null} or empty if {wmo} or {bbox} is given.
          *                 Array of site name strings. One site can be given as a single string.
-         *                 Notice, either {sites} or {bbox} is required.
+         *                 Notice, either {wmo}, {sites} or {bbox} is required.
          *         bbox : {String}
-         *                May be {undefined}, {null} or empty if {sites} is given.
-         *                BBOX string. Notice, either {sites} or {bbox} is required.
+         *                May be {undefined}, {null} or empty if {wmo} or {sites} is given.
+         *                BBOX string. Notice, either {wmo}, {sites} or {bbox} is required.
          *         crs : {String}
          *               May be {undefined}, {null} or empty.
          *               Coordinate Reference System (CRS) string.
