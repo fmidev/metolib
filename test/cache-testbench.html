@@ -18,9 +18,10 @@
                     var cache = null;
                     var sideAfter = 0;
                     var sideBefore = 0;
-                    var maxBlockSize = 200;
-                    var minBlockSize = 20;
-                    var cacheCapacity = 10000;
+                    var maxBlockSize = 2000;
+                    var minBlockSize = 200;
+                    var cacheCapacity = 500000;
+                    var maxVisualizedBlocks = 500;
                     
                     var fetching = false;
                     var paper = new Raphael(document.getElementById('cachevis'),1024,400);
@@ -239,21 +240,28 @@
                         var trans = (minTime < 0)?(-minTime):0;
                         
                         var timeScale = paper.width/(maxTime-minTime);
+                        var blockCount = _.keys(activeBlocks).length;
                         paper.clear();
                         paper.text(30,10,'Time:'+minTime);
                         paper.text(paper.width-30,10,maxTime);
                         paper.text(70,20,'Total blocks created:'+existingBlockCount);
-                        paper.text(250,20,'Active blocks:'+_.keys(activeBlocks).length);
+                        paper.text(250,20,'Active blocks:'+blockCount);
                         var serviceLocParamCombinations = {};
                         var yOffset = -100;
-                        _.each(activeBlocks,function(block){
+                        if (blockCount > maxVisualizedBlocks){
+                            paper.text(600,20,'Too many blocks to visualize').attr({stroke:'red'});
+                        }
+                        else {
+                            _.each(activeBlocks,function(block, index){
+                            if (index > maxVisualizedBlocks){
+                                return;
+                            }
                             var label = block.service+block.location+block.parameter;
                             if (!serviceLocParamCombinations[label]){
                                 serviceLocParamCombinations[label] = {
                                     label: block.service+', '+block.location+', '+block.parameter,
                                     y: yOffset+=150
                                 };
-                                console.log(serviceLocParamCombinations);
                             }
                             var y = serviceLocParamCombinations[label].y;
                             var height = 100;
@@ -289,7 +297,8 @@
                             
                             paper.rect(x,y,width,height).attr(attrs);
 
-                        });
+                            });
+                        }
                         
                         _.each(serviceLocParamCombinations, function(obj,index){
                            paper.text(100,obj.y+50,obj.label); 
