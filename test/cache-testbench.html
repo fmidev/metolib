@@ -9,336 +9,338 @@
     <!-- JavaScript libraries -->
     <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
     <script type="text/javascript" src="raphael-min.js"></script>
-		<script type="text/javascript" src="../deps/underscore/underscore-1.4.4.js"></script>
+        <script type="text/javascript" src="../deps/underscore/underscore-1.4.4.js"></script>
     <script type="text/javascript" src="../deps/async/async-0.2.5.js"></script>
-		<script type="text/javascript" src="../src/splittercache.js"></script>
+        <script type="text/javascript" src="../src/splittercache.js"></script>
 
     <script type="text/javascript">
         $(function() {
-					var cache = null;
-					var sideAfter = 0;
-					var sideBefore = 0;
-					var maxBlockSize = 200;
-					var minBlockSize = 20;
-					var cacheCapacity = 10000;
-					
-					var fetching = false;
-					var paper = new Raphael(document.getElementById('cachevis'),1024,400);
-					var minTime = 0;
-					var maxTime = 100;
-					var recycledBlockCount = 0;
-					var existingBlockCount = 0;
-					var activeBlocks = {};
-					var activeFetches = [];
-					
-					function init(){
-						cache = new fi.fmi.metoclient.metolib.SplitterCache({
-								sideFetchAfterFactor : sideAfter,
-								sideFetchBeforeFactor : sideBefore,
-								maxBlockDataPoints : maxBlockSize,
-								minBlockDataPoints : minBlockSize,
-								maxCacheDataSize : cacheCapacity
-						});
+                    var cache = null;
+                    var sideAfter = 0;
+                    var sideBefore = 0;
+                    var maxBlockSize = 200;
+                    var minBlockSize = 20;
+                    var cacheCapacity = 10000;
+                    
+                    var fetching = false;
+                    var paper = new Raphael(document.getElementById('cachevis'),1024,400);
+                    var minTime = 0;
+                    var maxTime = 100;
+                    var recycledBlockCount = 0;
+                    var existingBlockCount = 0;
+                    var activeBlocks = {};
+                    var activeFetches = [];
+                    
+                    function init(){
+                        cache = new fi.fmi.metoclient.metolib.SplitterCache({
+                                sideFetchAfterFactor : sideAfter,
+                                sideFetchBeforeFactor : sideBefore,
+                                maxBlockDataPoints : maxBlockSize,
+                                minBlockDataPoints : minBlockSize,
+                                maxCacheDataSize : cacheCapacity
+                        });
 
-						var obs = function(taskDef, callback) {
-								var retval = {};
-								var i = 0;
-								async.forEach(taskDef.location, function(loc, locNotify) {
-										if (retval[loc] === undefined) {
-												retval[loc] = {};
-										}
-										async.forEach(taskDef.parameter, function(param, paramNotify) {
-												if (retval[loc][param] === undefined) {
-														retval[loc][param] = [];
-												}
-												for ( i = 0; i < taskDef.pointCount; i++) {
-														retval[loc][param].push(Math.random());
-												}
-												paramNotify();
-										}, function(err) {
-												// one location completed
-												locNotify();
-										});
-								}, function(err) {
-										// all done, simulate network delay:
-										setTimeout(function() {
-												callback(err, retval);
-										}, Math.random() * 2000);
-								});
-						};
+                        var obs = function(taskDef, callback) {
+                                var retval = {};
+                                var i = 0;
+                                async.forEach(taskDef.location, function(loc, locNotify) {
+                                        if (retval[loc] === undefined) {
+                                                retval[loc] = {};
+                                        }
+                                        async.forEach(taskDef.parameter, function(param, paramNotify) {
+                                                if (retval[loc][param] === undefined) {
+                                                        retval[loc][param] = [];
+                                                }
+                                                for ( i = 0; i < taskDef.pointCount; i++) {
+                                                        retval[loc][param].push(Math.random());
+                                                }
+                                                paramNotify();
+                                        }, function(err) {
+                                                // one location completed
+                                                locNotify();
+                                        });
+                                }, function(err) {
+                                        // all done, simulate network delay:
+                                        setTimeout(function() {
+                                                callback(err, retval);
+                                        }, Math.random() * 2000);
+                                });
+                        };
 
-						var fct = function(taskDef, callback) {
-								var retval = {};
-								var i = 0;
-								async.forEach(taskDef.location, function(loc, locNotify) {
-										if (retval[loc] === undefined) {
-												retval[loc] = {};
-										}
-										async.forEach(taskDef.parameter, function(param, paramNotify) {
-												if (retval[loc][param] === undefined) {
-														retval[loc][param] = [];
-												}
-												for ( i = 0; i < taskDef.pointCount; i++) {
-														retval[loc][param].push(Math.random());
-												}
-												paramNotify();
-										}, function(err) {
-												// one location completed
-												locNotify();
-										});
-								}, function(err) {
-										// all done, simulate network delay:
-										setTimeout(function() {
-												callback(err, retval);
-										}, Math.random() * 2000);
-								});
-						};
-						cache.addDataProvider('obs', obs);
-						cache.addDataProvider('fct', fct);
-						
-						cache.addListener('blockCreated', function(block){
-							existingBlockCount++;
-							delayedUpdateView();
-						});
-						
-						cache.addListener('blockPrepared', function(block){
-							var blockData = {
-								id:block.getId(),
-								start: block.getStart(),
-								end: block.getEnd(),
-								service: block.getService(),
-								location: block.getLocation(),
-								parameter:block.getParameter(),
-								fetching: false,
-								fetched: false,
-								pinned: false,
-								waitingRecycling: false,
-								age: 0,
-								dataSize: block.getDataSize()
-							};
-							if (block.getStart() < minTime){
-								minTime = block.getStart();
-							}
-							if (block.getEnd() > maxTime){
-								maxTime = block.getEnd();
-							}
-							activeBlocks[block.getId()] = blockData;
-							delayedUpdateView();
-						});
-						
-						cache.addListener('blockProviderFetchStarted', function(block){
-							activeBlocks[block.getId()].age = 0;
-							activeBlocks[block.getId()].fetching = true;
-							delayedUpdateView();
-						});
-						
-						cache.addListener('blockProviderFetchFinished', function(block){
-							activeBlocks[block.getId()].fetched = true;
-							activeBlocks[block.getId()].fetching = false;
-							delayedUpdateView();
-						});
-						
-						cache.addListener('blockCacheFetchStarted', function(block){
-							activeBlocks[block.getId()].age = 0;
-							activeBlocks[block.getId()].fetching = true;
-							delayedUpdateView();
-						});
-						
-						cache.addListener('blockCacheFetchFinished', function(block){
-							activeBlocks[block.getId()].fetched = true;
-							activeBlocks[block.getId()].fetching = false;
-							delayedUpdateView();
-						});
-						
-						cache.addListener('blockPinned', function(block){
-							activeBlocks[block.getId()].pinned = true;
-							delayedUpdateView();
-						});
-						
-						cache.addListener('blockUnpinned', function(block){
-							activeBlocks[block.getId()].pinned = false;
-							delayedUpdateView();
-						});
-						
-						cache.addListener('blockEvicted', function(block){
-							activeBlocks[block.getId()].waitingRecycling = true;
-							delayedUpdateView();
-						});
-						
-						cache.addListener('blockRecycled', function(block){
-							delete activeBlocks[block.getId()];
-							recycledBlocks++;
-							delayedUpdateView();
-						});
-						
-						cache.addListener('blockAged', function(block){
-							activeBlocks[block.getId()].age++;
-							delayedUpdateView();
-						});
-						
-					}
-					
-					function doFetch(){
-						if (fetching){
-							return;
-						}
-						fetching = true;
-						var taskDef = {};
-						taskDef.service = $('#service').val();
-						taskDef.parameter = $('#parameter').val().split(',');
-						taskDef.location = $('#location').val().split(',');
-						taskDef.resolution = parseInt($('#resolution').val());
-						taskDef.start = parseInt($('#start').val());
-						taskDef.end = parseInt($('#end').val());
-						
-						var repeat = parseInt($('#repeat').val());
-						var startRand = parseFloat($('#start_rand').val());
-						var endRand = parseFloat($('#end_rand').val());
-						var i=0;
+                        var fct = function(taskDef, callback) {
+                                var retval = {};
+                                var i = 0;
+                                async.forEach(taskDef.location, function(loc, locNotify) {
+                                        if (retval[loc] === undefined) {
+                                                retval[loc] = {};
+                                        }
+                                        async.forEach(taskDef.parameter, function(param, paramNotify) {
+                                                if (retval[loc][param] === undefined) {
+                                                        retval[loc][param] = [];
+                                                }
+                                                for ( i = 0; i < taskDef.pointCount; i++) {
+                                                        retval[loc][param].push(Math.random());
+                                                }
+                                                paramNotify();
+                                        }, function(err) {
+                                                // one location completed
+                                                locNotify();
+                                        });
+                                }, function(err) {
+                                        // all done, simulate network delay:
+                                        setTimeout(function() {
+                                                callback(err, retval);
+                                        }, Math.random() * 2000);
+                                });
+                        };
+                        cache.addDataProvider('obs', obs);
+                        cache.addDataProvider('fct', fct);
+                        
+                        cache.addListener('blockCreated', function(block){
+                            existingBlockCount++;
+                            delayedUpdateView();
+                        });
+                        
+                        cache.addListener('blockPrepared', function(block){
+                            var blockData = {
+                                id:block.getId(),
+                                start: block.getStart(),
+                                end: block.getEnd(),
+                                service: block.getService(),
+                                location: block.getLocation(),
+                                parameter:block.getParameter(),
+                                fetching: false,
+                                fetched: false,
+                                pinned: false,
+                                waitingRecycling: false,
+                                age: 0,
+                                dataSize: block.getDataSize()
+                            };
+                            if (block.getStart() < minTime){
+                                minTime = block.getStart();
+                            }
+                            if (block.getEnd() > maxTime){
+                                maxTime = block.getEnd();
+                            }
+                            activeBlocks[block.getId()] = blockData;
+                            delayedUpdateView();
+                        });
+                        
+                        cache.addListener('blockProviderFetchStarted', function(block){
+                            activeBlocks[block.getId()].age = 0;
+                            activeBlocks[block.getId()].fetching = true;
+                            delayedUpdateView();
+                        });
+                        
+                        cache.addListener('blockProviderFetchFinished', function(block){
+                            activeBlocks[block.getId()].fetched = true;
+                            activeBlocks[block.getId()].fetching = false;
+                            delayedUpdateView();
+                        });
+                        
+                        cache.addListener('blockCacheFetchStarted', function(block){
+                            activeBlocks[block.getId()].age = 0;
+                            activeBlocks[block.getId()].fetching = true;
+                            delayedUpdateView();
+                        });
+                        
+                        cache.addListener('blockCacheFetchFinished', function(block){
+                            activeBlocks[block.getId()].fetched = true;
+                            activeBlocks[block.getId()].fetching = false;
+                            delayedUpdateView();
+                        });
+                        
+                        cache.addListener('blockPinned', function(block){
+                            activeBlocks[block.getId()].pinned = true;
+                            delayedUpdateView();
+                        });
+                        
+                        cache.addListener('blockUnpinned', function(block){
+                            activeBlocks[block.getId()].pinned = false;
+                            delayedUpdateView();
+                        });
+                        
+                        cache.addListener('blockEvicted', function(block){
+                            activeBlocks[block.getId()].waitingRecycling = true;
+                            delayedUpdateView();
+                        });
+                        
+                        cache.addListener('blockRecycled', function(block){
+                            delete activeBlocks[block.getId()];
+                            recycledBlocks++;
+                            delayedUpdateView();
+                        });
+                        
+                        cache.addListener('blockAged', function(block){
+                            activeBlocks[block.getId()].age++;
+                            delayedUpdateView();
+                        });
+                        
+                    }
+                    
+                    function doFetch(){
+                        if (fetching){
+                            return;
+                        }
+                        fetching = true;
+                        var taskDef = {};
+                        taskDef.service = $('#service').val();
+                        taskDef.parameter = $('#parameter').val().split(',');
+                        taskDef.location = $('#location').val().split(',');
+                        taskDef.resolution = parseInt($('#resolution').val());
+                        taskDef.start = parseInt($('#start').val());
+                        taskDef.end = parseInt($('#end').val());
+                        
+                        var repeat = parseInt($('#repeat').val());
+                        var startRand = parseFloat($('#start_rand').val());
+                        var endRand = parseFloat($('#end_rand').val());
+                        var i=0;
 
-						for (i=0;i<repeat;i++){
-							(function()
-							{
-								var td = _.clone(taskDef);
-								if (startRand !== 0){
-									td.start = td.start + Math.round(Math.random()*startRand*2-startRand)*td.resolution;
-								}
-								if (endRand !== 0){
-									td.end = td.end + Math.round(Math.random()*endRand*2-endRand)*td.resolution;
-									while (td.end <= td.start){
-										td.end = td.end + Math.round(Math.random()*endRand*2-endRand)*td.resolution;
-									}
-								}
-								try {
-									activeFetches.push(td);
-									delayedUpdateView();
-									cache.fetch(td,function(err,result){
-										if (err){
-											console.log('Fetch complete with errors');
-										}
-										else {
-											console.log('Fetch complete OK, returned data for time period '+result.steps[0]+' - '+result.steps[result.steps.length-1]);
-										}
-										fetching = false;
-										activeFetches = _.reject(activeFetches,function(taskDef){
-											return (taskDef == td);
-										});
-										delayedUpdateView();
-									});
-								} catch(ex) {
-									fetching = false;
-									activeFetches = _.reject(activeFetches,function(taskDef){
-										return (taskDef == td);
-									});
-									delayedUpdateView();
-									throw ex;
-								}
-							})();
-						}
-					}
-					
-					function updateView(){
-						var trans = (minTime < 0)?(-minTime):0;
-						
-						var timeScale = paper.width/(maxTime-minTime);
-						paper.clear();
-						paper.text(10,10,minTime);
-						paper.text(paper.width-30,10,maxTime);
-						var serviceLocParamCombinations = {};
-						var yOffset = -100;
-						_.each(activeBlocks,function(block){
-						    var label = block.service+block.location+block.parameter;
-						    if (!serviceLocParamCombinations[label]){
-						        serviceLocParamCombinations[label] = {
-						            label: block.service+', '+block.location+', '+block.parameter,
-						            y: yOffset+=150
-						        };
-						        console.log(serviceLocParamCombinations);
-					        }
-							var y = serviceLocParamCombinations[label].y;
-							var height = 100;
-							var x = (block.start+trans)*timeScale;
-							var width = (block.end-block.start)*timeScale;
-							var attrs = {};
-							if (block.pinned){
-								attrs.stroke = "red";
-							}
-							else {
-								attrs.stroke = "black";
-							}
-							if (block.fetching){
-								attrs.fill = '#C8FFAE';
-							} else if (block.fetched){
-								if (block.age === 0){
-									attrs.fill = '#F9B836';
-								}
-								else {
-									attrs.fill = '#DDF1FF';
-								}
-							}
-							if (block.waitingRecycling){
-								attrs.fill = "white";
-								attrs['stroke-dasharray'] = '-';
-							}
-							else {
-							    attrs['stroke-dasharray'] = '';
-							}
-							
-							attrs.fillOpacity = 1/block.age;
-							attrs.title = block.start+' - '+block.end+' age:'+block.age+', size:'+block.dataSize;
-							
-							paper.rect(x,y,width,height).attr(attrs);
+                        for (i=0;i<repeat;i++){
+                            (function()
+                            {
+                                var td = _.clone(taskDef);
+                                if (startRand !== 0){
+                                    td.start = td.start + Math.round(Math.random()*startRand*2-startRand)*td.resolution;
+                                }
+                                if (endRand !== 0){
+                                    td.end = td.end + Math.round(Math.random()*endRand*2-endRand)*td.resolution;
+                                    while (td.end <= td.start){
+                                        td.end = td.end + Math.round(Math.random()*endRand*2-endRand)*td.resolution;
+                                    }
+                                }
+                                try {
+                                    activeFetches.push(td);
+                                    delayedUpdateView();
+                                    cache.fetch(td,function(err,result){
+                                        if (err){
+                                            console.log('Fetch complete with errors');
+                                        }
+                                        else {
+                                            console.log('Fetch complete OK, returned data for time period '+result.steps[0]+' - '+result.steps[result.steps.length-1]);
+                                        }
+                                        fetching = false;
+                                        activeFetches = _.reject(activeFetches,function(taskDef){
+                                            return (taskDef == td);
+                                        });
+                                        updateView();
+                                    });
+                                } catch(ex) {
+                                    fetching = false;
+                                    activeFetches = _.reject(activeFetches,function(taskDef){
+                                        return (taskDef == td);
+                                    });
+                                    updateView();
+                                    throw ex;
+                                }
+                            })();
+                        }
+                    }
+                    
+                    function updateView(){
+                        var trans = (minTime < 0)?(-minTime):0;
+                        
+                        var timeScale = paper.width/(maxTime-minTime);
+                        paper.clear();
+                        paper.text(30,10,minTime);
+                        paper.text(paper.width-30,10,maxTime);
+                        var serviceLocParamCombinations = {};
+                        var yOffset = -100;
+                        _.each(activeBlocks,function(block){
+                            var label = block.service+block.location+block.parameter;
+                            if (!serviceLocParamCombinations[label]){
+                                serviceLocParamCombinations[label] = {
+                                    label: block.service+', '+block.location+', '+block.parameter,
+                                    y: yOffset+=150
+                                };
+                                console.log(serviceLocParamCombinations);
+                            }
+                            var y = serviceLocParamCombinations[label].y;
+                            var height = 100;
+                            var x = (block.start+trans)*timeScale;
+                            var width = (block.end-block.start)*timeScale;
+                            var attrs = {};
+                            if (block.pinned){
+                                attrs.stroke = "red";
+                            }
+                            else {
+                                attrs.stroke = "black";
+                            }
+                            if (block.fetching){
+                                attrs.fill = '#C8FFAE';
+                            } else if (block.fetched){
+                                if (block.age === 0){
+                                    attrs.fill = '#F9B836';
+                                }
+                                else {
+                                    attrs.fill = '#DDF1FF';
+                                }
+                            }
+                            if (block.waitingRecycling){
+                                attrs.fill = "white";
+                                attrs['stroke-dasharray'] = '-';
+                            }
+                            else {
+                                attrs['stroke-dasharray'] = '';
+                            }
+                            
+                            attrs.fillOpacity = 1/block.age;
+                            attrs.title = block.start+' - '+block.end+' age:'+block.age+', size:'+block.dataSize;
+                            
+                            paper.rect(x,y,width,height).attr(attrs);
 
-						});
-						
-						_.each(serviceLocParamCombinations, function(obj,index){
-						   paper.text(100,obj.y+50,obj.label); 
-						});
-						
-						paper.setSize(1024,_.keys(serviceLocParamCombinations).length*150);
-						
-						_.each(activeFetches,function(taskDef,index){
-							paper.rect((taskDef.start+trans)*timeScale,0,(taskDef.end-taskDef.start+trans)*timeScale,10).attr({
-								stroke: 'black'
-							});
-						});
-				}
-				
-				delayedUpdateView = _.throttle(updateView,200);
-					
-				init();
-				updateView();
-					
-				$('#ctrl').submit(function(e){
-					e.preventDefault();
-				});
-				$('#fetch').click(function(e){
-					doFetch();
-				});
-				
-					$('#clear').click(function(e){
-						cache.clearCache();
-						delayedUpdateView();
-					});
-						
+                        });
+                        
+                        _.each(serviceLocParamCombinations, function(obj,index){
+                           paper.text(100,obj.y+50,obj.label); 
+                        });
+                        
+                        paper.setSize(1024,_.keys(serviceLocParamCombinations).length*150);
+                        
+                        _.each(activeFetches,function(taskDef,index){
+                            paper.rect((taskDef.start+trans)*timeScale,0,(taskDef.end-taskDef.start+trans)*timeScale,10).attr({
+                                stroke: 'black'
+                            });
+                        });
+                }
+                
+                delayedUpdateView = _.throttle(updateView,200);
+                    
+                init();
+                updateView();
+                    
+                $('#ctrl').submit(function(e){
+                    e.preventDefault();
+                });
+                $('#fetch').click(function(e){
+                    doFetch();
+                });
+                
+                $('#clear').click(function(e){
+                    cache.clearCache();
+                    minTime = 0;
+                    maxTime = 100;
+                    delayedUpdateView();
+                });
+
     });
     </script>
 </head>
 <html>
-	<body>
-	    <h1>SplitterCache test bench</h1>
-		<div id="control">
-			<form id="ctrl" action="" method="GET">
-				<label for="service">Service</label><select id="service"><option selected="selected">obs</option><option>fct</option></select><br/>
-				<label for="parameter">Parameters</label><input type="text" value="temp" id="parameter"/><br/>
-				<label for="location">Locations</label><input type="text" value="Kaisaniemi" id="location"/><br/>
-				<label for="resolution">Resolution</label><input type="text" value="10" id="resolution"/><br/>
-				<label for="start">Start</label><input type="text" value="0" id="start"/><label for="start_rand">randomize +/- steps</label><input type="text" value="100" id="start_rand"/><br/>
-				<label for="end">End</label><input type="text" value="1000" id="end"/><label for="end_rand">randomize +/- steps</label><input type="text" value="100" id="end_rand"/><br/>
-				<label for="repeat">Repeat</label><input type="text" value="1" id="repeat"/><br/>
-				<button id="fetch">Fetch</button><button id="clear">Clear cache</button>
-			</form>
-		</div>
-		<div id="cachevis" style="width:1024px;height:600px;border-style:solid;border-width:1px;overflow:auto"></div>
-	</body>
+    <body>
+        <h1>SplitterCache test bench</h1>
+        <div id="control">
+            <form id="ctrl" action="" method="GET">
+                <label for="service">Service</label><select id="service"><option selected="selected">obs</option><option>fct</option></select><br/>
+                <label for="parameter">Parameters</label><input type="text" value="temp" id="parameter"/><br/>
+                <label for="location">Locations</label><input type="text" value="Kaisaniemi" id="location"/><br/>
+                <label for="resolution">Resolution</label><input type="text" value="10" id="resolution"/><br/>
+                <label for="start">Start</label><input type="text" value="0" id="start"/><label for="start_rand">randomize +/- steps</label><input type="text" value="100" id="start_rand"/><br/>
+                <label for="end">End</label><input type="text" value="1000" id="end"/><label for="end_rand">randomize +/- steps</label><input type="text" value="100" id="end_rand"/><br/>
+                <label for="repeat">Repeat</label><input type="text" value="1" id="repeat"/><br/>
+                <button id="fetch">Fetch</button><button id="clear">Clear cache</button>
+            </form>
+        </div>
+        <div id="cachevis" style="width:1024px;height:600px;border-style:solid;border-width:1px;overflow:auto"></div>
+    </body>
 </html>
