@@ -299,6 +299,57 @@ describe("Parser", function() {
         });
     }
 
+    function testForecastGeoidHelsinkiTemperature(url, cb) {
+        fi.fmi.metoclient.metolib.WfsRequestParser.getData({
+            url : url,
+            storedQueryId : STORED_QUERY_FORECAST,
+            requestParameter : "temperature",
+            // Integer values are used to init dates for older browsers.
+            // (new Date("2013-05-10T08:00:00Z")).getTime()
+            // (new Date("2013-05-12T10:00:00Z")).getTime()
+            begin : new Date(1368172800000),
+            end : new Date(1368352800000),
+            timestep : 60 * 60 * 1000,
+            geoid : 658225,
+            callback : function(data, errors) {
+                // Times that XML should provide. Notice, these are in seconds.
+                var times = [1368172800, 1368176400, 1368180000, 1368183600, 1368187200, 1368190800, 1368194400, 1368198000, 1368201600, 1368205200, 1368208800, 1368212400, 1368216000, 1368219600, 1368223200, 1368226800, 1368230400, 1368234000, 1368237600, 1368241200, 1368244800, 1368248400, 1368252000, 1368255600, 1368259200, 1368262800, 1368266400, 1368270000, 1368273600, 1368277200, 1368280800, 1368284400, 1368288000, 1368291600, 1368295200, 1368298800, 1368302400, 1368306000, 1368309600, 1368313200, 1368316800, 1368320400, 1368324000, 1368327600, 1368331200, 1368334800, 1368338400, 1368342000, 1368345600, 1368349200, 1368352800];
+                // Notice, server does not have forecast data of the past.
+                // Therefore, all the values are NaN values if begin and end times define period in the past.
+                // For local data tests proper values could be used. But, NaN needs to be used here if both local
+                // and server data tests should be run.
+                var values = [NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN];
+                cb(fi.fmi.metoclient.test.SpecUtils.checkData(data, times, values));
+            }
+        });
+    }
+
+    function testForecastGeoidHelsinkiGeoidKumpulaTemperature(url, cb) {
+        fi.fmi.metoclient.metolib.WfsRequestParser.getData({
+            url : url,
+            storedQueryId : STORED_QUERY_FORECAST,
+            requestParameter : "temperature",
+            // Integer values are used to init dates for older browsers.
+            // (new Date("2013-05-10T08:00:00Z")).getTime()
+            // (new Date("2013-05-12T10:00:00Z")).getTime()
+            begin : new Date(1368172800000),
+            end : new Date(1368352800000),
+            timestep : 60 * 60 * 1000,
+            // GeoId can be integer or string or multiple values in an array.
+            geoid : [658225, "843429"],
+            callback : function(data, errors) {
+                // Times that XML should provide. Notice, these are in seconds.
+                var times = [1368172800, 1368176400, 1368180000, 1368183600, 1368187200, 1368190800, 1368194400, 1368198000, 1368201600, 1368205200, 1368208800, 1368212400, 1368216000, 1368219600, 1368223200, 1368226800, 1368230400, 1368234000, 1368237600, 1368241200, 1368244800, 1368248400, 1368252000, 1368255600, 1368259200, 1368262800, 1368266400, 1368270000, 1368273600, 1368277200, 1368280800, 1368284400, 1368288000, 1368291600, 1368295200, 1368298800, 1368302400, 1368306000, 1368309600, 1368313200, 1368316800, 1368320400, 1368324000, 1368327600, 1368331200, 1368334800, 1368338400, 1368342000, 1368345600, 1368349200, 1368352800, 1368172800, 1368176400, 1368180000, 1368183600, 1368187200, 1368190800, 1368194400, 1368198000, 1368201600, 1368205200, 1368208800, 1368212400, 1368216000, 1368219600, 1368223200, 1368226800, 1368230400, 1368234000, 1368237600, 1368241200, 1368244800, 1368248400, 1368252000, 1368255600, 1368259200, 1368262800, 1368266400, 1368270000, 1368273600, 1368277200, 1368280800, 1368284400, 1368288000, 1368291600, 1368295200, 1368298800, 1368302400, 1368306000, 1368309600, 1368313200, 1368316800, 1368320400, 1368324000, 1368327600, 1368331200, 1368334800, 1368338400, 1368342000, 1368345600, 1368349200, 1368352800];
+                // Notice, server does not have forecast data of the past.
+                // Therefore, all the values are NaN values if begin and end times define period in the past.
+                // For local data tests proper values could be used. But, NaN needs to be used here if both local
+                // and server data tests should be run.
+                var values = [NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN];
+                cb(fi.fmi.metoclient.test.SpecUtils.checkData(data, times, values));
+            }
+        });
+    }
+
     function testHkiQueryExtensionWmoKumpulaTd(url, cb) {
         fi.fmi.metoclient.metolib.WfsRequestParser.getData({
             url : url,
@@ -853,7 +904,7 @@ describe("Parser", function() {
         // Start the async call in the first one:
         runs(function() {
             try {
-                testWmoHelsinkiWmoKumpulaTd(getLocalUrlBase() + "wmo_helsinki_wmo_kumpula_td.xml", function(success) {
+                testWmoHelsinkiWmoKumpulaTd(getLocalUrlBase() + "wmo_hki_wmo_kumpula_td.xml", function(success) {
                     expect(success).toBeTruthy();
                     finished = true;
                 });
@@ -881,6 +932,112 @@ describe("Parser", function() {
             runs(function() {
                 try {
                     testWmoHelsinkiWmoKumpulaTd(getSpecRunnerTestServerUrl(), function(success) {
+                        expect(success).toBeTruthy();
+                        finished = true;
+                    });
+
+                } catch (exception) {
+                    finished = true;
+                    expect(false).toBeTruthy();
+                }
+            });
+
+            // Wait max secs for all the async calls to finish:
+            waitsFor(function() {
+                return finished;
+            }, "request and parse operation to finish!", TEST_TIME_OUT);
+        });
+    }
+
+    /* ======================================== */
+    it("Local data, forecast, geoid Helsinki, temperature", function() {
+        var finished = false;
+
+        /* ======================================== */
+        // Start the async call in the first one:
+        runs(function() {
+            try {
+                testForecastGeoidHelsinkiTemperature(getLocalUrlBase() + "forecast_geoid_hki_temperature.xml", function(success) {
+                    expect(success).toBeTruthy();
+                    finished = true;
+                });
+
+            } catch (exception) {
+                finished = true;
+                expect(false).toBeTruthy();
+            }
+        });
+
+        // Wait max secs for all the async calls to finish:
+        waitsFor(function() {
+            return finished;
+        }, "request and parse operation to finish!", TEST_TIME_OUT);
+    });
+
+    // Check if test should be run for server data.
+    if (!isOnlyLocalTests()) {
+        /* ======================================== */
+        it("Server data, forecast, geoid Helsinki, temperature", function() {
+            var finished = false;
+
+            /* ======================================== */
+            // Start the async call in the first one:
+            runs(function() {
+                try {
+                    testForecastGeoidHelsinkiTemperature(getSpecRunnerTestServerUrl(), function(success) {
+                        expect(success).toBeTruthy();
+                        finished = true;
+                    });
+
+                } catch (exception) {
+                    finished = true;
+                    expect(false).toBeTruthy();
+                }
+            });
+
+            // Wait max secs for all the async calls to finish:
+            waitsFor(function() {
+                return finished;
+            }, "request and parse operation to finish!", TEST_TIME_OUT);
+        });
+    }
+
+    /* ======================================== */
+    it("Local data, forecast, geoid Helsinki, geoid Kumpula, temperature", function() {
+        var finished = false;
+
+        /* ======================================== */
+        // Start the async call in the first one:
+        runs(function() {
+            try {
+                testForecastGeoidHelsinkiGeoidKumpulaTemperature(getLocalUrlBase() + "forecast_geoid_hki_geoid_kumpula_temperature.xml", function(success) {
+                    expect(success).toBeTruthy();
+                    finished = true;
+                });
+
+            } catch (exception) {
+                finished = true;
+                expect(false).toBeTruthy();
+            }
+        });
+
+        // Wait max secs for all the async calls to finish:
+        waitsFor(function() {
+            return finished;
+        }, "request and parse operation to finish!", TEST_TIME_OUT);
+    });
+
+    // Check if test should be run for server data.
+    if (!isOnlyLocalTests()) {
+        /* ======================================== */
+        it("Server data, forecast, geoid Helsinki, geoid Kumpula, temperature", function() {
+            var finished = false;
+
+            /* ======================================== */
+            // Start the async call in the first one:
+            runs(function() {
+                try {
+                    testForecastGeoidHelsinkiGeoidKumpulaTemperature(getSpecRunnerTestServerUrl(), function(success) {
                         expect(success).toBeTruthy();
                         finished = true;
                     });

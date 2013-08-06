@@ -60,7 +60,7 @@ describe("Connection", function() {
         return fi.fmi.metoclient.test && fi.fmi.metoclient.test.SpecConfig && fi.fmi.metoclient.test.SpecConfig.SPEC_RUNNER_TEST_SERVER_URL ? fi.fmi.metoclient.test.SpecConfig.SPEC_RUNNER_TEST_SERVER_URL : "";
     }
 
-    function testConnectionKumpulaHkiTd(connection, cb) {
+    function testKumpulaHkiTd(connection, cb) {
         var progressCalled = false;
         if (!connection.getData({
             requestParameter : "td",
@@ -99,7 +99,7 @@ describe("Connection", function() {
         }
     }
 
-    function testConnectionHkiTd(connection, cb) {
+    function testHkiTd(connection, cb) {
         var progressCalled = false;
         if (!connection.getData({
             requestParameter : "td",
@@ -137,7 +137,7 @@ describe("Connection", function() {
         }
     }
 
-    function testConnectionHkiTurkuTdWindspeed(connection, cb) {
+    function testHkiTurkuTdWindspeed(connection, cb) {
         var progressCalled = false;
         if (!connection.getData({
             requestParameter : "td,ws_10min",
@@ -173,7 +173,7 @@ describe("Connection", function() {
         }
     }
 
-    function testConnectionKumpulaHkiTurkuTdWindspeed(connection, cb) {
+    function testKumpulaHkiTurkuTdWindspeed(connection, cb) {
         var progressCalled = false;
         if (!connection.getData({
             requestParameter : "td,ws_10min",
@@ -209,7 +209,7 @@ describe("Connection", function() {
         }
     }
 
-    function testConnectionSpatialTdWindspeed(connection, cb) {
+    function testSpatialTdWindspeed(connection, cb) {
         var progressCalled = false;
         if (!connection.getData({
             requestParameter : "td,ws_10min",
@@ -244,7 +244,7 @@ describe("Connection", function() {
         }
     }
 
-    function testConnectionForecastHkiTemperature(connection, cb) {
+    function testForecastHkiTemperature(connection, cb) {
         var progressCalled = false;
         if (!connection.getData({
             requestParameter : "temperature",
@@ -281,7 +281,7 @@ describe("Connection", function() {
         }
     }
 
-    function testConnectionForecastHkiWindspeed(connection, cb) {
+    function testForecastHkiWindspeed(connection, cb) {
         var progressCalled = false;
         if (!connection.getData({
             requestParameter : "windspeedms",
@@ -318,7 +318,7 @@ describe("Connection", function() {
         }
     }
 
-    function testConnectionForecastHkiTemperatureWindspeed(connection, cb) {
+    function testForecastHkiTemperatureWindspeed(connection, cb) {
         var progressCalled = false;
         if (!connection.getData({
             requestParameter : "temperature,windspeedms",
@@ -346,6 +346,81 @@ describe("Connection", function() {
                 var propertyDataWs = data && data.properties ? data.properties.windspeedms : undefined;
                 var propertyWsCheck = propertyDataWs && propertyDataWs.label === "Wind speed" && propertyDataWs.phenomenon === "Wind" && propertyDataWs.unit === "m/s" && propertyDataWs.statisticalFunction === "avg" && propertyDataWs.statisticalPeriod === "PT1H";
                 var success = infoCheck && propertyTemperatureCheck && propertyWsCheck && fi.fmi.metoclient.test.SpecUtils.checkData(data, times, values);
+                if (cb) {
+                    cb(success && progressCalled);
+                }
+            },
+            progressCallback : function(err, partStart, partEnd) {
+                // Simple check to test that progress has been called during the flow.
+                progressCalled = !isNaN(partStart) && !isNaN(partEnd);
+            }
+        })) {
+            if (cb) {
+                cb(false);
+            }
+        }
+    }
+
+    function testForecastGeoidHelsinkiTemperature(connection, cb) {
+        var progressCalled = false;
+        if (!connection.getData({
+            requestParameter : "temperature",
+            // Integer values are used to init dates for older browsers.
+            // (new Date("2013-05-10T08:00:00Z")).getTime()
+            // (new Date("2013-05-12T10:00:00Z")).getTime()
+            begin : new Date(1368172800000),
+            end : new Date(1368352800000),
+            timestep : 60 * 60 * 1000,
+            geoid : 658225,
+            callback : function(data, errors) {
+                // Notice, the values here are the correct values for time period defined above.
+                // Connection may request extra values around the given times. Therefore, XML may contain more values than just these.
+                // Times that XML should provide. Notice, these are in seconds.
+                var times = [1368172800, 1368176400, 1368180000, 1368183600, 1368187200, 1368190800, 1368194400, 1368198000, 1368201600, 1368205200, 1368208800, 1368212400, 1368216000, 1368219600, 1368223200, 1368226800, 1368230400, 1368234000, 1368237600, 1368241200, 1368244800, 1368248400, 1368252000, 1368255600, 1368259200, 1368262800, 1368266400, 1368270000, 1368273600, 1368277200, 1368280800, 1368284400, 1368288000, 1368291600, 1368295200, 1368298800, 1368302400, 1368306000, 1368309600, 1368313200, 1368316800, 1368320400, 1368324000, 1368327600, 1368331200, 1368334800, 1368338400, 1368342000, 1368345600, 1368349200, 1368352800];
+                // Notice, server does not have forecast data of the past.
+                // Therefore, all the values are NaN values if begin and end times define period in the past.
+                // For local data tests proper values could be used. But, NaN needs to be used here if both local
+                // and server data tests should be run.
+                var values = [NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN];
+                var success = fi.fmi.metoclient.test.SpecUtils.checkData(data, times, values);
+                if (cb) {
+                    cb(success && progressCalled);
+                }
+            },
+            progressCallback : function(err, partStart, partEnd) {
+                // Simple check to test that progress has been called during the flow.
+                progressCalled = !isNaN(partStart) && !isNaN(partEnd);
+            }
+        })) {
+            if (cb) {
+                cb(false);
+            }
+        }
+    }
+
+    function testForecastGeoidHelsinkiGeoidKumpulaTemperature(connection, cb) {
+        var progressCalled = false;
+        if (!connection.getData({
+            requestParameter : "temperature",
+            // Integer values are used to init dates for older browsers.
+            // (new Date("2013-05-10T08:00:00Z")).getTime()
+            // (new Date("2013-05-12T10:00:00Z")).getTime()
+            begin : new Date(1368172800000),
+            end : new Date(1368352800000),
+            timestep : 60 * 60 * 1000,
+            // GeoId can be integer or string or multiple values in an array.
+            geoid : [658225, "843429"],
+            callback : function(data, errors) {
+                // Notice, the values here are the correct values for time period defined above.
+                // Connection may request extra values around the given times. Therefore, XML may contain more values than just these.
+                // Times that XML should provide. Notice, these are in seconds.
+                var times = [1368172800, 1368176400, 1368180000, 1368183600, 1368187200, 1368190800, 1368194400, 1368198000, 1368201600, 1368205200, 1368208800, 1368212400, 1368216000, 1368219600, 1368223200, 1368226800, 1368230400, 1368234000, 1368237600, 1368241200, 1368244800, 1368248400, 1368252000, 1368255600, 1368259200, 1368262800, 1368266400, 1368270000, 1368273600, 1368277200, 1368280800, 1368284400, 1368288000, 1368291600, 1368295200, 1368298800, 1368302400, 1368306000, 1368309600, 1368313200, 1368316800, 1368320400, 1368324000, 1368327600, 1368331200, 1368334800, 1368338400, 1368342000, 1368345600, 1368349200, 1368352800, 1368172800, 1368176400, 1368180000, 1368183600, 1368187200, 1368190800, 1368194400, 1368198000, 1368201600, 1368205200, 1368208800, 1368212400, 1368216000, 1368219600, 1368223200, 1368226800, 1368230400, 1368234000, 1368237600, 1368241200, 1368244800, 1368248400, 1368252000, 1368255600, 1368259200, 1368262800, 1368266400, 1368270000, 1368273600, 1368277200, 1368280800, 1368284400, 1368288000, 1368291600, 1368295200, 1368298800, 1368302400, 1368306000, 1368309600, 1368313200, 1368316800, 1368320400, 1368324000, 1368327600, 1368331200, 1368334800, 1368338400, 1368342000, 1368345600, 1368349200, 1368352800];
+                // Notice, server does not have forecast data of the past.
+                // Therefore, all the values are NaN values if begin and end times define period in the past.
+                // For local data tests proper values could be used. But, NaN needs to be used here if both local
+                // and server data tests should be run.
+                var values = [NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN];
+                var success = fi.fmi.metoclient.test.SpecUtils.checkData(data, times, values);
                 if (cb) {
                     cb(success && progressCalled);
                 }
@@ -517,60 +592,60 @@ describe("Connection", function() {
         // Synchronous functions do not need callbacks.
         expect(connection.connect( useLocalUrl ? (getLocalUrlBase() + "hki_td_missing_times.xml") : getSpecRunnerTestServerUrl(), STORED_QUERY_OBSERVATION)).toBeTruthy();
         // Insert components into the page when document has been loaded.
-        testConnectionHkiTd(connection, function(success) {
+        testHkiTd(connection, function(success) {
             expect(success).toBeTruthy();
             // Retry same to test that cache works when same data is requested.
-            testConnectionHkiTd(connection, function(success) {
+            testHkiTd(connection, function(success) {
                 expect(success).toBeTruthy();
                 // Disconnect before setting new URL.
                 expect(connection.disconnect()).toBeTruthy();
                 expect(forecastConnection.connect( useLocalUrl ? (getLocalUrlBase() + "forecast_hki_temperature.xml") : getSpecRunnerTestServerUrl(), STORED_QUERY_FORECAST)).toBeTruthy();
                 // Insert components into the page when document has been loaded.
-                testConnectionForecastHkiTemperature(forecastConnection, function(success) {
+                testForecastHkiTemperature(forecastConnection, function(success) {
                     expect(success).toBeTruthy();
                     // Retry same to test that cache works when same data is requested.
-                    testConnectionForecastHkiTemperature(forecastConnection, function(success) {
+                    testForecastHkiTemperature(forecastConnection, function(success) {
                         expect(success).toBeTruthy();
                         // Disconnect before setting new URL.
                         expect(forecastConnection.disconnect()).toBeTruthy();
                         expect(forecastConnection.connect( useLocalUrl ? (getLocalUrlBase() + "forecast_hki_windspeedms.xml") : getSpecRunnerTestServerUrl(), STORED_QUERY_FORECAST)).toBeTruthy();
                         // Insert components into the page when document has been loaded.
-                        testConnectionForecastHkiWindspeed(forecastConnection, function(success) {
+                        testForecastHkiWindspeed(forecastConnection, function(success) {
                             expect(success).toBeTruthy();
                             // Retry same to test that cache works when same data is requested.
-                            testConnectionForecastHkiWindspeed(forecastConnection, function(success) {
+                            testForecastHkiWindspeed(forecastConnection, function(success) {
                                 expect(success).toBeTruthy();
                                 // Disconnect before setting new URL.
                                 expect(forecastConnection.disconnect()).toBeTruthy();
                                 expect(forecastConnection.connect( useLocalUrl ? (getLocalUrlBase() + "forecast_hki_temperature_windspeedms.xml") : getSpecRunnerTestServerUrl(), STORED_QUERY_FORECAST)).toBeTruthy();
                                 // Insert components into the page when document has been loaded.
-                                testConnectionForecastHkiTemperatureWindspeed(forecastConnection, function(success) {
+                                testForecastHkiTemperatureWindspeed(forecastConnection, function(success) {
                                     // Retry same to test that cache works when same data is requested.
-                                    testConnectionForecastHkiTemperatureWindspeed(forecastConnection, function(success) {
+                                    testForecastHkiTemperatureWindspeed(forecastConnection, function(success) {
                                         expect(success).toBeTruthy();
                                         // Disconnect before setting new URL.
                                         expect(forecastConnection.disconnect()).toBeTruthy();
                                         expect(connection.connect( useLocalUrl ? (getLocalUrlBase() + "spatial_bbox_td_ws.xml") : getSpecRunnerTestServerUrl(), STORED_QUERY_OBSERVATION)).toBeTruthy();
                                         // Insert components into the page when document has been loaded.
-                                        testConnectionSpatialTdWindspeed(connection, function(success) {
+                                        testSpatialTdWindspeed(connection, function(success) {
                                             expect(success).toBeTruthy();
                                             // Retry same to test that cache works when same data is requested.
-                                            testConnectionSpatialTdWindspeed(connection, function(success) {
+                                            testSpatialTdWindspeed(connection, function(success) {
                                                 expect(success).toBeTruthy();
                                                 // Disconnect before setting new URL.
                                                 expect(connection.disconnect()).toBeTruthy();
                                                 expect(connection.connect( useLocalUrl ? (getLocalUrlBase() + "kumpula_hki_td.xml") : getSpecRunnerTestServerUrl(), STORED_QUERY_OBSERVATION)).toBeTruthy();
-                                                testConnectionKumpulaHkiTd(connection, function(success) {
+                                                testKumpulaHkiTd(connection, function(success) {
                                                     expect(success).toBeTruthy();
                                                     // Disconnect before setting new URL.
                                                     expect(connection.disconnect()).toBeTruthy();
                                                     expect(connection.connect( useLocalUrl ? (getLocalUrlBase() + "hki_turku_td_ws.xml") : getSpecRunnerTestServerUrl(), STORED_QUERY_OBSERVATION)).toBeTruthy();
-                                                    testConnectionHkiTurkuTdWindspeed(connection, function(success) {
+                                                    testHkiTurkuTdWindspeed(connection, function(success) {
                                                         expect(success).toBeTruthy();
                                                         // Disconnect before setting new URL.
                                                         expect(connection.disconnect()).toBeTruthy();
                                                         expect(connection.connect( useLocalUrl ? (getLocalUrlBase() + "kumpula_hki_turku_td_ws.xml") : getSpecRunnerTestServerUrl(), STORED_QUERY_OBSERVATION)).toBeTruthy();
-                                                        testConnectionKumpulaHkiTurkuTdWindspeed(connection, function(success) {
+                                                        testKumpulaHkiTurkuTdWindspeed(connection, function(success) {
                                                             expect(success).toBeTruthy();
                                                             expect(connection.disconnect()).toBeTruthy();
                                                             cb();
@@ -620,7 +695,7 @@ describe("Connection", function() {
                 var connection = new fi.fmi.metoclient.metolib.WfsConnection();
                 expect(connection.connect(getLocalUrlBase() + "hki_td_missing_times.xml", STORED_QUERY_OBSERVATION)).toBeTruthy();
                 // Insert components into the page when document has been loaded.
-                testConnectionHkiTd(connection, function(success) {
+                testHkiTd(connection, function(success) {
                     expect(success).toBeTruthy();
                     expect(connection.disconnect()).toBeTruthy();
                     finished = true;
@@ -651,7 +726,7 @@ describe("Connection", function() {
                     var connection = new fi.fmi.metoclient.metolib.WfsConnection();
                     expect(connection.connect(getSpecRunnerTestServerUrl(), STORED_QUERY_OBSERVATION)).toBeTruthy();
                     // Insert components into the page when document has been loaded.
-                    testConnectionHkiTd(connection, function(success) {
+                    testHkiTd(connection, function(success) {
                         expect(success).toBeTruthy();
                         expect(connection.disconnect()).toBeTruthy();
                         finished = true;
@@ -681,10 +756,10 @@ describe("Connection", function() {
                 var connection = new fi.fmi.metoclient.metolib.WfsConnection();
                 expect(connection.connect(getLocalUrlBase() + "hki_td_missing_times.xml", STORED_QUERY_OBSERVATION)).toBeTruthy();
                 // Insert components into the page when document has been loaded.
-                testConnectionHkiTd(connection, function(success) {
+                testHkiTd(connection, function(success) {
                     expect(success).toBeTruthy();
                     // Retry same to test that cache works when same data is requested.
-                    testConnectionHkiTd(connection, function(success) {
+                    testHkiTd(connection, function(success) {
                         expect(success).toBeTruthy();
                         // Disconnect before setting new URL.
                         expect(connection.disconnect()).toBeTruthy();
@@ -717,10 +792,10 @@ describe("Connection", function() {
                     var connection = new fi.fmi.metoclient.metolib.WfsConnection();
                     expect(connection.connect(getSpecRunnerTestServerUrl(), STORED_QUERY_OBSERVATION)).toBeTruthy();
                     // Insert components into the page when document has been loaded.
-                    testConnectionHkiTd(connection, function(success) {
+                    testHkiTd(connection, function(success) {
                         expect(success).toBeTruthy();
                         // Retry same to test that cache works when same data is requested.
-                        testConnectionHkiTd(connection, function(success) {
+                        testHkiTd(connection, function(success) {
                             expect(success).toBeTruthy();
                             // Disconnect before setting new URL.
                             expect(connection.disconnect()).toBeTruthy();
@@ -752,7 +827,7 @@ describe("Connection", function() {
                 var forecastConnection = new fi.fmi.metoclient.metolib.WfsConnection();
                 expect(forecastConnection.connect(getLocalUrlBase() + "forecast_hki_temperature.xml", STORED_QUERY_FORECAST)).toBeTruthy();
                 // Insert components into the page when document has been loaded.
-                testConnectionForecastHkiTemperature(forecastConnection, function(success) {
+                testForecastHkiTemperature(forecastConnection, function(success) {
                     expect(success).toBeTruthy();
                     // Disconnect before setting new URL.
                     expect(forecastConnection.disconnect()).toBeTruthy();
@@ -784,7 +859,7 @@ describe("Connection", function() {
                     var forecastConnection = new fi.fmi.metoclient.metolib.WfsConnection();
                     expect(forecastConnection.connect(getSpecRunnerTestServerUrl(), STORED_QUERY_FORECAST)).toBeTruthy();
                     // Insert components into the page when document has been loaded.
-                    testConnectionForecastHkiTemperature(forecastConnection, function(success) {
+                    testForecastHkiTemperature(forecastConnection, function(success) {
                         expect(success).toBeTruthy();
                         expect(forecastConnection.disconnect()).toBeTruthy();
                         finished = true;
@@ -814,10 +889,10 @@ describe("Connection", function() {
                 var forecastConnection = new fi.fmi.metoclient.metolib.WfsConnection();
                 expect(forecastConnection.connect(getLocalUrlBase() + "forecast_hki_temperature.xml", STORED_QUERY_FORECAST)).toBeTruthy();
                 // Insert components into the page when document has been loaded.
-                testConnectionForecastHkiTemperature(forecastConnection, function(success) {
+                testForecastHkiTemperature(forecastConnection, function(success) {
                     expect(success).toBeTruthy();
                     // Retry same to test that cache works when same data is requested.
-                    testConnectionForecastHkiTemperature(forecastConnection, function(success) {
+                    testForecastHkiTemperature(forecastConnection, function(success) {
                         expect(success).toBeTruthy();
                         // Disconnect before setting new URL.
                         expect(forecastConnection.disconnect()).toBeTruthy();
@@ -850,10 +925,10 @@ describe("Connection", function() {
                     var forecastConnection = new fi.fmi.metoclient.metolib.WfsConnection();
                     expect(forecastConnection.connect(getSpecRunnerTestServerUrl(), STORED_QUERY_FORECAST)).toBeTruthy();
                     // Insert components into the page when document has been loaded.
-                    testConnectionForecastHkiTemperature(forecastConnection, function(success) {
+                    testForecastHkiTemperature(forecastConnection, function(success) {
                         expect(success).toBeTruthy();
                         // Retry same to test that cache works when same data is requested.
-                        testConnectionForecastHkiTemperature(forecastConnection, function(success) {
+                        testForecastHkiTemperature(forecastConnection, function(success) {
                             expect(success).toBeTruthy();
                             // Disconnect before setting new URL.
                             expect(forecastConnection.disconnect()).toBeTruthy();
@@ -885,10 +960,10 @@ describe("Connection", function() {
                 var forecastConnection = new fi.fmi.metoclient.metolib.WfsConnection();
                 expect(forecastConnection.connect(getLocalUrlBase() + "forecast_hki_windspeedms.xml", STORED_QUERY_FORECAST)).toBeTruthy();
                 // Insert components into the page when document has been loaded.
-                testConnectionForecastHkiWindspeed(forecastConnection, function(success) {
+                testForecastHkiWindspeed(forecastConnection, function(success) {
                     expect(success).toBeTruthy();
                     // Retry same to test that cache works when same data is requested.
-                    testConnectionForecastHkiWindspeed(forecastConnection, function(success) {
+                    testForecastHkiWindspeed(forecastConnection, function(success) {
                         expect(success).toBeTruthy();
                         // Disconnect before setting new URL.
                         expect(forecastConnection.disconnect()).toBeTruthy();
@@ -921,10 +996,10 @@ describe("Connection", function() {
                     var forecastConnection = new fi.fmi.metoclient.metolib.WfsConnection();
                     expect(forecastConnection.connect(getSpecRunnerTestServerUrl(), STORED_QUERY_FORECAST)).toBeTruthy();
                     // Insert components into the page when document has been loaded.
-                    testConnectionForecastHkiWindspeed(forecastConnection, function(success) {
+                    testForecastHkiWindspeed(forecastConnection, function(success) {
                         expect(success).toBeTruthy();
                         // Retry same to test that cache works when same data is requested.
-                        testConnectionForecastHkiWindspeed(forecastConnection, function(success) {
+                        testForecastHkiWindspeed(forecastConnection, function(success) {
                             expect(success).toBeTruthy();
                             // Disconnect before setting new URL.
                             expect(forecastConnection.disconnect()).toBeTruthy();
@@ -955,9 +1030,9 @@ describe("Connection", function() {
                 var forecastConnection = new fi.fmi.metoclient.metolib.WfsConnection();
                 expect(forecastConnection.connect(getLocalUrlBase() + "forecast_hki_temperature_windspeedms.xml", STORED_QUERY_FORECAST)).toBeTruthy();
                 // Insert components into the page when document has been loaded.
-                testConnectionForecastHkiTemperatureWindspeed(forecastConnection, function(success) {
+                testForecastHkiTemperatureWindspeed(forecastConnection, function(success) {
                     // Retry same to test that cache works when same data is requested.
-                    testConnectionForecastHkiTemperatureWindspeed(forecastConnection, function(success) {
+                    testForecastHkiTemperatureWindspeed(forecastConnection, function(success) {
                         expect(success).toBeTruthy();
                         // Disconnect before setting new URL.
                         expect(forecastConnection.disconnect()).toBeTruthy();
@@ -990,9 +1065,9 @@ describe("Connection", function() {
                     var forecastConnection = new fi.fmi.metoclient.metolib.WfsConnection();
                     expect(forecastConnection.connect(getSpecRunnerTestServerUrl(), STORED_QUERY_FORECAST)).toBeTruthy();
                     // Insert components into the page when document has been loaded.
-                    testConnectionForecastHkiTemperatureWindspeed(forecastConnection, function(success) {
+                    testForecastHkiTemperatureWindspeed(forecastConnection, function(success) {
                         // Retry same to test that cache works when same data is requested.
-                        testConnectionForecastHkiTemperatureWindspeed(forecastConnection, function(success) {
+                        testForecastHkiTemperatureWindspeed(forecastConnection, function(success) {
                             expect(success).toBeTruthy();
                             // Disconnect before setting new URL.
                             expect(forecastConnection.disconnect()).toBeTruthy();
@@ -1023,10 +1098,10 @@ describe("Connection", function() {
                 var connection = new fi.fmi.metoclient.metolib.WfsConnection();
                 expect(connection.connect(getLocalUrlBase() + "spatial_bbox_td_ws.xml", STORED_QUERY_OBSERVATION)).toBeTruthy();
                 // Insert components into the page when document has been loaded.
-                testConnectionSpatialTdWindspeed(connection, function(success) {
+                testSpatialTdWindspeed(connection, function(success) {
                     expect(success).toBeTruthy();
                     // Retry same to test that cache works when same data is requested.
-                    testConnectionSpatialTdWindspeed(connection, function(success) {
+                    testSpatialTdWindspeed(connection, function(success) {
                         expect(success).toBeTruthy();
                         // Disconnect before setting new URL.
                         expect(connection.disconnect()).toBeTruthy();
@@ -1058,10 +1133,10 @@ describe("Connection", function() {
                     var connection = new fi.fmi.metoclient.metolib.WfsConnection();
                     expect(connection.connect(getSpecRunnerTestServerUrl(), STORED_QUERY_OBSERVATION)).toBeTruthy();
                     // Insert components into the page when document has been loaded.
-                    testConnectionSpatialTdWindspeed(connection, function(success) {
+                    testSpatialTdWindspeed(connection, function(success) {
                         expect(success).toBeTruthy();
                         // Retry same to test that cache works when same data is requested.
-                        testConnectionSpatialTdWindspeed(connection, function(success) {
+                        testSpatialTdWindspeed(connection, function(success) {
                             expect(success).toBeTruthy();
                             // Disconnect before setting new URL.
                             expect(connection.disconnect()).toBeTruthy();
@@ -1091,7 +1166,7 @@ describe("Connection", function() {
             try {
                 var connection = new fi.fmi.metoclient.metolib.WfsConnection();
                 expect(connection.connect(getLocalUrlBase() + "kumpula_hki_td.xml", STORED_QUERY_OBSERVATION)).toBeTruthy();
-                testConnectionKumpulaHkiTd(connection, function(success) {
+                testKumpulaHkiTd(connection, function(success) {
                     expect(success).toBeTruthy();
                     // Disconnect before setting new URL.
                     expect(connection.disconnect()).toBeTruthy();
@@ -1121,7 +1196,7 @@ describe("Connection", function() {
                 try {
                     var connection = new fi.fmi.metoclient.metolib.WfsConnection();
                     expect(connection.connect(getSpecRunnerTestServerUrl(), STORED_QUERY_OBSERVATION)).toBeTruthy();
-                    testConnectionKumpulaHkiTd(connection, function(success) {
+                    testKumpulaHkiTd(connection, function(success) {
                         expect(success).toBeTruthy();
                         // Disconnect before setting new URL.
                         expect(connection.disconnect()).toBeTruthy();
@@ -1150,7 +1225,7 @@ describe("Connection", function() {
             try {
                 var connection = new fi.fmi.metoclient.metolib.WfsConnection();
                 expect(connection.connect(getLocalUrlBase() + "hki_turku_td_ws.xml", STORED_QUERY_OBSERVATION)).toBeTruthy();
-                testConnectionHkiTurkuTdWindspeed(connection, function(success) {
+                testHkiTurkuTdWindspeed(connection, function(success) {
                     expect(success).toBeTruthy();
                     // Disconnect before setting new URL.
                     expect(connection.disconnect()).toBeTruthy();
@@ -1180,7 +1255,7 @@ describe("Connection", function() {
                 try {
                     var connection = new fi.fmi.metoclient.metolib.WfsConnection();
                     expect(connection.connect(getSpecRunnerTestServerUrl(), STORED_QUERY_OBSERVATION)).toBeTruthy();
-                    testConnectionHkiTurkuTdWindspeed(connection, function(success) {
+                    testHkiTurkuTdWindspeed(connection, function(success) {
                         expect(success).toBeTruthy();
                         // Disconnect before setting new URL.
                         expect(connection.disconnect()).toBeTruthy();
@@ -1209,7 +1284,7 @@ describe("Connection", function() {
             try {
                 var connection = new fi.fmi.metoclient.metolib.WfsConnection();
                 expect(connection.connect(getLocalUrlBase() + "kumpula_hki_turku_td_ws.xml", STORED_QUERY_OBSERVATION)).toBeTruthy();
-                testConnectionKumpulaHkiTurkuTdWindspeed(connection, function(success) {
+                testKumpulaHkiTurkuTdWindspeed(connection, function(success) {
                     expect(success).toBeTruthy();
                     expect(connection.disconnect()).toBeTruthy();
                     finished = true;
@@ -1238,7 +1313,121 @@ describe("Connection", function() {
                 try {
                     var connection = new fi.fmi.metoclient.metolib.WfsConnection();
                     expect(connection.connect(getSpecRunnerTestServerUrl(), STORED_QUERY_OBSERVATION)).toBeTruthy();
-                    testConnectionKumpulaHkiTurkuTdWindspeed(connection, function(success) {
+                    testKumpulaHkiTurkuTdWindspeed(connection, function(success) {
+                        expect(success).toBeTruthy();
+                        expect(connection.disconnect()).toBeTruthy();
+                        finished = true;
+                    });
+
+                } catch (exception) {
+                    finished = true;
+                    expect(false).toBeTruthy();
+                }
+            });
+
+            // Wait max secs for all the async calls to finish:
+            waitsFor(function() {
+                return finished;
+            }, "connection operations to finish!", TEST_TIME_OUT);
+        });
+    }
+
+    /* ======================================== */
+    it("Local data, forecast, geoid Helsinki, temperature", function() {
+        var finished = false;
+
+        // Start the async call in the first one:
+        runs(function() {
+            try {
+                var connection = new fi.fmi.metoclient.metolib.WfsConnection();
+                expect(connection.connect(getLocalUrlBase() + "forecast_geoid_hki_temperature.xml", STORED_QUERY_FORECAST)).toBeTruthy();
+                testForecastGeoidHelsinkiTemperature(connection, function(success) {
+                    expect(success).toBeTruthy();
+                    expect(connection.disconnect()).toBeTruthy();
+                    finished = true;
+                });
+
+            } catch (exception) {
+                finished = true;
+                expect(false).toBeTruthy();
+            }
+        });
+
+        // Wait max secs for all the async calls to finish:
+        waitsFor(function() {
+            return finished;
+        }, "connection operations to finish!", TEST_TIME_OUT);
+    });
+
+    // Check if test should be run for server data.
+    if (!isOnlyLocalTests()) {
+        /* ======================================== */
+        it("Server data, forecast, geoid Helsinki, temperature", function() {
+            var finished = false;
+
+            // Start the async call in the first one:
+            runs(function() {
+                try {
+                    var connection = new fi.fmi.metoclient.metolib.WfsConnection();
+                    expect(connection.connect(getSpecRunnerTestServerUrl(), STORED_QUERY_FORECAST)).toBeTruthy();
+                    testForecastGeoidHelsinkiTemperature(connection, function(success) {
+                        expect(success).toBeTruthy();
+                        expect(connection.disconnect()).toBeTruthy();
+                        finished = true;
+                    });
+
+                } catch (exception) {
+                    finished = true;
+                    expect(false).toBeTruthy();
+                }
+            });
+
+            // Wait max secs for all the async calls to finish:
+            waitsFor(function() {
+                return finished;
+            }, "connection operations to finish!", TEST_TIME_OUT);
+        });
+    }
+
+    /* ======================================== */
+    it("Local data, forecast, geoid Helsinki, geoid Kumpula, temperature", function() {
+        var finished = false;
+
+        // Start the async call in the first one:
+        runs(function() {
+            try {
+                var connection = new fi.fmi.metoclient.metolib.WfsConnection();
+                expect(connection.connect(getLocalUrlBase() + "forecast_geoid_hki_geoid_kumpula_temperature.xml", STORED_QUERY_FORECAST)).toBeTruthy();
+                testForecastGeoidHelsinkiGeoidKumpulaTemperature(connection, function(success) {
+                    expect(success).toBeTruthy();
+                    expect(connection.disconnect()).toBeTruthy();
+                    finished = true;
+                });
+
+            } catch (exception) {
+                finished = true;
+                expect(false).toBeTruthy();
+            }
+        });
+
+        // Wait max secs for all the async calls to finish:
+        waitsFor(function() {
+            return finished;
+        }, "connection operations to finish!", TEST_TIME_OUT);
+    });
+
+    // Check if test should be run for server data.
+    if (!isOnlyLocalTests()) {
+        /* ======================================== */
+        it("Server data, forecast, geoid Helsinki, geoid Kumpula, temperature", function() {
+            var finished = false;
+
+            // Start the async call in the first one:
+            runs(function() {
+                try {
+                    var connection = new fi.fmi.metoclient.metolib.WfsConnection();
+                    expect(connection.connect(getSpecRunnerTestServerUrl(), STORED_QUERY_FORECAST)).toBeTruthy();
+                    testForecastGeoidHelsinkiGeoidKumpulaTemperature(connection, function(success) {
                         expect(success).toBeTruthy();
                         expect(connection.disconnect()).toBeTruthy();
                         finished = true;
@@ -1322,7 +1511,7 @@ describe("Connection", function() {
         runs(function() {
             try {
                 var connection = new fi.fmi.metoclient.metolib.WfsConnection();
-                expect(connection.connect(getLocalUrlBase() + "wmo_helsinki_wmo_kumpula_td.xml", STORED_QUERY_OBSERVATION)).toBeTruthy();
+                expect(connection.connect(getLocalUrlBase() + "wmo_hki_wmo_kumpula_td.xml", STORED_QUERY_OBSERVATION)).toBeTruthy();
                 testWmoHelsinkiWmoKumpulaTd(connection, function(success) {
                     expect(success).toBeTruthy();
                     expect(connection.disconnect()).toBeTruthy();

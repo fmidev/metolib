@@ -109,6 +109,7 @@ fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
         REQUEST_BEGIN : "&starttime=",
         REQUEST_END : "&endtime=",
         REQUEST_TIMESTEP : "&timestep=",
+        REQUEST_GEOID : "&geoid=",
         REQUEST_WMO : "&wmo=",
         REQUEST_PLACE : "&place=",
         REQUEST_BBOX : "&bbox=",
@@ -357,6 +358,7 @@ fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
      *         {
      *             info : {
      *                 id : "locationIdString",
+     *                 geoid : "geoidString",
      *                 wmo : "wmoString",
      *                 name : "locationNameString",
      *                 region : "regionNameString",
@@ -427,7 +429,8 @@ fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
                                 info : {
                                     // At least an empty string is set as property value.
                                     // Notice, values are strings, not integers.
-                                    id : contentLocation.id || contentLocation.geoid || "",
+                                    id : contentLocation.id || "",
+                                    geoid : contentLocation.geoid || "",
                                     wmo : contentLocation.wmo || "",
                                     name : contentLocation.name || position.name || "",
                                     region : contentLocation.region || "",
@@ -1785,7 +1788,7 @@ fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
      * See API function {@link #getData()} for function and parameter descriptions.
      * @throws {String} Exception if parameters are not correct.
      */
-    function getParsedData(url, storedQueryId, requestParameter, begin, end, timestep, numOfTimesteps, denyTimeAdjusting, wmo, sites, bbox, crs, queryExtension, callback) {
+    function getParsedData(url, storedQueryId, requestParameter, begin, end, timestep, numOfTimesteps, denyTimeAdjusting, geoid, wmo, sites, bbox, crs, queryExtension, callback) {
         // Convert possible integer millisecond values of times into Date objects.
         if (!( begin instanceof Date) && !isNaN(begin)) {
             begin = new Date(begin);
@@ -1810,10 +1813,11 @@ fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
         var storedQueryCheck = storedQueryId && _.isString(storedQueryId);
         var parameterCheck = requestParameter && _.isString(requestParameter);
         var periodCheck = begin instanceof Date && end instanceof Date && begin.getTime() <= end.getTime() && (!timestep || _.isNumber(timestep) );
+        var geoidCheck = _.isNumber(geoid) || geoid && _.isString(geoid) || _.isArray(geoid) && geoid.length;
         var wmoCheck = _.isNumber(wmo) || wmo && _.isString(wmo) || _.isArray(wmo) && wmo.length;
         var sitesCheck = sites && _.isString(sites) || _.isArray(sites) && sites.length;
         var bboxCheck = bbox && _.isString(bbox);
-        var locationGivenCheck = wmoCheck || sitesCheck || bboxCheck;
+        var locationGivenCheck = geoidCheck || wmoCheck || sitesCheck || bboxCheck;
         var crsCheck = !crs || _.isString(crs);
         if (urlCheck && storedQueryCheck && parameterCheck && periodCheck && locationGivenCheck && crsCheck) {
             // Check if begin and end times should be adjusted for server. They need to be exact for minutes.
@@ -1842,15 +1846,36 @@ fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
             // be numbers are checked above and numbers are always accepted.
             requestParameter = fi.fmi.metoclient.metolib.Utils.encodeUriComponent(requestParameter);
 
-            var wmoParameter = "";
-            if (wmo || wmo === 0) {
-                if (_.isNumber(wmo) || _.isString(wmo)) {
-                    // Insert wmo string into an array if only string was given.
-                    wmo = [wmo];
+            var ind;
+            var geoidParameter = "";
+            if (_.isNumber(geoid) || geoid && _.isString(geoid)) {
+                // Insert geoid into an array if integer or string was given.
+                geoid = [geoid];
+
+            }
+            // Content should always be in an array.
+            if (_.isArray(geoid)) {
+                // There may be multiple geoids. Server accepts multiple geoid parameters.
+                for ( ind = 0; ind < geoid.length; ++ind) {
+                    var tmpGeoid = geoid[ind];
+                    if (_.isNumber(tmpGeoid) || tmpGeoid && _.isString(tmpGeoid)) {
+                        tmpGeoid = fi.fmi.metoclient.metolib.Utils.encodeUriComponent(tmpGeoid);
+                        geoidParameter += myConstants.REQUEST_GEOID + tmpGeoid;
+                    }
                 }
+            }
+
+            var wmoParameter = "";
+            if (_.isNumber(wmo) || wmo && _.isString(wmo)) {
+                // Insert string into an array if integer or string was given.
+                wmo = [wmo];
+
+            }
+            // Content should always be in an array.
+            if (_.isArray(wmo)) {
                 // There may be multiple wmos. Server accepts multiple wmo parameters.
-                for (var i = 0; i < wmo.length; ++i) {
-                    var tmpWmo = wmo[i];
+                for ( ind = 0; ind < wmo.length; ++ind) {
+                    var tmpWmo = wmo[ind];
                     if (_.isNumber(tmpWmo) || tmpWmo && _.isString(tmpWmo)) {
                         tmpWmo = fi.fmi.metoclient.metolib.Utils.encodeUriComponent(tmpWmo);
                         wmoParameter += myConstants.REQUEST_WMO + tmpWmo;
@@ -1865,8 +1890,8 @@ fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
                     sites = [sites];
                 }
                 // There may be multiple places. Server accepts multiple place parameters.
-                for (var j = 0; j < sites.length; ++j) {
-                    var place = sites[j];
+                for ( ind = 0; ind < sites.length; ++ind) {
+                    var place = sites[ind];
                     if (place && _.isString(place)) {
                         place = fi.fmi.metoclient.metolib.Utils.encodeUriComponent(place);
                         sitesParameter += myConstants.REQUEST_PLACE + place;
@@ -1895,7 +1920,7 @@ fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
 
             var urlQueryExtension = handleQueryExtension(queryExtension);
 
-            var requestUrl = url + urlQueryDelimiter + myConstants.REQUEST_GET_FEATURE + storedQueryIdParameter + myConstants.REQUEST_PARAMETERS + requestParameter + myConstants.REQUEST_BEGIN + begin + myConstants.REQUEST_END + end + timeStepParameter + wmoParameter + sitesParameter + bboxParameter + crsParameter + urlQueryExtension;
+            var requestUrl = url + urlQueryDelimiter + myConstants.REQUEST_GET_FEATURE + storedQueryIdParameter + myConstants.REQUEST_PARAMETERS + requestParameter + myConstants.REQUEST_BEGIN + begin + myConstants.REQUEST_END + end + timeStepParameter + geoidParameter + wmoParameter + sitesParameter + bboxParameter + crsParameter + urlQueryExtension;
             requestAndParseXml(requestUrl, callback);
 
         } else {
@@ -1963,7 +1988,7 @@ fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
                 // Then, later if string or integer values are changed in the function, they are changed
                 // to function variables instead of changing property values of the original object. Notice,
                 // arrays and objects as function parameters still refere to the original arrays and objects.
-                getParsedData(options.url, options.storedQueryId, options.requestParameter, options.begin, options.end, options.timestep, options.numOfTimesteps, options.denyTimeAdjusting, options.wmo, options.sites, options.bbox, options.crs, options.queryExtension, function(data, errors) {
+                getParsedData(options.url, options.storedQueryId, options.requestParameter, options.begin, options.end, options.timestep, options.numOfTimesteps, options.denyTimeAdjusting, options.geoid, options.wmo, options.sites, options.bbox, options.crs, options.queryExtension, function(data, errors) {
                     // Notice, errors parameter is for the errors that occurred during the asynchronous flow.
                     dataCallback(options.callback, data, errors);
                 });
@@ -2032,6 +2057,7 @@ fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
          *                  {
          *                      info : {
          *                          id : "location id string",
+         *                          geoid : "geoid string",
          *                          wmo : "wmo string",
          *                          name : "location name string",
          *                          region : "region name string",
@@ -2085,19 +2111,19 @@ fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
          *                         Mandatory property. May not be {undefined}, {null} or empty.
          *                         Stored query ID to identify the data that is requested. For example,
          *                         stored query ID may be used to request observed data or forecast data.
-         *         requestParameter : {String}/{Array(String)}
+         *         requestParameter : {String|Array(String)}
          *                            Mandatory property. May not be {undefined} or {null}. Array may not be empty.
          *                            This is one of the parameter strings that is part of
          *                            URL parameters to define which data is requested from the server.
          *                            Parameter string may contain request for multiple parameters.
          *                            For example, value for temperature may be "td". If an array is given,
          *                            strings are given as separate array string items.
-         *         begin : {int}/{Date}
+         *         begin : {int|Date}
          *                 Mandatory property. May not be {undefined} or {null}.
          *                 The begin time for the data.
          *                 Integer value is number of milliseconds since 01.01.1970 that can be gotten,
          *                 for example, with {Date::getTime()}. Alternatively, {Date} object may be given.
-         *         end : {int}/{Date}
+         *         end : {int|Date}
          *               Mandatory property. May not be {undefined} or {null}.
          *               The end time for the data.
          *               Value is number of milliseconds since 01.01.1970 that can be gotten,
@@ -2120,18 +2146,23 @@ fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
          *                             May be {undefined} or {null}.
          *                             If {true}, {begin} and {end} times are not adjusted for server but given values
          *                             are used exactly for requests. Otherwise, times are adjusted.
-         *         wmo : {Array(String|int)}/{String|int}
-         *               May be {undefined} or {null} or empty if {sites} or {bbox} is given.
+         *         geoid : {Array(String|int)|String|int}
+         *                 May be {undefined} or {null} or empty if {wmo}, {sites} or {bbox} is given.
+         *                 Array of Geographical name ID (geonames.org) strings or integers.
+         *                 One geoid can be given as a single string or integer.
+         *                 Notice, either {geoid}, {wmo}, {sites} or {bbox} is required.
+         *         wmo : {Array(String|int)|String|int}
+         *               May be {undefined} or {null} or empty if {geoid}, {sites} or {bbox} is given.
          *               Array of World Meteorological Organization (WMO) identifier strings or integers.
          *               One wmo can be given as a single string or integer.
-         *               Notice, either {wmo}, {sites} or {bbox} is required.
-         *         sites : {Array(String)}/{String}
-         *                 May be {undefined} or {null} or empty if {wmo} or {bbox} is given.
+         *               Notice, either {geoid}, {wmo}, {sites} or {bbox} is required.
+         *         sites : {Array(String)|String}
+         *                 May be {undefined} or {null} or empty if {geoid}, {wmo} or {bbox} is given.
          *                 Array of site name strings. One site can be given as a single string.
-         *                 Notice, either {wmo}, {sites} or {bbox} is required.
+         *                 Notice, either {geoid}, {wmo}, {sites} or {bbox} is required.
          *         bbox : {String}
          *                May be {undefined}, {null} or empty if {wmo} or {sites} is given.
-         *                BBOX string. Notice, either {wmo}, {sites} or {bbox} is required.
+         *                BBOX string. Notice, either {geoid}, {wmo}, {sites} or {bbox} is required.
          *         crs : {String}
          *               May be {undefined}, {null} or empty.
          *               Coordinate Reference System (CRS) string.
@@ -2162,10 +2193,10 @@ fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
          * method for special cases that should adjust times for other purposes outside the parser.
          *
          * @param {int} timestep Timestep in milliseconds. May be {undefined} or {null}.
-         * @param {int}/{Date} time Integer value is number of milliseconds since 01.01.1970 that can be gotten,
-         *                          for example, with {Date::getTime()}. Alternatively, {Date} object may be given.
-         *                          May be {undefined} or {null} but then operation is ignored and {undefined} is
-         *                          returned.
+         * @param {int|Date} time Integer value is number of milliseconds since 01.01.1970 that can be gotten,
+         *                        for example, with {Date::getTime()}. Alternatively, {Date} object may be given.
+         *                        May be {undefined} or {null} but then operation is ignored and {undefined} is
+         *                        returned.
          * @return {Date} Adjusted begin time as {Date} object. Is {undefined} if given {time} is {undefined} or {null}.
          */
         adjustBeginTime : adjustBeginTime,
@@ -2178,19 +2209,19 @@ fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
          * method for special cases that should adjust times for other purposes outside the parser.
          *
          * @param {int} timestep Timestep in milliseconds. May be {undefined} or {null}.
-         * @param {int}/{Date} end End time that is adjusted by this function.
+         * @param {int|Date} end End time that is adjusted by this function.
+         *                       Integer value is number of milliseconds since 01.01.1970 that can be gotten,
+         *                       for example, with {Date::getTime()}. Alternatively, {Date} object may be given.
+         *                       May be {undefined} or {null} but then operation is ignored and {undefined} is
+         *                       returned.
+         * @param {int|Date} begin Begin time that is used for the time period that is requested. This is needed
+         *                         in order to calculate the proper end time. Notice, {begin} does not necessarily
+         *                         need to be adjusted before calling this function because value is adjusted
+         *                         internally in this function if needed for calculations.
          *                         Integer value is number of milliseconds since 01.01.1970 that can be gotten,
          *                         for example, with {Date::getTime()}. Alternatively, {Date} object may be given.
          *                         May be {undefined} or {null} but then operation is ignored and {undefined} is
          *                         returned.
-         * @param {int}/{Date} begin Begin time that is used for the time period that is requested. This is needed
-         *                           in order to calculate the proper end time. Notice, {begin} does not necessarily
-         *                           need to be adjusted before calling this function because value is adjusted
-         *                           internally in this function if needed for calculations.
-         *                           Integer value is number of milliseconds since 01.01.1970 that can be gotten,
-         *                           for example, with {Date::getTime()}. Alternatively, {Date} object may be given.
-         *                           May be {undefined} or {null} but then operation is ignored and {undefined} is
-         *                           returned.
          * @return {Date} Adjusted end time as {Date} object. Is {undefined} if given {begin} or {end} is {undefined} or {null}.
          */
         adjustEndTime : adjustEndTime
