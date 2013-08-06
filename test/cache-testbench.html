@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <head>
     <meta charset="utf-8" />
-    <title>Animator</title>
+    <title>SplitterCache test bench</title>
 
     <!-- Stylesheets -->
     <link rel="stylesheet" type="text/css" href="cache-testbench-style.css" />
@@ -113,7 +113,8 @@
 								fetched: false,
 								pinned: false,
 								waitingRecycling: false,
-								age: 0
+								age: 0,
+								dataSize: block.getDataSize()
 							};
 							if (block.getStart() < minTime){
 								minTime = block.getStart();
@@ -237,15 +238,24 @@
 					}
 					
 					function updateView(){
-						try {
 						var trans = (minTime < 0)?(-minTime):0;
 						
 						var timeScale = paper.width/(maxTime-minTime);
 						paper.clear();
 						paper.text(10,10,minTime);
 						paper.text(paper.width-30,10,maxTime);
+						var serviceLocParamCombinations = {};
+						var yOffset = -100;
 						_.each(activeBlocks,function(block){
-							var y = (block.service == 'obs')?50:200;
+						    var label = block.service+block.location+block.parameter;
+						    if (!serviceLocParamCombinations[label]){
+						        serviceLocParamCombinations[label] = {
+						            label: block.service+', '+block.location+', '+block.parameter,
+						            y: yOffset+=150
+						        };
+						        console.log(serviceLocParamCombinations);
+					        }
+							var y = serviceLocParamCombinations[label].y;
 							var height = 100;
 							var x = (block.start+trans)*timeScale;
 							var width = (block.end-block.start)*timeScale;
@@ -255,10 +265,6 @@
 							}
 							else {
 								attrs.stroke = "black";
-							}
-							if (block.isWaitingForRecycling){
-								attrs.fill = "white";
-								attrs.stroke-dasharray = '-';
 							}
 							if (block.fetching){
 								attrs.fill = '#C8FFAE';
@@ -270,22 +276,32 @@
 									attrs.fill = '#DDF1FF';
 								}
 							}
+							if (block.waitingRecycling){
+								attrs.fill = "white";
+								attrs['stroke-dasharray'] = '-';
+							}
+							else {
+							    attrs['stroke-dasharray'] = '';
+							}
 							
 							attrs.fillOpacity = 1/block.age;
-							attrs.title = block.start+' - '+block.end+' age:'+block.age;
+							attrs.title = block.start+' - '+block.end+' age:'+block.age+', size:'+block.dataSize;
 							
 							paper.rect(x,y,width,height).attr(attrs);
 
 						});
 						
+						_.each(serviceLocParamCombinations, function(obj,index){
+						   paper.text(100,obj.y+50,obj.label); 
+						});
+						
+						paper.setSize(1024,_.keys(serviceLocParamCombinations).length*150);
+						
 						_.each(activeFetches,function(taskDef,index){
-							paper.rect((taskDef.start+trans)*timeScale,paper.height-100+index*10,(taskDef.end-taskDef.start+trans)*timeScale,10).attr({
+							paper.rect((taskDef.start+trans)*timeScale,0,(taskDef.end-taskDef.start+trans)*timeScale,10).attr({
 								stroke: 'black'
 							});
 						});
-					} catch (ex){
-						console.log(ex.toString());
-					}
 				}
 				
 				delayedUpdateView = _.throttle(updateView,200);
@@ -310,9 +326,10 @@
 </head>
 <html>
 	<body>
+	    <h1>SplitterCache test bench</h1>
 		<div id="control">
 			<form id="ctrl" action="" method="GET">
-				<label for="service">Service</label><input type="text" value="obs" id="service"/><br/>
+				<label for="service">Service</label><select id="service"><option selected="selected">obs</option><option>fct</option></select><br/>
 				<label for="parameter">Parameters</label><input type="text" value="temp" id="parameter"/><br/>
 				<label for="location">Locations</label><input type="text" value="Kaisaniemi" id="location"/><br/>
 				<label for="resolution">Resolution</label><input type="text" value="10" id="resolution"/><br/>
@@ -322,6 +339,6 @@
 				<button id="fetch">Fetch</button><button id="clear">Clear cache</button>
 			</form>
 		</div>
-		<div id="cachevis" style="width:1024px;height:400px;border-style:solid;border-width:1px"></div>
+		<div id="cachevis" style="width:1024px;height:600px;border-style:solid;border-width:1px;overflow:auto"></div>
 	</body>
 </html>
