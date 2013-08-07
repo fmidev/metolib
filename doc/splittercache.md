@@ -22,32 +22,32 @@ This section describes the internal working of the SplitterCache in a couple of 
 ### Empty cache
 In this scenario the cache does not contain any data before the fetch operation. 
 
-![Empty cache](splittercache_doc_scenario1.png)
+![Empty cache](splittercache/splittercache_doc_scenario1.png)
 
 The original request time span is split into several separately fetched data blocks (three in this case) because the request contained more data points than allowed for one block. The total fetched time series is longer than the originally requested one because of the cache proactively fetches data also at both sides of the request to prepare for executing the future requests faster (see Proactive cache filling). When all blocks have been retrieved the copy of the requested time series between `T1` and `T2` is returned to as a combined data array.
 
 ### Some required blocks cached
 The cache already contains some of the requested data requested during previous fetch operations. The SplitterCache creates data blocks for the missing parts of the time series and fetches only them from the data provider.
 
-![Some required blocks cached](splittercache_doc_scenario5.png)
+![Some required blocks cached](splittercache/splittercache_doc_scenario5.png)
 
 In this case only the block `E` from the newly fetched blocks is actually included in the final response, blocks `D` and `F` are retrieved and stored in the cache as the result of the side fetch.
 
 ### All required blocks cached
 In a lucky case the cache already contains all the required data blocks including the ones caused by side fetch. In these cases there will be no data requests to the data provider, and combined data array is composed only using the memory cache data.
 
-![All required blocks cached](splittercache_doc_scenario3.png)
+![All required blocks cached](splittercache/splittercache_doc_scenario3.png)
 
 ### Side fetch behind the scenes
 Sometimes the side fetch causes requests to the data provider even if all the data for the original request would already be cached.
 
-![Side fetch](splittercache_doc_scenario4.png)
+![Side fetch](splittercache/splittercache_doc_scenario4.png)
 
 
 ### Cache overflow & recycling
 In this a bit more complicated scenario the cache data size overflows during a fetch operation. This means that the some data blocks are removed from the cache to make space for the new data.
 
-![Cache overflow](splittercache_doc_scenario6.png)
+![Cache overflow](splittercache/splittercache_doc_scenario6.png)
 
 After the first fetch operation the cached data size is noticed to be too large. The least recently used data blocks are marked for recycling
 until enough data is removed for the total cached data size to be under the configured maximum again (`E`, `K` and `L` will be removed in this case). These data blocks are actually recycled in the beginning of the next fetch cycle, and their data is let for the garbage collector to be removed from the memory. The recycled data block objects are returned into the empty block pool to be reused during future fetch requests.

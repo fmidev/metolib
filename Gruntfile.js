@@ -101,8 +101,10 @@ module.exports = function(grunt) {
                     "_" : true,
                     "async" : true,
                     "jasmine" : true,
+                    "Raphael" : true,
                     "navigator" : true,
                     "window" : true,
+                    "document" : true,
                     "fi" : true,
                     "XDomainRequest" : true
                 }
