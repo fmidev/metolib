@@ -139,6 +139,13 @@ fi.fmi.metoclient.metolib.WfsConnection = (function() {
     /**
      * @private
      *
+     * FMISID location name prefix for cache.
+     */
+    var LOCATION_FMISID_PREFIX = "f_";
+
+    /**
+     * @private
+     *
      * Sites location name prefix for cache.
      */
     var LOCATION_SITES_PREFIX = "s_";
@@ -258,12 +265,14 @@ fi.fmi.metoclient.metolib.WfsConnection = (function() {
             // to create the cache hierarchy.
             taskDef.geoid = trimProperty(options.geoid);
             taskDef.wmo = trimProperty(options.wmo);
+            taskDef.fmisid = trimProperty(options.fmisid);
             taskDef.sites = trimSites(options.sites);
             // Combine locations information for taskDef location.
             // Notice, prefix is used for cache. Then, it is sure that different location
             // requests do not have same string for key (really rare case).
             location.push.apply(location, trimProperty(options.geoid, LOCATION_GEOID_PREFIX));
             location.push.apply(location, trimProperty(options.wmo, LOCATION_WMO_PREFIX));
+            location.push.apply(location, trimProperty(options.fmisid, LOCATION_FMISID_PREFIX));
             location.push.apply(location, trimSites(options.sites, LOCATION_SITES_PREFIX));
         }
     }
@@ -277,6 +286,7 @@ fi.fmi.metoclient.metolib.WfsConnection = (function() {
      * Location name is checked in the following order and first match is used:
      *   - GEOID
      *   - WMO
+     *   - FMISID
      *   - taskDef location contains both name and region.
      *     - If taskDef contains location that matches the given name and region,
      *       then corresponding name is returned.
@@ -288,7 +298,7 @@ fi.fmi.metoclient.metolib.WfsConnection = (function() {
      * @param {String} region Location region string. May be {undefined} or {null}.
      * @return {String} Proper location name for cache. May be {undefined} or {null} if region is.
      */
-    function locationNameForCache(taskDef, name, region, wmo, geoid) {
+    function locationNameForCache(taskDef, name, region, wmo, geoid, fmisid) {
         // Default value is just region with site prefix.
         var locationName = LOCATION_SITES_PREFIX + region;
         if (taskDef) {
@@ -311,6 +321,17 @@ fi.fmi.metoclient.metolib.WfsConnection = (function() {
                     if (taskDef.wmo[i] === wmo) {
                         // Notice, prefix is used with cache.
                         locationName = LOCATION_WMO_PREFIX + wmo;
+                        matchFound = true;
+                        break;
+                    }
+                }
+            }
+            // Check FMISID.
+            if (!matchFound && taskDef.fmisid && fmisid) {
+                for ( i = 0; i < taskDef.fmisid.length; ++i) {
+                    if (taskDef.fmisid[i] === fmisid) {
+                        // Notice, prefix is used with cache.
+                        locationName = LOCATION_FMISID_PREFIX + fmisid;
                         matchFound = true;
                         break;
                     }
@@ -521,7 +542,7 @@ fi.fmi.metoclient.metolib.WfsConnection = (function() {
             // function for the corresponding structure that cache requires.
             _.each(data.locations, function(location) {
                 // Location name is used as a key for the location object.
-                var locationName = locationNameForCache(taskDef, location.info.name, location.info.region, location.info.wmo, location.info.geoid);
+                var locationName = locationNameForCache(taskDef, location.info.name, location.info.region, location.info.wmo, location.info.geoid, location.info.fmisid);
                 if (!converted.data[locationName]) {
                     // Initialize converted data to contain location object identified by the location name.
                     converted.data[locationName] = {};
@@ -675,6 +696,7 @@ fi.fmi.metoclient.metolib.WfsConnection = (function() {
             // specific location related properties are used.
             geoid : taskDef.geoid,
             wmo : taskDef.wmo,
+            fmisid : taskDef.fmisid,
             sites : taskDef.sites,
             crs : taskDef.crs,
             queryExtension : taskDef.queryExtension,
@@ -719,6 +741,7 @@ fi.fmi.metoclient.metolib.WfsConnection = (function() {
                 denyTimeAdjusting : options.denyTimeAdjusting,
                 geoid : trimProperty(options.geoid),
                 wmo : trimProperty(options.wmo),
+                fmisid : trimProperty(options.fmisid),
                 sites : trimSites(options.sites),
                 crs : options.crs,
                 queryExtension : options.queryExtension,
@@ -787,6 +810,7 @@ fi.fmi.metoclient.metolib.WfsConnection = (function() {
             // But, bbox is the reason that all data is provided directly for the parser.
             geoid : trimProperty(options.geoid),
             wmo : trimProperty(options.wmo),
+            fmisid : trimProperty(options.fmisid),
             sites : trimSites(options.sites),
             bbox : options.bbox,
             crs : options.crs,
@@ -928,11 +952,11 @@ fi.fmi.metoclient.metolib.WfsConnection = (function() {
                 // Thefore, pass the whole query to the parser.
                 retrieveSpatialData.call(this, options);
 
-            } else if (options.geoid || options.wmo || options.sites) {
+            } else if (options.geoid || options.wmo || options.fmisid || options.sites) {
                 retrieveSitesData.call(this, options);
 
             } else {
-                var errorStr = "ERROR: Either geoid, wmo, sites or bbox is mandatory in options!";
+                var errorStr = "ERROR: Either geoid, wmo, fmisid, sites or bbox is mandatory in options!";
                 console.error(errorStr);
                 throw errorStr;
             }
@@ -1089,6 +1113,7 @@ fi.fmi.metoclient.metolib.WfsConnection = (function() {
          *                          id : "location id string",
          *                          geoid : "geoid string",
          *                          wmo : "wmo string",
+         *                          fmisid : "fmisid string",
          *                          name : "location name string",
          *                          region : "region name string",
          *                          country : "country name string",
@@ -1163,19 +1188,27 @@ fi.fmi.metoclient.metolib.WfsConnection = (function() {
          *                             If {true}, {begin} and {end} times are not adjusted for server but given values
          *                             are used exactly for requests. Otherwise, times are adjusted.
          *         geoid : {Array(String|int)|String|int}
-         *                 May be {undefined} or {null} or empty if {wmo}, {sites} or {bbox} is given.
+         *                 May be {undefined} or {null} or empty if {wmo}, {fmisid}, {sites} or {bbox} is given.
          *                 Array of Geographical name ID (geonames.org) strings or integers.
          *                 One geoid can be given as a single string or integer.
-         *                 Notice, either {geoid}, {wmo}, {sites} or {bbox} is required.
+         *                 Notice, either {geoid}, {wmo}, {fmisid}, {sites} or {bbox} is required.
          *         wmo : {Array(String|int)|String|int}
-         *               May be {undefined} or {null} or empty if {geoid}, {sites} or {bbox} is given.
+         *               May be {undefined} or {null} or empty if {geoid}, {fmisid}, {sites} or {bbox} is given.
          *               Array of World Meteorological Organization (WMO) identifier strings or integers.
          *               One wmo can be given as a single string or integer.
-         *               Notice, either {geoid}, {wmo}, {sites} or {bbox} is required.
+         *               Notice, either {geoid}, {wmo}, {fmisid}, {sites} or {bbox} is required.
+         *         fmisid : {Array(String|int)|String|int}
+         *                  May be {undefined} or {null} or empty if {geoid}, {wmo}, {sites} or {bbox} is given.
+         *                  Array of FMI observation station identifiers (fmisid) strings or integers.
+         *                  One fmisid can be given as a single string or integer.
+         *                  Notice, either {geoid}, {wmo}, {fmisid}, {sites} or {bbox} is required.
          *         sites : {Array(String)|String}
-         *                 May be {undefined} or {null} or empty if {geoid}, {wmo} or {bbox} is given.
+         *                 May be {undefined} or {null} or empty if {geoid}, {wmo}, {fmisid} or {bbox} is given.
          *                 Array of site name strings. One site can be given as a single string.
-         *                 Notice, either {geoid}, {wmo}, {sites} or {bbox} is required.
+         *                 Notice, either {geoid}, {wmo}, {fmisid}, {sites} or {bbox} is required.
+         *         bbox : {String}
+         *                May be {undefined}, {null} or empty if {geoid}, {wmo}, {fmisid} or {sites} is given.
+         *                BBOX string. Notice, either {geoid}, {wmo}, {fmisid}, {sites} or {bbox} is required.
          *         crs : {String}
          *               May be {undefined}, {null} or empty.
          *               Coordinate Reference System (CRS) string.
