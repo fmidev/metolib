@@ -15,7 +15,7 @@ $(function() {
     var activeBlocks = {};
     var activeFetches = [];
 
-    function updateView() {
+    var updateView = function() {
         var trans = (minTime < 0) ? (-minTime) : 0;
 
         var timeScale = paper.width / (maxTime - minTime);
@@ -88,11 +88,10 @@ $(function() {
                 stroke : 'black'
             });
         });
-    }
+    };
 
     // updateView function was defined above.
     // So, use it for throttle function parameter after declaration.
-    // Then, jsHint does not give warning.
     var delayedUpdateView = _.throttle(updateView, 200);
 
     function init() {

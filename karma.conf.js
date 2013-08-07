@@ -12,7 +12,7 @@ basePath = '';
 files = [
   JASMINE,
   JASMINE_ADAPTER,
-  'deps/jquery/jquery-1.9.1.js',
+  'deps/jquery/jquery-1.10.2.js',
   'deps/underscore/underscore-1.4.4.js',
   'deps/async/async-0.2.5.js',
   'src/utils.js',
