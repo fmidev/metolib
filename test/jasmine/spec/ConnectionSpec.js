@@ -16,7 +16,7 @@ describe("Connection", function() {
     function getLocalUrlBase() {
         var urlBase = fi.fmi.metoclient.test && fi.fmi.metoclient.test.GruntSpecConfig && fi.fmi.metoclient.test.GruntSpecConfig.SPEC_RUNNER_BASE_STR ? fi.fmi.metoclient.test.GruntSpecConfig.SPEC_RUNNER_BASE_STR : "";
         if (undefined !== window.__karma__) {
-            // Change the base path for Karma tests.The base path always starts with 'base'.
+            // Change the base path for Karma tests. The base path always starts with 'base'.
             urlBase = "base/" + urlBase + "data/karma/connection/";
 
         } else if (urlBase) {

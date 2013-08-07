@@ -111,6 +111,7 @@ fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
         REQUEST_TIMESTEP : "&timestep=",
         REQUEST_GEOID : "&geoid=",
         REQUEST_WMO : "&wmo=",
+        REQUEST_FMISID : "&fmisid=",
         REQUEST_PLACE : "&place=",
         REQUEST_BBOX : "&bbox=",
         REQUEST_CRS : "&crs=",
@@ -174,6 +175,7 @@ fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
         XML_ATTR_CODE_SPACE_NAME : "http://xml.fmi.fi/namespace/locationcode/name",
         XML_ATTR_CODE_SPACE_WMO : "http://xml.fmi.fi/namespace/locationcode/wmo",
         XML_ATTR_CODE_SPACE_GEOID : "http://xml.fmi.fi/namespace/locationcode/geoid",
+        XML_ATTR_CODE_SPACE_FMISID : "http://xml.fmi.fi/namespace/stationcode/fmisid",
         XML_ATTR_UOM : "uom",
 
         // Prefix that may be used in XML references.
@@ -232,7 +234,7 @@ fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
                     end : undefined
                 },
                 // For location data. Content objects exists if set by the parser.
-                // Content object : { id : "idString", geoid : "geoidString", wmo : "wmoString",
+                // Content object : { id : "idString", geoid : "geoidString", wmo : "wmoString", fmisid : "fmisidString",
                 //                    name : "nameString", region : "regionNameString",
                 //                    country : "countryNameString", timezone : "timezoneStrinng",
                 //                    pointRef : "pointRefString" }
@@ -360,6 +362,7 @@ fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
      *                 id : "locationIdString",
      *                 geoid : "geoidString",
      *                 wmo : "wmoString",
+     *                 fmisid: "geoidString",
      *                 name : "locationNameString",
      *                 region : "regionNameString",
      *                 country : "countryNameString",
@@ -432,6 +435,7 @@ fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
                                     id : contentLocation.id || "",
                                     geoid : contentLocation.geoid || "",
                                     wmo : contentLocation.wmo || "",
+                                    fmisid : contentLocation.fmisid || "",
                                     name : contentLocation.name || position.name || "",
                                     region : contentLocation.region || "",
                                     country : contentLocation.country || "",
@@ -896,7 +900,13 @@ fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
      */
     function parseGmlIdentifier(xmlElement, container, asyncStarted, asyncCallback, errors) {
         jQuery(xmlElement).children(myConstants.XML_GML_IDENTIFIER).each(function() {
+            // Set id for the common id property.
             container.id = jQuery.trim(jQuery(this).text());
+            var codeSpaceValue = jQuery.trim(jQuery(this).attr(myConstants.XML_ATTR_CODE_SPACE));
+            if (myConstants.XML_ATTR_CODE_SPACE_FMISID === codeSpaceValue) {
+                // Set value for more accurately describing property.
+                container.fmisid = jQuery.trim(jQuery(this).text());
+            }
         });
     }
 
@@ -1788,7 +1798,7 @@ fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
      * See API function {@link #getData()} for function and parameter descriptions.
      * @throws {String} Exception if parameters are not correct.
      */
-    function getParsedData(url, storedQueryId, requestParameter, begin, end, timestep, numOfTimesteps, denyTimeAdjusting, geoid, wmo, sites, bbox, crs, queryExtension, callback) {
+    function getParsedData(url, storedQueryId, requestParameter, begin, end, timestep, numOfTimesteps, denyTimeAdjusting, geoid, wmo, fmisid, sites, bbox, crs, queryExtension, callback) {
         // Convert possible integer millisecond values of times into Date objects.
         if (!( begin instanceof Date) && !isNaN(begin)) {
             begin = new Date(begin);
@@ -1815,9 +1825,10 @@ fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
         var periodCheck = begin instanceof Date && end instanceof Date && begin.getTime() <= end.getTime() && (!timestep || _.isNumber(timestep) );
         var geoidCheck = _.isNumber(geoid) || geoid && _.isString(geoid) || _.isArray(geoid) && geoid.length;
         var wmoCheck = _.isNumber(wmo) || wmo && _.isString(wmo) || _.isArray(wmo) && wmo.length;
+        var fmisidCheck = _.isNumber(fmisid) || fmisid && _.isString(fmisid) || _.isArray(fmisid) && fmisid.length;
         var sitesCheck = sites && _.isString(sites) || _.isArray(sites) && sites.length;
         var bboxCheck = bbox && _.isString(bbox);
-        var locationGivenCheck = geoidCheck || wmoCheck || sitesCheck || bboxCheck;
+        var locationGivenCheck = geoidCheck || wmoCheck || fmisidCheck || sitesCheck || bboxCheck;
         var crsCheck = !crs || _.isString(crs);
         if (urlCheck && storedQueryCheck && parameterCheck && periodCheck && locationGivenCheck && crsCheck) {
             // Check if begin and end times should be adjusted for server. They need to be exact for minutes.
@@ -1883,6 +1894,24 @@ fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
                 }
             }
 
+            var fmisidParameter = "";
+            if (_.isNumber(fmisid) || fmisid && _.isString(fmisid)) {
+                // Insert string into an array if integer or string was given.
+                fmisid = [fmisid];
+
+            }
+            // Content should always be in an array.
+            if (_.isArray(fmisid)) {
+                // There may be multiple fmisids. Server accepts multiple fmisid parameters.
+                for ( ind = 0; ind < fmisid.length; ++ind) {
+                    var tmpFmisid = fmisid[ind];
+                    if (_.isNumber(tmpFmisid) || tmpFmisid && _.isString(tmpFmisid)) {
+                        tmpFmisid = fi.fmi.metoclient.metolib.Utils.encodeUriComponent(tmpFmisid);
+                        fmisidParameter += myConstants.REQUEST_FMISID + tmpFmisid;
+                    }
+                }
+            }
+
             var sitesParameter = "";
             if (sites) {
                 if (_.isString(sites)) {
@@ -1920,7 +1949,7 @@ fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
 
             var urlQueryExtension = handleQueryExtension(queryExtension);
 
-            var requestUrl = url + urlQueryDelimiter + myConstants.REQUEST_GET_FEATURE + storedQueryIdParameter + myConstants.REQUEST_PARAMETERS + requestParameter + myConstants.REQUEST_BEGIN + begin + myConstants.REQUEST_END + end + timeStepParameter + geoidParameter + wmoParameter + sitesParameter + bboxParameter + crsParameter + urlQueryExtension;
+            var requestUrl = url + urlQueryDelimiter + myConstants.REQUEST_GET_FEATURE + storedQueryIdParameter + myConstants.REQUEST_PARAMETERS + requestParameter + myConstants.REQUEST_BEGIN + begin + myConstants.REQUEST_END + end + timeStepParameter + geoidParameter + wmoParameter + fmisidParameter + sitesParameter + bboxParameter + crsParameter + urlQueryExtension;
             requestAndParseXml(requestUrl, callback);
 
         } else {
@@ -1988,7 +2017,7 @@ fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
                 // Then, later if string or integer values are changed in the function, they are changed
                 // to function variables instead of changing property values of the original object. Notice,
                 // arrays and objects as function parameters still refere to the original arrays and objects.
-                getParsedData(options.url, options.storedQueryId, options.requestParameter, options.begin, options.end, options.timestep, options.numOfTimesteps, options.denyTimeAdjusting, options.geoid, options.wmo, options.sites, options.bbox, options.crs, options.queryExtension, function(data, errors) {
+                getParsedData(options.url, options.storedQueryId, options.requestParameter, options.begin, options.end, options.timestep, options.numOfTimesteps, options.denyTimeAdjusting, options.geoid, options.wmo, options.fmisid, options.sites, options.bbox, options.crs, options.queryExtension, function(data, errors) {
                     // Notice, errors parameter is for the errors that occurred during the asynchronous flow.
                     dataCallback(options.callback, data, errors);
                 });
@@ -2059,6 +2088,7 @@ fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
          *                          id : "location id string",
          *                          geoid : "geoid string",
          *                          wmo : "wmo string",
+         *                          fmisid : "fmisid string",
          *                          name : "location name string",
          *                          region : "region name string",
          *                          country : "country name string",
@@ -2147,22 +2177,27 @@ fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
          *                             If {true}, {begin} and {end} times are not adjusted for server but given values
          *                             are used exactly for requests. Otherwise, times are adjusted.
          *         geoid : {Array(String|int)|String|int}
-         *                 May be {undefined} or {null} or empty if {wmo}, {sites} or {bbox} is given.
+         *                 May be {undefined} or {null} or empty if {wmo}, {fmisid}, {sites} or {bbox} is given.
          *                 Array of Geographical name ID (geonames.org) strings or integers.
          *                 One geoid can be given as a single string or integer.
-         *                 Notice, either {geoid}, {wmo}, {sites} or {bbox} is required.
+         *                 Notice, either {geoid}, {wmo}, {fmisid}, {sites} or {bbox} is required.
          *         wmo : {Array(String|int)|String|int}
-         *               May be {undefined} or {null} or empty if {geoid}, {sites} or {bbox} is given.
+         *               May be {undefined} or {null} or empty if {geoid}, {fmisid}, {sites} or {bbox} is given.
          *               Array of World Meteorological Organization (WMO) identifier strings or integers.
          *               One wmo can be given as a single string or integer.
-         *               Notice, either {geoid}, {wmo}, {sites} or {bbox} is required.
+         *               Notice, either {geoid}, {wmo}, {fmisid}, {sites} or {bbox} is required.
+         *         fmisid : {Array(String|int)|String|int}
+         *                  May be {undefined} or {null} or empty if {geoid}, {wmo}, {sites} or {bbox} is given.
+         *                  Array of FMI observation station identifiers (fmisid) strings or integers.
+         *                  One fmisid can be given as a single string or integer.
+         *                  Notice, either {geoid}, {wmo}, {fmisid}, {sites} or {bbox} is required.
          *         sites : {Array(String)|String}
-         *                 May be {undefined} or {null} or empty if {geoid}, {wmo} or {bbox} is given.
+         *                 May be {undefined} or {null} or empty if {geoid}, {wmo}, {fmisid} or {bbox} is given.
          *                 Array of site name strings. One site can be given as a single string.
-         *                 Notice, either {geoid}, {wmo}, {sites} or {bbox} is required.
+         *                 Notice, either {geoid}, {wmo}, {fmisid}, {sites} or {bbox} is required.
          *         bbox : {String}
-         *                May be {undefined}, {null} or empty if {wmo} or {sites} is given.
-         *                BBOX string. Notice, either {geoid}, {wmo}, {sites} or {bbox} is required.
+         *                May be {undefined}, {null} or empty if {geoid}, {wmo}, {fmisid} or {sites} is given.
+         *                BBOX string. Notice, either {geoid}, {wmo}, {fmisid}, {sites} or {bbox} is required.
          *         crs : {String}
          *               May be {undefined}, {null} or empty.
          *               Coordinate Reference System (CRS) string.

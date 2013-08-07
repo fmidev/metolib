@@ -15,7 +15,7 @@ describe("Parser", function() {
     function getLocalUrlBase() {
         var urlBase = fi.fmi.metoclient.test && fi.fmi.metoclient.test.GruntSpecConfig && fi.fmi.metoclient.test.GruntSpecConfig.SPEC_RUNNER_BASE_STR ? fi.fmi.metoclient.test.GruntSpecConfig.SPEC_RUNNER_BASE_STR : "";
         if (undefined !== window.__karma__) {
-            // Change the base path for Karma tests.The base path always starts with 'base'.
+            // Change the base path for Karma tests. The base path always starts with 'base'.
             urlBase = "base/" + urlBase + "data/karma/parser/";
 
         } else if (urlBase) {
@@ -272,7 +272,9 @@ describe("Parser", function() {
                 // Times that XML should provide. Notice, these are in seconds.
                 var times = [1368172800, 1368176400, 1368180000, 1368183600, 1368187200, 1368190800, 1368194400, 1368198000, 1368201600, 1368205200, 1368208800, 1368212400, 1368216000, 1368219600, 1368223200, 1368226800, 1368230400, 1368234000, 1368237600, 1368241200, 1368244800, 1368248400, 1368252000, 1368255600, 1368259200, 1368262800, 1368266400, 1368270000, 1368273600, 1368277200, 1368280800, 1368284400, 1368288000, 1368291600, 1368295200, 1368298800, 1368302400, 1368306000, 1368309600, 1368313200, 1368316800, 1368320400, 1368324000, 1368327600, 1368331200, 1368334800, 1368338400, 1368342000, 1368345600, 1368349200, 1368352800];
                 var values = [10.5, 11.0, 9.8, 10.6, 10.6, 9.8, 9.8, 10.5, 10.7, 9.9, 9.3, 9.4, 9.5, 9.9, 8.6, 8.3, 9.0, 8.2, 8.2, 6.3, 7.2, 8.0, 8.2, 9.4, 8.4, 8.5, 7.3, 7.5, 8.3, 8.0, 8.0, 7.1, 5.8, 5.6, 6.1, 6.5, 6.4, 6.3, 5.9, 5.4, 5.5, 5.2, 5.2, 5.2, 5.6, 5.8, 4.5, 4.6, 3.9, 4.2, 4.0];
-                cb(fi.fmi.metoclient.test.SpecUtils.checkData(data, times, values));
+                var locationInfo = data && data.locations && data.locations.length && data.locations[0] ? data.locations[0].info : undefined;
+                var infoCheck = locationInfo && locationInfo.wmo === "2998";
+                cb(infoCheck && fi.fmi.metoclient.test.SpecUtils.checkData(data, times, values));
             }
         });
     }
@@ -319,7 +321,9 @@ describe("Parser", function() {
                 // For local data tests proper values could be used. But, NaN needs to be used here if both local
                 // and server data tests should be run.
                 var values = [NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN];
-                cb(fi.fmi.metoclient.test.SpecUtils.checkData(data, times, values));
+                var locationInfo = data && data.locations && data.locations.length && data.locations[0] ? data.locations[0].info : undefined;
+                var infoCheck = locationInfo && locationInfo.geoid === "658225";
+                cb(infoCheck && fi.fmi.metoclient.test.SpecUtils.checkData(data, times, values));
             }
         });
     }
@@ -345,6 +349,51 @@ describe("Parser", function() {
                 // For local data tests proper values could be used. But, NaN needs to be used here if both local
                 // and server data tests should be run.
                 var values = [NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN];
+                cb(fi.fmi.metoclient.test.SpecUtils.checkData(data, times, values));
+            }
+        });
+    }
+
+    function testFmisidKumpulaTd(url, cb) {
+        fi.fmi.metoclient.metolib.WfsRequestParser.getData({
+            url : url,
+            storedQueryId : STORED_QUERY_OBSERVATION,
+            requestParameter : "td",
+            // Integer values are used to init dates for older browsers.
+            // (new Date("2013-05-10T08:00:00Z")).getTime()
+            // (new Date("2013-05-12T10:00:00Z")).getTime()
+            begin : new Date(1368172800000),
+            end : new Date(1368352800000),
+            timestep : 60 * 60 * 1000,
+            fmisid : 101004,
+            callback : function(data, errors) {
+                // Times that XML should provide. Notice, these are in seconds.
+                var times = [1368172800, 1368176400, 1368180000, 1368183600, 1368187200, 1368190800, 1368194400, 1368198000, 1368201600, 1368205200, 1368208800, 1368212400, 1368216000, 1368219600, 1368223200, 1368226800, 1368230400, 1368234000, 1368237600, 1368241200, 1368244800, 1368248400, 1368252000, 1368255600, 1368259200, 1368262800, 1368266400, 1368270000, 1368273600, 1368277200, 1368280800, 1368284400, 1368288000, 1368291600, 1368295200, 1368298800, 1368302400, 1368306000, 1368309600, 1368313200, 1368316800, 1368320400, 1368324000, 1368327600, 1368331200, 1368334800, 1368338400, 1368342000, 1368345600, 1368349200, 1368352800];
+                var values = [10.5, 11.0, 9.8, 10.6, 10.6, 9.8, 9.8, 10.5, 10.7, 9.9, 9.3, 9.4, 9.5, 9.9, 8.6, 8.3, 9.0, 8.2, 8.2, 6.3, 7.2, 8.0, 8.2, 9.4, 8.4, 8.5, 7.3, 7.5, 8.3, 8.0, 8.0, 7.1, 5.8, 5.6, 6.1, 6.5, 6.4, 6.3, 5.9, 5.4, 5.5, 5.2, 5.2, 5.2, 5.6, 5.8, 4.5, 4.6, 3.9, 4.2, 4.0];
+                var locationInfo = data && data.locations && data.locations.length && data.locations[0] ? data.locations[0].info : undefined;
+                var infoCheck = locationInfo && locationInfo.fmisid === "101004";
+                cb(infoCheck && fi.fmi.metoclient.test.SpecUtils.checkData(data, times, values));
+            }
+        });
+    }
+
+    function testFmisidHelsinkiFmisidKumpulaTd(url, cb) {
+        fi.fmi.metoclient.metolib.WfsRequestParser.getData({
+            url : url,
+            storedQueryId : STORED_QUERY_OBSERVATION,
+            requestParameter : "td",
+            // Integer values are used to init dates for older browsers.
+            // (new Date("2013-05-10T08:00:00Z")).getTime()
+            // (new Date("2013-05-12T10:00:00Z")).getTime()
+            begin : new Date(1368172800000),
+            end : new Date(1368352800000),
+            timestep : 60 * 60 * 1000,
+            // Value can be integer or string or multiple values in an array.
+            fmisid : [101007, "101004"],
+            callback : function(data, errors) {
+                // Times that XML should provide. Notice, these are in seconds.
+                var times = [1368172800, 1368176400, 1368180000, 1368183600, 1368187200, 1368190800, 1368194400, 1368198000, 1368201600, 1368205200, 1368208800, 1368212400, 1368216000, 1368219600, 1368223200, 1368226800, 1368230400, 1368234000, 1368237600, 1368241200, 1368244800, 1368248400, 1368252000, 1368255600, 1368259200, 1368262800, 1368266400, 1368270000, 1368273600, 1368277200, 1368280800, 1368284400, 1368288000, 1368291600, 1368295200, 1368298800, 1368302400, 1368306000, 1368309600, 1368313200, 1368316800, 1368320400, 1368324000, 1368327600, 1368331200, 1368334800, 1368338400, 1368342000, 1368345600, 1368349200, 1368352800, 1368172800, 1368176400, 1368180000, 1368183600, 1368187200, 1368190800, 1368194400, 1368198000, 1368201600, 1368205200, 1368208800, 1368212400, 1368216000, 1368219600, 1368223200, 1368226800, 1368230400, 1368234000, 1368237600, 1368241200, 1368244800, 1368248400, 1368252000, 1368255600, 1368259200, 1368262800, 1368266400, 1368270000, 1368273600, 1368277200, 1368280800, 1368284400, 1368288000, 1368291600, 1368295200, 1368298800, 1368302400, 1368306000, 1368309600, 1368313200, 1368316800, 1368320400, 1368324000, 1368327600, 1368331200, 1368334800, 1368338400, 1368342000, 1368345600, 1368349200, 1368352800];
+                var values = [10.5, 11.0, 9.8, 10.6, 10.6, 9.8, 9.8, 10.5, 10.7, 9.9, 9.3, 9.4, 9.5, 9.9, 8.6, 8.3, 9.0, 8.2, 8.2, 6.3, 7.2, 8.0, 8.2, 9.4, 8.4, 8.5, 7.3, 7.5, 8.3, 8.0, 8.0, 7.1, 5.8, 5.6, 6.1, 6.5, 6.4, 6.3, 5.9, 5.4, 5.5, 5.2, 5.2, 5.2, 5.6, 5.8, 4.5, 4.6, 3.9, 4.2, 4.0, 10.7, 10.1, 10.7, 11.7, 10.7, 9.6, 9.2, 10.2, 9.8, 9.6, 9.2, 10.0, 9.9, 9.0, 6.7, 9.0, 9.1, 8.6, 7.9, 5.7, 7.3, 7.8, 8.6, 8.0, 7.9, 7.2, 7.0, 7.0, 7.1, 6.4, 6.9, 6.8, 5.4, 5.7, 6.0, 6.4, 6.6, 6.6, 5.9, 5.9, 6.0, 5.9, 5.8, 5.6, 5.5, 5.2, 4.2, 4.3, 3.7, 3.7, 3.9];
                 cb(fi.fmi.metoclient.test.SpecUtils.checkData(data, times, values));
             }
         });
@@ -1038,6 +1087,112 @@ describe("Parser", function() {
             runs(function() {
                 try {
                     testForecastGeoidHelsinkiGeoidKumpulaTemperature(getSpecRunnerTestServerUrl(), function(success) {
+                        expect(success).toBeTruthy();
+                        finished = true;
+                    });
+
+                } catch (exception) {
+                    finished = true;
+                    expect(false).toBeTruthy();
+                }
+            });
+
+            // Wait max secs for all the async calls to finish:
+            waitsFor(function() {
+                return finished;
+            }, "request and parse operation to finish!", TEST_TIME_OUT);
+        });
+    }
+
+    /* ======================================== */
+    it("Local data, fmisid Kumpula, td", function() {
+        var finished = false;
+
+        /* ======================================== */
+        // Start the async call in the first one:
+        runs(function() {
+            try {
+                testFmisidKumpulaTd(getLocalUrlBase() + "fmisid_kumpula_td.xml", function(success) {
+                    expect(success).toBeTruthy();
+                    finished = true;
+                });
+
+            } catch (exception) {
+                finished = true;
+                expect(false).toBeTruthy();
+            }
+        });
+
+        // Wait max secs for all the async calls to finish:
+        waitsFor(function() {
+            return finished;
+        }, "request and parse operation to finish!", TEST_TIME_OUT);
+    });
+
+    // Check if test should be run for server data.
+    if (!isOnlyLocalTests()) {
+        /* ======================================== */
+        it("Server data, fmisid Kumpula, td", function() {
+            var finished = false;
+
+            /* ======================================== */
+            // Start the async call in the first one:
+            runs(function() {
+                try {
+                    testFmisidKumpulaTd(getSpecRunnerTestServerUrl(), function(success) {
+                        expect(success).toBeTruthy();
+                        finished = true;
+                    });
+
+                } catch (exception) {
+                    finished = true;
+                    expect(false).toBeTruthy();
+                }
+            });
+
+            // Wait max secs for all the async calls to finish:
+            waitsFor(function() {
+                return finished;
+            }, "request and parse operation to finish!", TEST_TIME_OUT);
+        });
+    }
+
+    /* ======================================== */
+    it("Local data, fmisid Helsinki, fmisid Kumpula, td", function() {
+        var finished = false;
+
+        /* ======================================== */
+        // Start the async call in the first one:
+        runs(function() {
+            try {
+                testFmisidHelsinkiFmisidKumpulaTd(getLocalUrlBase() + "fmisid_hki_fmisid_kumpula_td.xml", function(success) {
+                    expect(success).toBeTruthy();
+                    finished = true;
+                });
+
+            } catch (exception) {
+                finished = true;
+                expect(false).toBeTruthy();
+            }
+        });
+
+        // Wait max secs for all the async calls to finish:
+        waitsFor(function() {
+            return finished;
+        }, "request and parse operation to finish!", TEST_TIME_OUT);
+    });
+
+    // Check if test should be run for server data.
+    if (!isOnlyLocalTests()) {
+        /* ======================================== */
+        it("Server data, fmisid Helsinki, fmisid Kumpula, td", function() {
+            var finished = false;
+
+            /* ======================================== */
+            // Start the async call in the first one:
+            runs(function() {
+                try {
+                    testFmisidHelsinkiFmisidKumpulaTd(getSpecRunnerTestServerUrl(), function(success) {
                         expect(success).toBeTruthy();
                         finished = true;
                     });
