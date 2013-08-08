@@ -1209,6 +1209,7 @@ fi.fmi.metoclient.metolib.WfsConnection = (function() {
          *         bbox : {String}
          *                May be {undefined}, {null} or empty if {geoid}, {wmo}, {fmisid} or {sites} is given.
          *                BBOX string. Notice, either {geoid}, {wmo}, {fmisid}, {sites} or {bbox} is required.
+         *                Notice, cache is not used if spatial data (bbox) is queried.
          *         crs : {String}
          *               May be {undefined}, {null} or empty.
          *               Coordinate Reference System (CRS) string.
