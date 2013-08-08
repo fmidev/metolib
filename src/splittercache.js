@@ -377,11 +377,11 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
                                 that.unpin();
                             } else {
                                 async.each(callbacks, function(cb, notify) {
+                                    notify();
                                     try {
                                         cb.call(that, fetchError, data);
                                     } catch (ex) {
                                     }
-                                    notify();
                                 }, function(err) {
                                     callbacks = [];
                                     fetching = false;
