@@ -15,7 +15,10 @@ $(function() {
     var activeBlocks = {};
     var activeFetches = [];
 
-    var updateView = function() {
+    // This is set inside init.
+    var delayedUpdateView;
+
+    function updateView() {
         var trans = (minTime < 0) ? (-minTime) : 0;
 
         var timeScale = paper.width / (maxTime - minTime);
@@ -88,13 +91,11 @@ $(function() {
                 stroke : 'black'
             });
         });
-    };
-
-    // updateView function was defined above.
-    // So, use it for throttle function parameter after declaration.
-    var delayedUpdateView = _.throttle(updateView, 200);
+    }
 
     function init() {
+        delayedUpdateView = _.throttle(updateView, 200);
+
         cache = new fi.fmi.metoclient.metolib.SplitterCache({
             sideFetchAfterFactor : sideAfter,
             sideFetchBeforeFactor : sideBefore,
