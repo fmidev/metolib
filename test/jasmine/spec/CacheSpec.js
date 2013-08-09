@@ -923,6 +923,8 @@ describe("Cache", function() {
         };
 
         runs(function() {
+            expect(evictedBlockIds.length).toEqual(0);
+            expect(recycledBlockIds.length).toEqual(0);
             milkRun.call(this, taskDef);
         });
 
@@ -932,22 +934,26 @@ describe("Cache", function() {
 
         //eviction is done on the next fetch:
         runs(function() {
+            expect(evictedBlockIds.length).toEqual(0);
+            expect(recycledBlockIds.length).toEqual(0);
             milkRun.call(this, taskDef2);
         });
 
         //the evicted are recycled on the next fetch:
         runs(function() {
+            expect(evictedBlockIds.length).not.toEqual(0);
+            expect(recycledBlockIds.length).toEqual(0);
             milkRun.call(this, taskDef2);
         });
 
         //wait for recycling to finish
-        waits(200);
+        waits(500);
 
         runs(function() {
             evictedBlockIds.sort();
             recycledBlockIds.sort();
             expect(evictedBlockIds.length).not.toEqual(0);
-            expect(evictedBlockIds.length).toEqual(evictedBlockIds.length);
+            expect(evictedBlockIds.length).toEqual(recycledBlockIds.length);
             for (var i = 0; i < evictedBlockIds.length; i++) {
                 expect(evictedBlockIds[i]).toEqual(recycledBlockIds[i]);
             }
