@@ -181,7 +181,6 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
                 waitingMerging = false;
                 ready = false;
                 callbacks = [];
-
             }
 
             //Privileged functions:
@@ -369,37 +368,41 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
                             }
                             data = result;
                             fetched = true;
-                            if (dispatcher) {
-                                dispatcher('blockProviderFetchFinished', thisBlock);
-                            }
-                            if (callbacks.length === 0) {
-                                fetching = false;
-                                that.unpin();
-                            } else {
-                                async.each(callbacks, function(cb, notify) {
-                                    notify();
+                            async.whilst(
+                                function(){
+                                    return (callbacks.length > 0);
+                                },
+                                function(notify){
+                                    var cb = callbacks.pop();
                                     try {
                                         cb.call(that, fetchError, data);
                                     } catch (ex) {
+                                        if (console) console.error('Error in block finished callback:'+ex.message);
+                                    } finally {
+                                        notify();
                                     }
-                                }, function(err) {
-                                    callbacks = [];
+                                },
+                                function(err){
                                     fetching = false;
                                     that.unpin();
-                                });
-                            }
+                                }
+                            );
+                            if (dispatcher) {
+                                dispatcher('blockProviderFetchFinished', thisBlock);
+                            }                          
                         });
                         if (dispatcher) {
                             dispatcher('blockProviderFetchStarted', thisBlock);
                         }
                     }
+
                 } else {
                     if (_.isFunction(callback)) {
-                        _.defer(function(err, data) {
+                        _.defer(function(err, d) {
                             if (dispatcher) {
                                 dispatcher('blockCacheFetchFinished', thisBlock);
                             }
-                            callback(err, data);
+                            callback(err, d);
                             that.unpin();
                         }, fetchError, data);
                         if (dispatcher) {
