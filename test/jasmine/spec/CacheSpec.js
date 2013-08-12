@@ -1222,94 +1222,93 @@ describe("Cache", function() {
 
     });
     it("should merge small blocks", function() {
-                /*====================================== */
+        /*====================================== */
 
-                var listeners = {
-                        blockCreated : jasmine.createSpy(),
-                        blockPrepared : jasmine.createSpy(),
-                        blockMarkedForMerge : jasmine.createSpy(),
-                        blockEvicted : jasmine.createSpy(),
-                        blockRecycled : jasmine.createSpy()
-                };
+        var listeners = {
+            blockCreated : jasmine.createSpy(),
+            blockPrepared : jasmine.createSpy(),
+            blockMarkedForMerge : jasmine.createSpy(),
+            blockEvicted : jasmine.createSpy(),
+            blockRecycled : jasmine.createSpy()
+        };
 
-                _.each(_.keys(listeners), function(eventName) {
-                        cache.addListener(eventName, listeners[eventName]);
-                });
-
-                var taskDef = {
-                        service : 'obs',
-                        parameter : 'temp',
-                        location : 'Rautatientori',
-                        start : 0,
-                        resolution : 10,
-                        pointCount : 10
-                };
-
-                var taskDef2 = {
-                        service : 'obs',
-                        parameter : 'temp',
-                        location : 'Rautatientori',
-                        start : 10*10,
-                        resolution : 10,
-                        pointCount : 10
-                };
-                
-                //First task
-                runs(function() {
-                        milkRun.call(this, taskDef);
-                });
-
-                waitsFor(function() {
-                        return this.finished;
-                }, 5000);
-                
-                runs(function(){
-                    expect(listeners.blockCreated.calls.length).toEqual(1);
-                    expect(listeners.blockMarkedForMerge.calls.length).toEqual(0);
-                });
-                
-                //Second task
-                runs(function() {
-                        milkRun.call(this, taskDef2);
-                });
-
-                waitsFor(function() {
-                        return this.finished;
-                }, 5000);
-                
-                runs(function(){
-                    expect(listeners.blockCreated.calls.length).toEqual(2);
-                    expect(listeners.blockMarkedForMerge.calls.length).toEqual(0);
-                });
-
-                //First task again, should start merge
-                runs(function() {
-                        milkRun.call(this, taskDef);
-                });
-
-                waitsFor(function() {
-                        return this.finished;
-                }, 5000);
-                
-                
-                runs(function(){
-                    expect(listeners.blockMarkedForMerge.calls.length).toEqual(2);
-                    expect(listeners.blockEvicted.calls.length).toEqual(2);
-                    expect(listeners.blockRecycled.calls.length).toEqual(0);
-                });
-                
-                //First task 3rd time, should recycle the merged blocks
-                runs(function() {
-                    milkRun.call(this, taskDef);
-                });
-
-                waitsFor(function() {
-                    return this.finished;
-                }, 5000);
-                
-                runs(function(){
-                    expect(listeners.blockEvicted.calls.length).toEqual(2);
-                    expect(listeners.blockRecycled.calls.length).toEqual(2);
-                });
+        _.each(_.keys(listeners), function(eventName) {
+            cache.addListener(eventName, listeners[eventName]);
         });
+
+        var taskDef = {
+            service : 'obs',
+            parameter : 'temp',
+            location : 'Rautatientori',
+            start : 0,
+            resolution : 10,
+            pointCount : 10
+        };
+
+        var taskDef2 = {
+            service : 'obs',
+            parameter : 'temp',
+            location : 'Rautatientori',
+            start : 10 * 10,
+            resolution : 10,
+            pointCount : 10
+        };
+
+        //First task
+        runs(function() {
+            milkRun.call(this, taskDef);
+        });
+
+        waitsFor(function() {
+            return this.finished;
+        }, 5000);
+
+        runs(function() {
+            expect(listeners.blockCreated.calls.length).toEqual(1);
+            expect(listeners.blockMarkedForMerge.calls.length).toEqual(0);
+        });
+
+        //Second task
+        runs(function() {
+            milkRun.call(this, taskDef2);
+        });
+
+        waitsFor(function() {
+            return this.finished;
+        }, 5000);
+
+        runs(function() {
+            expect(listeners.blockCreated.calls.length).toEqual(2);
+            expect(listeners.blockMarkedForMerge.calls.length).toEqual(0);
+        });
+
+        //First task again, should start merge
+        runs(function() {
+            milkRun.call(this, taskDef);
+        });
+
+        waitsFor(function() {
+            return this.finished;
+        }, 5000);
+
+        runs(function() {
+            expect(listeners.blockMarkedForMerge.calls.length).toEqual(2);
+            expect(listeners.blockEvicted.calls.length).toEqual(2);
+            expect(listeners.blockRecycled.calls.length).toEqual(0);
+        });
+
+        //First task 3rd time, should recycle the merged blocks
+        runs(function() {
+            milkRun.call(this, taskDef);
+        });
+
+        waitsFor(function() {
+            return this.finished;
+        }, 5000);
+
+        runs(function() {
+            expect(listeners.blockEvicted.calls.length).toEqual(2);
+            expect(listeners.blockRecycled.calls.length).toEqual(2);
+        });
+    });
 });

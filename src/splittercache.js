@@ -368,28 +368,26 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
                             }
                             data = result;
                             fetched = true;
-                            async.whilst(
-                                function(){
-                                    return (callbacks.length > 0);
-                                },
-                                function(notify){
-                                    var cb = callbacks.pop();
-                                    try {
-                                        cb.call(that, fetchError, data);
-                                    } catch (ex) {
-                                        if (console) console.error('Error in block finished callback:'+ex.message);
-                                    } finally {
-                                        notify();
+                            async.whilst(function() {
+                                return (callbacks.length > 0);
+                            }, function(notify) {
+                                var cb = callbacks.pop();
+                                try {
+                                    cb.call(that, fetchError, data);
+                                } catch (ex) {
+                                    if (console) {
+                                        console.error('Error in block finished callback:' + ex.message);
                                     }
-                                },
-                                function(err){
-                                    fetching = false;
-                                    that.unpin();
+                                } finally {
+                                    notify();
                                 }
-                            );
+                            }, function(err) {
+                                fetching = false;
+                                that.unpin();
+                            });
                             if (dispatcher) {
                                 dispatcher('blockProviderFetchFinished', thisBlock);
-                            }                          
+                            }
                         });
                         if (dispatcher) {
                             dispatcher('blockProviderFetchStarted', thisBlock);
