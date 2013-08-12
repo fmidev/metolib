@@ -256,10 +256,12 @@ $(function() {
             activeFetches.push(td);
             delayedUpdateView();
             cache.fetch(td, function(err, result) {
-                if (err) {
-                    console.log('Fetch complete with errors');
-                } else {
-                    console.log('Fetch complete OK, returned data for time period ' + result.steps[0] + ' - ' + result.steps[result.steps.length - 1]);
+                if (console) {
+                    if (err) {
+                        console.log('Fetch complete with errors');
+                    } else {
+                        console.log('Fetch complete OK, returned data for time period ' + result.steps[0] + ' - ' + result.steps[result.steps.length - 1]);
+                    }
                 }
                 fetching = false;
                 activeFetches = _.reject(activeFetches, function(taskDef) {

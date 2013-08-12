@@ -249,9 +249,9 @@ describe("Cache", function() {
         cache.addDataProvider('obs', function(taskDef, callback) {
             var retval = {};
             var i = 0;
-            // console.log('obs2: Cache miss, fetching obs data block between
+            // if (console) { console.log('obs2: Cache miss, fetching obs data block between
             // '+taskDef.startTime+' - '+taskDef.endTime+',
-            // '+taskDef.pointCount+' points');
+            // '+taskDef.pointCount+' points'); }
             async.forEach(taskDef.location, function(loc, locNotify) {
                 if (retval[loc] === undefined) {
                     retval[loc] = {};
@@ -272,9 +272,9 @@ describe("Cache", function() {
                 // all done, simulate network delay:
                 setTimeout(function() {
                     callback(err, retval);
-                    // console.log('finished obs with block between
+                    // if (console) { console.log('finished obs with block between
                     // '+taskDef.startTime+' - '+taskDef.endTime);
-                    // console.log(retval);
+                    // console.log(retval); }
                 }, Math.random() * 1000);
             });
         });
@@ -349,8 +349,8 @@ describe("Cache", function() {
             try {
                 cache.fetch(taskDef, function(err, result) {
                     that.myErr = err;
-                    //console.log(cache.getCachedItemCount());
-                    //console.log(cache.getFillingDegree());
+                    // if (console) { console.log(cache.getCachedItemCount()); }
+                    // if (console) { console.log(cache.getFillingDegree()); }
                 }, function(err, start, end) {
 
                 });
@@ -369,16 +369,18 @@ describe("Cache", function() {
                 cache.fetch(taskDef, function(err, result) {
                     that.myErr = err;
                     that.finished = true;
-                    //console.log(cache.getCachedItemCount());
-                    //console.log(cache.getFillingDegree());
+                    // if (console) { console.log(cache.getCachedItemCount()); }
+                    // if (console) { console.log(cache.getFillingDegree()); }
                 }, function(err, start, end) {
-                    //console.log(cache.getCachedItemCount());
-                    //console.log(cache.getFillingDegree());
+                    // if (console) { console.log(cache.getCachedItemCount()); }
+                    // if (console) { console.log(cache.getFillingDegree()); }
                 });
 
             } catch (exception) {
                 this.myException = exception;
-                console.error(exception);
+                if (console) {
+                    console.error(exception);
+                }
             }
         });
 
@@ -439,7 +441,7 @@ describe("Cache", function() {
             pointCount : pointCount
         };
 
-        //console.log(taskDef);
+        // if (console) { console.log(taskDef); }
         // runs blocks are run linearly:
         // Start the async call in the first one:
         runs(function() {
@@ -451,10 +453,10 @@ describe("Cache", function() {
             try {
                 cache.fetch(taskDef, function(err, result) {
                     that.myErr = err;
-                    //console.log(cache.getCachedItemCount());
-                    //console.log(cache.getFillingDegree());
+                    // if (console) { console.log(cache.getCachedItemCount()); }
+                    // if (console) { console.log(cache.getFillingDegree()); }
                 }, function(err, start, end) {
-                    //console.log(cache.getCachedItemCount());
+                    // if (console) { console.log(cache.getCachedItemCount()); }
                 });
 
             } catch (exception) {
@@ -471,11 +473,11 @@ describe("Cache", function() {
             try {
                 cache.fetch(taskDef1b, function(err, result) {
                     that.myErr = err;
-                    //console.log(cache.getCachedItemCount());
-                    //console.log(cache.getFillingDegree());
+                    // if (console) { console.log(cache.getCachedItemCount()); }
+                    // if (console) { console.log(cache.getFillingDegree()); }
                 }, function(err, start, end) {
-                    //console.log(cache.getCachedItemCount());
-                    //console.log(cache.getFragmentationRatio());
+                    // if (console) { console.log(cache.getCachedItemCount()); }
+                    // if (console) { console.log(cache.getFragmentationRatio()); }
                 });
 
             } catch (exception) {
@@ -491,11 +493,11 @@ describe("Cache", function() {
             try {
                 cache.fetch(taskDef2, function(err, result) {
                     that.myErr = err;
-                    //console.log(cache.getCachedItemCount());
-                    //console.log(cache.getFillingDegree());
+                    // if (console) { console.log(cache.getCachedItemCount()); }
+                    // if (console) { console.log(cache.getFillingDegree()); }
                 }, function(err, start, end) {
-                    //console.log(cache.getCachedItemCount());
-                    //console.log(cache.getFragmentationRatio());
+                    // if (console) { console.log(cache.getCachedItemCount()); }
+                    // if (console) { console.log(cache.getFragmentationRatio()); }
                 });
 
             } catch (exception) {
@@ -512,11 +514,11 @@ describe("Cache", function() {
                 cache.fetch(taskDef2b, function(err, result) {
                     that.myErr = err;
                     that.finished = true;
-                    //console.log(cache.getCachedItemCount());
-                    //console.log(cache.getFillingDegree());
+                    // if (console) { console.log(cache.getCachedItemCount()); }
+                    // if (console) { console.log(cache.getFillingDegree()); }
                 }, function(err, start, end) {
-                    //console.log(cache.getCachedItemCount());
-                    //console.log(cache.getFragmentationRatio());
+                    // if (console) { console.log(cache.getCachedItemCount()); }
+                    // if (console) { console.log(cache.getFragmentationRatio()); }
                 });
 
             } catch (exception) {
@@ -540,11 +542,11 @@ describe("Cache", function() {
                 cache.fetch(taskDef2, function(err, result) {
                     that.myErr = err;
                     that.finished = true;
-                    //console.log(cache.getCachedItemCount());
-                    //console.log(cache.getFillingDegree());
+                    // if (console) { console.log(cache.getCachedItemCount()); }
+                    // if (console) { console.log(cache.getFillingDegree()); }
                 }, function(err, start, end) {
-                    //console.log(cache.getCachedItemCount());
-                    //console.log(cache.getFragmentationRatio());
+                    // if (console) { console.log(cache.getCachedItemCount()); }
+                    // if (console) { console.log(cache.getFragmentationRatio()); }
                 });
 
             } catch (exception) {

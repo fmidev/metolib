@@ -853,7 +853,9 @@ fi.fmi.metoclient.metolib.WfsConnection = (function() {
 
         } catch(e) {
             var errorStr = "ERROR: API level error occurred in a synchronous flow!";
-            console.error(errorStr);
+            if (console) {
+                console.error(errorStr);
+            }
             success = false;
             if (callback) {
                 // Inform callback about exception in the flow.
@@ -903,12 +905,16 @@ fi.fmi.metoclient.metolib.WfsConnection = (function() {
         if (!this.connectionUrl) {
             if (!_.isString(url) || !url) {
                 var urlErrorStr = "ERROR: WfsConnection URL must be a string and not empty!";
-                console.error(urlErrorStr);
+                if (console) {
+                    console.error(urlErrorStr);
+                }
                 throw urlErrorStr;
             }
             if (!_.isString(storedQueryId) || !storedQueryId) {
                 var idErrorStr = "ERROR: WfsConnection stored query ID must be a string and not empty!";
-                console.error(idErrorStr);
+                if (console) {
+                    console.error(idErrorStr);
+                }
                 throw idErrorStr;
             }
             this.connectionUrl = url;
@@ -957,13 +963,17 @@ fi.fmi.metoclient.metolib.WfsConnection = (function() {
 
             } else {
                 var errorStr = "ERROR: Either geoid, wmo, fmisid, sites or bbox is mandatory in options!";
-                console.error(errorStr);
+                if (console) {
+                    console.error(errorStr);
+                }
                 throw errorStr;
             }
 
         } else {
             var optionsErrorStr = "ERROR: Options object is mandatory!";
-            console.error(optionsErrorStr);
+            if (console) {
+                console.error(optionsErrorStr);
+            }
             throw optionsErrorStr;
         }
     };
