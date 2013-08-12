@@ -949,7 +949,7 @@ fi.fmi.metoclient.metolib.WfsConnection = (function() {
         if (options) {
             if (options.bbox) {
                 // BBox is not supported by the cache at the moment.
-                // Thefore, pass the whole query to the parser.
+                // Therefore, pass the whole query to the parser.
                 retrieveSpatialData.call(this, options);
 
             } else if (options.geoid || options.wmo || options.fmisid || options.sites) {
