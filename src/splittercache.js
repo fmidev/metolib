@@ -384,7 +384,7 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
                                         cb.call(that, fetchError, data);
                                     }
                                 } catch (ex) {
-                                    if (console) {
+                                    if ("undefined" !== typeof console && console) {
                                         console.error('Error in block finished callback:' + ex.message);
                                     }
                                 } finally {
@@ -534,7 +534,7 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
                 toEvict.markForRecycling();
                 notify();
             }, function(err) {
-                if (err && console) {
+                if (err && "undefined" !== typeof console && console) {
                     console.error(err);
                 }
             });
@@ -561,7 +561,7 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
                                 fillWith(combinedData, data, taskDef.location, taskDef.parameter, 0, 0, block1.getPointCount(), cb);
                             } else {
                                 fillWith(combinedData, NaN, taskDef.location, taskDef.parameter, 0, 0, block1.getPointCount(), cb);
-                                if (console) {
+                                if ("undefined" !== typeof console && console) {
                                     console.log('Error in merge:' + err);
                                 }
                             }
@@ -573,7 +573,7 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
                                 fillWith(combinedData, data, taskDef.location, taskDef.parameter, block1.getPointCount(), 0, block2.getPointCount(), cb);
                             } else {
                                 fillWith(combinedData, NaN, taskDef.location, taskDef.parameter, block1.getPointCount(), 0, block2.getPointCount(), cb);
-                                if (console) {
+                                if ("undefined" !== typeof console && console) {
                                     console.log('Error in merge:' + err);
                                 }
                             }
@@ -755,7 +755,7 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
                                 retval.push(block);
                                 cacheHits += block.getDataSize();
                             } else {
-                                if (console) {
+                                if ("undefined" !== typeof console && console) {
                                     console.error('Strange, unable to pin block!');
                                 }
                             }
@@ -768,7 +768,7 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
                         if ((prevMatchingBlock !== null) && shouldBlocksBeMerged(prevMatchingBlock, block)) {
                             mergeBlocks(prevMatchingBlock, block, function(err, merged) {
                                 if (err) {
-                                    if (console) {
+                                    if ("undefined" !== typeof console && console) {
                                         console.error(err);
                                     }
                                 } else {
@@ -876,7 +876,7 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
                 if (block.pin()) {
                     blocks.push(block);
                 } else {
-                    if (console) {
+                    if ("undefined" !== typeof console && console) {
                         console.error('Strange, unable to pin block!');
                     }
                 }
@@ -910,7 +910,7 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
 
                         } else if (source[loc][param].length < (sourceIndex + count)) {
                             useErrorValues = true;
-                            if (console) {
+                            if ("undefined" !== typeof console && console) {
                                 console.error('The service returned ' + source[loc][param].length + ' values for location ' + loc + ' and parameter ' + param + ' when ' + (sourceIndex + count) + ' were requested. Filling the whole segment with NaN');
                             }
                         }

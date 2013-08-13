@@ -308,7 +308,7 @@ fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
 
         } catch(e) {
             // An error occurred in a synchronous part of the data parsing flow.
-            if (console) {
+            if ("undefined" !== typeof console && console) {
                 console.error("ERROR: Error during synchronous data parsing flow!");
             }
             // Make sure the asynchronous operations do not recall the callback.
@@ -476,7 +476,7 @@ fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
                             resultObject.values[parameter] = parseFloat(parsedContent.data[(i / srsDimension ) * parametersLength + j]);
                             // Make sure properties have at least empty default property object corresponding every parameter.
                             if (!result.properties[parameter]) {
-                                if (console) {
+                                if ("undefined" !== typeof console && console) {
                                     console.error("ERROR: Server has not provided properties for request parameter!");
                                 }
                                 result.properties[parameter] = myConstants.PROPERTY_OBJECT_EMPTY;
@@ -533,7 +533,7 @@ fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
 
         } catch(e) {
             // An error occurred.
-            if (console) {
+            if ("undefined" !== typeof console && console) {
                 console.error("ERROR: Could not finalize data!");
             }
             // Set result to undefined.
@@ -1364,7 +1364,7 @@ fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
 
         } catch(e) {
             // An error occurred.
-            if (console) {
+            if ("undefined" !== typeof console && console) {
                 console.error("ERROR: Error while parsing exception data!");
             }
             // If subparsing has thrown an exception, it is catched here.
@@ -1592,7 +1592,7 @@ fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
         } catch(e) {
             // Ignore errors that may occur in the callback.
             // Callback may be provided from outside of this library.
-            if (console) {
+            if ("undefined" !== typeof console && console) {
                 console.error("ERROR: Callback function error!");
             }
         }
@@ -1614,7 +1614,7 @@ fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
         setTimeout(function() {
             // URL may be logged here for debugging purposes.
             // Then, you may also use the URL directly with a web browser to check the XML.
-            // if (console) { console.debug("URL: " + url); }
+            // if ("undefined" !== typeof console && console) { console.debug("URL: " + url); }
             jQuery.ajax({
                 type : myConstants.HTTP_METHOD,
                 url : url,
@@ -1759,7 +1759,7 @@ fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
         } catch(e) {
             // An error occurred.
             var errorString = "ERROR: Could not finalize data!";
-            if (console) {
+            if ("undefined" !== typeof console && console) {
                 console.error(errorString);
             }
             // Set data undefined.
@@ -1966,7 +1966,7 @@ fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
 
         } else {
             var errorStr = "ERROR: Wrong or missing information for the request!";
-            if (console) {
+            if ("undefined" !== typeof console && console) {
                 console.error(errorStr);
             }
             // Notice, this error is part of the synchronous flow.
@@ -2042,7 +2042,7 @@ fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
                 // Then, flow progresses similarly through API in both
                 // error and success cases.
                 setTimeout(function() {
-                    if (console) {
+                    if ("undefined" !== typeof console && console) {
                         console.error("ERROR: Get data error!");
                     }
                     var error = {};
@@ -2054,7 +2054,7 @@ fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
         } else {
             // Callback is required. There is no reason to request data if it is not used somewhere.
             var errorStr = "ERROR: Options object and callback function in it are mandatory!";
-            if (console) {
+            if ("undefined" !== typeof console && console) {
                 console.error(errorStr);
             }
             throw errorStr;

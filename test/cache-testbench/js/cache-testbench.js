@@ -256,7 +256,7 @@ $(function() {
             activeFetches.push(td);
             delayedUpdateView();
             cache.fetch(td, function(err, result) {
-                if (console) {
+                if ("undefined" !== typeof console && console) {
                     if (err) {
                         console.log('Fetch complete with errors');
                     } else {

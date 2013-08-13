@@ -249,7 +249,7 @@ describe("Cache", function() {
         cache.addDataProvider('obs', function(taskDef, callback) {
             var retval = {};
             var i = 0;
-            // if (console) { console.log('obs2: Cache miss, fetching obs data block between
+            // if ("undefined" !== typeof console && console) { console.log('obs2: Cache miss, fetching obs data block between
             // '+taskDef.startTime+' - '+taskDef.endTime+',
             // '+taskDef.pointCount+' points'); }
             async.forEach(taskDef.location, function(loc, locNotify) {
@@ -272,7 +272,7 @@ describe("Cache", function() {
                 // all done, simulate network delay:
                 setTimeout(function() {
                     callback(err, retval);
-                    // if (console) { console.log('finished obs with block between
+                    // if ("undefined" !== typeof console && console) { console.log('finished obs with block between
                     // '+taskDef.startTime+' - '+taskDef.endTime);
                     // console.log(retval); }
                 }, Math.random() * 1000);
@@ -349,8 +349,8 @@ describe("Cache", function() {
             try {
                 cache.fetch(taskDef, function(err, result) {
                     that.myErr = err;
-                    // if (console) { console.log(cache.getCachedItemCount()); }
-                    // if (console) { console.log(cache.getFillingDegree()); }
+                    // if ("undefined" !== typeof console && console) { console.log(cache.getCachedItemCount()); }
+                    // if ("undefined" !== typeof console && console) { console.log(cache.getFillingDegree()); }
                 }, function(err, start, end) {
 
                 });
@@ -369,16 +369,16 @@ describe("Cache", function() {
                 cache.fetch(taskDef, function(err, result) {
                     that.myErr = err;
                     that.finished = true;
-                    // if (console) { console.log(cache.getCachedItemCount()); }
-                    // if (console) { console.log(cache.getFillingDegree()); }
+                    // if ("undefined" !== typeof console && console) { console.log(cache.getCachedItemCount()); }
+                    // if ("undefined" !== typeof console && console) { console.log(cache.getFillingDegree()); }
                 }, function(err, start, end) {
-                    // if (console) { console.log(cache.getCachedItemCount()); }
-                    // if (console) { console.log(cache.getFillingDegree()); }
+                    // if ("undefined" !== typeof console && console) { console.log(cache.getCachedItemCount()); }
+                    // if ("undefined" !== typeof console && console) { console.log(cache.getFillingDegree()); }
                 });
 
             } catch (exception) {
                 this.myException = exception;
-                if (console) {
+                if ("undefined" !== typeof console && console) {
                     console.error(exception);
                 }
             }
@@ -441,7 +441,7 @@ describe("Cache", function() {
             pointCount : pointCount
         };
 
-        // if (console) { console.log(taskDef); }
+        // if ("undefined" !== typeof console && console) { console.log(taskDef); }
         // runs blocks are run linearly:
         // Start the async call in the first one:
         runs(function() {
@@ -453,10 +453,10 @@ describe("Cache", function() {
             try {
                 cache.fetch(taskDef, function(err, result) {
                     that.myErr = err;
-                    // if (console) { console.log(cache.getCachedItemCount()); }
-                    // if (console) { console.log(cache.getFillingDegree()); }
+                    // if ("undefined" !== typeof console && console) { console.log(cache.getCachedItemCount()); }
+                    // if ("undefined" !== typeof console && console) { console.log(cache.getFillingDegree()); }
                 }, function(err, start, end) {
-                    // if (console) { console.log(cache.getCachedItemCount()); }
+                    // if ("undefined" !== typeof console && console) { console.log(cache.getCachedItemCount()); }
                 });
 
             } catch (exception) {
@@ -473,11 +473,11 @@ describe("Cache", function() {
             try {
                 cache.fetch(taskDef1b, function(err, result) {
                     that.myErr = err;
-                    // if (console) { console.log(cache.getCachedItemCount()); }
-                    // if (console) { console.log(cache.getFillingDegree()); }
+                    // if ("undefined" !== typeof console && console) { console.log(cache.getCachedItemCount()); }
+                    // if ("undefined" !== typeof console && console) { console.log(cache.getFillingDegree()); }
                 }, function(err, start, end) {
-                    // if (console) { console.log(cache.getCachedItemCount()); }
-                    // if (console) { console.log(cache.getFragmentationRatio()); }
+                    // if ("undefined" !== typeof console && console) { console.log(cache.getCachedItemCount()); }
+                    // if ("undefined" !== typeof console && console) { console.log(cache.getFragmentationRatio()); }
                 });
 
             } catch (exception) {
@@ -493,11 +493,11 @@ describe("Cache", function() {
             try {
                 cache.fetch(taskDef2, function(err, result) {
                     that.myErr = err;
-                    // if (console) { console.log(cache.getCachedItemCount()); }
-                    // if (console) { console.log(cache.getFillingDegree()); }
+                    // if ("undefined" !== typeof console && console) { console.log(cache.getCachedItemCount()); }
+                    // if ("undefined" !== typeof console && console) { console.log(cache.getFillingDegree()); }
                 }, function(err, start, end) {
-                    // if (console) { console.log(cache.getCachedItemCount()); }
-                    // if (console) { console.log(cache.getFragmentationRatio()); }
+                    // if ("undefined" !== typeof console && console) { console.log(cache.getCachedItemCount()); }
+                    // if ("undefined" !== typeof console && console) { console.log(cache.getFragmentationRatio()); }
                 });
 
             } catch (exception) {
@@ -514,11 +514,11 @@ describe("Cache", function() {
                 cache.fetch(taskDef2b, function(err, result) {
                     that.myErr = err;
                     that.finished = true;
-                    // if (console) { console.log(cache.getCachedItemCount()); }
-                    // if (console) { console.log(cache.getFillingDegree()); }
+                    // if ("undefined" !== typeof console && console) { console.log(cache.getCachedItemCount()); }
+                    // if ("undefined" !== typeof console && console) { console.log(cache.getFillingDegree()); }
                 }, function(err, start, end) {
-                    // if (console) { console.log(cache.getCachedItemCount()); }
-                    // if (console) { console.log(cache.getFragmentationRatio()); }
+                    // if ("undefined" !== typeof console && console) { console.log(cache.getCachedItemCount()); }
+                    // if ("undefined" !== typeof console && console) { console.log(cache.getFragmentationRatio()); }
                 });
 
             } catch (exception) {
@@ -542,11 +542,11 @@ describe("Cache", function() {
                 cache.fetch(taskDef2, function(err, result) {
                     that.myErr = err;
                     that.finished = true;
-                    // if (console) { console.log(cache.getCachedItemCount()); }
-                    // if (console) { console.log(cache.getFillingDegree()); }
+                    // if ("undefined" !== typeof console && console) { console.log(cache.getCachedItemCount()); }
+                    // if ("undefined" !== typeof console && console) { console.log(cache.getFillingDegree()); }
                 }, function(err, start, end) {
-                    // if (console) { console.log(cache.getCachedItemCount()); }
-                    // if (console) { console.log(cache.getFragmentationRatio()); }
+                    // if ("undefined" !== typeof console && console) { console.log(cache.getCachedItemCount()); }
+                    // if ("undefined" !== typeof console && console) { console.log(cache.getFragmentationRatio()); }
                 });
 
             } catch (exception) {

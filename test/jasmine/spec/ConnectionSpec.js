@@ -751,7 +751,7 @@ describe("Connection", function() {
     it("Config check", function() {
         // Notice, requires specconfig.js source file.
         var checkPassed = isOnlyLocalTests() || getSpecRunnerTestServerUrl() && getSpecRunnerTestServerUrl().indexOf("insert-your-apikey-here") === -1;
-        if (!checkPassed && console) {
+        if (!checkPassed && "undefined" !== typeof console && console) {
             console.error("ERROR: Check js/specconfig.js source! SPEC_RUNNER_TEST_SERVER_URL should contain proper API-key!");
         }
         expect(checkPassed).toBeTruthy();
