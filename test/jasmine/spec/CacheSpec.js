@@ -632,7 +632,11 @@ describe("Cache", function() {
         runs(function() {
             milkRun.call(this, taskDef2);
         });
-
+        
+        waitsFor(function() {
+            return this.finished;
+        }, 5000);
+        
         //the evicted are recycled on the next fetch:
         runs(function() {
             milkRun.call(this, taskDef2);
@@ -643,7 +647,7 @@ describe("Cache", function() {
             cache.removeDataProvider('testProvider', this.testProviderId);
         });
 
-        waits(200);
+        waits(500);
 
         //Check that all the listeners have been called:
         runs(function() {
@@ -940,6 +944,10 @@ describe("Cache", function() {
             expect(recycledBlockIds.length).toEqual(0);
             milkRun.call(this, taskDef2);
         });
+        
+        waitsFor(function() {
+            return this.finished;
+        }, 5000);
 
         //the evicted are recycled on the next fetch:
         runs(function() {
@@ -1001,7 +1009,7 @@ describe("Cache", function() {
         };
 
         var taskDef3 = {
-            service : 'ftc',
+            service : 'fct',
             parameter : 'temp',
             location : 'Rautatientori',
             start : 0,
@@ -1095,7 +1103,7 @@ describe("Cache", function() {
         };
 
         var taskDef3 = {
-            service : 'ftc',
+            service : 'fct',
             parameter : 'temp',
             location : 'Rautatientori',
             start : 0,
@@ -1175,7 +1183,7 @@ describe("Cache", function() {
         };
 
         var taskDef3 = {
-            service : 'ftc',
+            service : 'fct',
             parameter : 'temp',
             location : 'Rautatientori',
             start : 0,

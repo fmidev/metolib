@@ -6,7 +6,7 @@
  *
  * Requires:
  * - async.js (https://github.com/caolan/async)
- * - underscore.js (http://underscorejs.org/)
+ * - lodash.underscore.js (http://lodash.com/) or underscore.js (http://underscorejs.org/)
  *
  * Original author: Ilkka Rinne / Spatineo Inc. for the Finnish Meteorological Institute
  *
@@ -37,9 +37,9 @@
 // Strict mode for whole file.
 "use strict";
 
-// Requires undersocre
+// Requires lodash or underscore
 if ("undefined" === typeof _ || !_) {
-    throw "ERROR: Underscore is required for fi.fmi.metoclient.metolib.SplitterCache!";
+    throw "ERROR: Lo-dash-underscore or Underscore is required for fi.fmi.metoclient.metolib.SplitterCache!";
 }
 
 // Requires async
@@ -158,11 +158,12 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
             var age = 0;
             var fetching = false;
             var fetched = false;
-            var pinned = false;
+            var pinCount = 0;
             var waitingRecycling = false;
             var waitingMerging = false;
             var ready = false;
             var callbacks = [];
+            var requestId = 0;
             var dispatcher = evtDispatcher;
             var thisBlock = this;
 
@@ -176,11 +177,12 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
                 age = 0;
                 fetching = false;
                 fetched = false;
-                pinned = false;
+                pinCount = 0;
                 waitingRecycling = false;
                 waitingMerging = false;
                 ready = false;
                 callbacks = [];
+
             }
 
             //Privileged functions:
@@ -226,31 +228,39 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
 
             this.pin = function() {
                 if (!waitingRecycling) {
-                    if (!pinned) {
-                        pinned = true;
-                        if (dispatcher) {
-                            dispatcher('blockPinned', thisBlock);
-                        }
+                    pinCount++;
+                    if (dispatcher) {
+                        dispatcher('blockPinned', thisBlock);
                     }
-                    return true;
-                } else {
-                    return false;
+                    return pinCount;
+                }
+                else {
+                    return null;
                 }
             };
 
             this.unpin = function() {
-                if (pinned) {
-                    pinned = false;
+                if (pinCount > 0) {
+                    pinCount--;
                     if (dispatcher) {
                         dispatcher('blockUnpinned', thisBlock);
                     }
                 }
+                return pinCount;
             };
 
             this.isPinned = function() {
-                return pinned;
+                return (pinCount > 0);
             };
 
+            this.getPinCount = function() {
+                return pinCount;
+            };
+            
+            this.getRequestId = function() {
+                return requestId;
+            };
+            
             this.isWaitingRecycling = function() {
                 return waitingRecycling;
             };
@@ -265,7 +275,7 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
 
             this.setFetched = function(f) {
                 if (f === true) {
-                    fetched = f;
+                    fetched = true;
                 } else {
                     fetched = false;
                 }
@@ -277,7 +287,7 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
 
             this.setFetching = function(f) {
                 if (f === true) {
-                    fetching = f;
+                    fetching = true;
                 } else {
                     fetching = false;
                 }
@@ -342,6 +352,7 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
                 taskDef = taskDefinition;
                 fetcher = dataFetcher;
                 ready = true;
+                requestId++;
                 if (dispatcher) {
                     dispatcher('blockPrepared', thisBlock);
                 }
@@ -363,37 +374,41 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
                     if (!fetching) {
                         fetching = true;
                         fetcher(taskDef, function(err, result) {
+                            var reqId = that.getRequestId();
                             if (err) {
                                 fetchError = err;
                             }
                             data = result;
                             fetched = true;
-                            async.whilst(function() {
-                                return (callbacks.length > 0);
-                            }, function(notify) {
-                                try {
-                                    // Fetched flag is set true above when fetcher has finished its job
-                                    // and asynchronous data handling is about to start after it. Normally,
-                                    // callbacks can be called here. But, in some cases asynchronous operations
-                                    // may result to notify call in finally section below before new data has actually
-                                    // been fetched. Then, callbacks array is not in sync with the flow. Therefore,
-                                    // fetched flag is checked here before popping and calling callback to make sure
-                                    // data has been fetched and callbacks can be called with proper data.
-                                    if (fetched) {
+                            if (callbacks.length === 0){
+                                that.unpin();
+                                fetching = false;
+                            }
+                            else {
+                                async.whilst(function() {
+                                    var myReqId = that.getRequestId();
+                                    //We may still be looping here when this block has been recycled, re-prepared and fetching for the next request.
+                                    //So need to check if the request has not changed and we still have callbacks.
+                                    //The callbacks for the next request will still be looped through when the time is right.
+                                    return ((reqId === myReqId) && (callbacks.length > 0));
+                                }, function(notify) {
+                                    try {
                                         var cb = callbacks.pop();
                                         cb.call(that, fetchError, data);
+                                    } catch (ex) {
+                                        if ("undefined" !== typeof console && console) {
+                                            console.error('Error in block finished callback:' + ex.message);
+                                        }
+                                    } finally {
+                                        notify();
+                                        if (that.unpin() === 0){
+                                            fetching = false;
+                                        }
                                     }
-                                } catch (ex) {
-                                    if ("undefined" !== typeof console && console) {
-                                        console.error('Error in block finished callback:' + ex.message);
-                                    }
-                                } finally {
-                                    notify();
-                                }
-                            }, function(err) {
-                                fetching = false;
-                                that.unpin();
-                            });
+                                }, function(err) {
+                                    //NOOP
+                                });
+                            }
                             if (dispatcher) {
                                 dispatcher('blockProviderFetchFinished', thisBlock);
                             }
@@ -479,6 +494,8 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
             dataProviderRemoved : {}
         };
 
+       
+        
         //Private functions:
         //Event handling:
 
@@ -544,7 +561,7 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
             var newBlock = null;
             var taskDef = {};
             var combinedData = [];
-            if (block1.pin() && block2.pin()) {
+            if ((block1.pin() > 0) && (block2.pin() > 0)){
                 block1.markForMerging();
                 block2.markForMerging();
                 newBlock = getDataBlock();
@@ -681,20 +698,15 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
                 emptyBlockPool.push(block);
             }
         }
-
-        function purge() {
-            _.each(cachedBlocks, function(block, index) {
-                if (block.isWaitingRecycling()) {
-                    recycleBlock(block);
-                }
-            });
-        }
-
-        function sortIterator(bl) {
-            return bl.getStart();
-        }
-
-        function calculateDataBlocks(taskDef) {
+        
+        //A single-line queue for running iterateCache: if more than one
+        //iteration is requested simultaneously, others have to queue for
+        //execution, because iterateCache changes the internal cache state asynchronously.
+        var iterateCacheQueue = async.queue(function(taskDef,callback){
+            callback(null,iterateCache(taskDef));
+        },1);
+        
+        function iterateCache(taskDef) {
             var retval = [];
             var requestedStart = taskDef.start;
             var requestedEnd = taskDef.end;
@@ -707,6 +719,10 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
             var mergeInd = -1;
             var blockToMerge = null;
             var prevMatchingBlock = null;
+            
+            var sortIterator = function (bl) {
+                return bl.getStart();
+            };
 
             cachedDataSize = 0;
             //add all merged blocks that are ready:
@@ -751,12 +767,12 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
 
                         selectThisBlock = blockOverlaps(blStart, blEnd, fetchStart, fetchEnd);
                         if (selectThisBlock) {
-                            if (block.pin()) {
+                            if (block.pin() > 0) {
                                 retval.push(block);
                                 cacheHits += block.getDataSize();
                             } else {
                                 if ("undefined" !== typeof console && console) {
-                                    console.error('Strange, unable to pin block!');
+                                    console.log('Unable to pin a block, it\'s already marked for recycling (this should not happen)');
                                 }
                             }
                         } else {
@@ -911,7 +927,7 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
                         } else if (source[loc][param].length < (sourceIndex + count)) {
                             useErrorValues = true;
                             if ("undefined" !== typeof console && console) {
-                                console.error('The service returned ' + source[loc][param].length + ' values for location ' + loc + ' and parameter ' + param + ' when ' + (sourceIndex + count) + ' were requested. Filling the whole segment with NaN');
+                                console.error('Trying to fill segment with only ' + source[loc][param].length + ' values for location ' + loc + ' and parameter ' + param + ' when ' + (sourceIndex + count) + ' would be needed. Filling the whole segment with NaN');
                             }
                         }
                     }
@@ -942,24 +958,18 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
                 });
             }, function(err) {
                 //all done:
-                callback();
+                callback(err,target);
             });
         }
 
-        function retrieveDataAsync(taskDef, finishCallback, progressCallback) {
-            var result = {};
-            var dataArr;
-            var errors = null;
-            var notifyProgress = false;
+        function retrieveDataAsync(origTaskDef, finishCallback, progressCallback) {
+            var taskDef = _.clone(origTaskDef);
 
             if (!_.isFunction(finishCallback)) {
                 throw 'finishCallback must be a function';
             }
 
-            if (_.isFunction(progressCallback)) {
-                notifyProgress = true;
-            }
-
+           
             if (getFetcher(taskDef.service) === null) {
                 throw 'No data fetcher set for service \'' + taskDef.service + '\', unable to provide data';
             }
@@ -975,10 +985,25 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
                 start : taskDef.start,
                 resolution : taskDef.resolution
             };
+            
+            iterateCacheQueue.push(taskDef, function(err,dataBlocks){
+                fetchDataForBlocks(dataBlocks, taskDef, finishCallback, progressCallback);                
+            });
 
-            var dataBlocks = calculateDataBlocks(taskDef);
+        }
+        
+        function fetchDataForBlocks(dataBlocks, taskDef, finishCallback, progressCallback){
+            var errors = null;
+            var notifyProgress = false;
+            var result = {};
+            
+            if (_.isFunction(progressCallback)) {
+                notifyProgress = true;
+            }
+            fireEvent('fetchStarted', taskDef);
             result.steps = _.range(taskDef.start, taskDef.end + taskDef.resolution, taskDef.resolution);
             result.data = {};
+            
             async.each(dataBlocks, function(dataBlock, notify) {
                 var td = dataBlock.getTaskDef();
 
@@ -1008,6 +1033,10 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
                     sourceStartIndex = 0;
                 }
                 targetStartIndex = _.indexOf(result.steps, includeStart, true);
+                
+                if (targetStartIndex === -1){
+                    throw dataBlock.getId()+':something wrong with indexing, start index for cache block not found in the combined results!';
+                }
 
                 if (td.end > taskDef.end) {
                     includeEnd = taskDef.end;
@@ -1017,7 +1046,7 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
                     targetEndIndex = _.indexOf(result.steps, td.end, true);
                 }
                 valueCount = targetEndIndex - targetStartIndex + 1;
-
+                
                 // See fillWith function description about the structure that data object should have.
                 dataBlock.getDataAsync(function(err, data) {
                     var fillValue = data;
@@ -1066,6 +1095,11 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
 
         function clear(service) {
             _.each(cachedBlocks, function(block) {
+                if ((service === undefined) || (block.getService() === service)) {
+                    block.markForRecycling();
+                }
+            });
+            _.each(mergedBlocks, function(block) {
                 if ((service === undefined) || (block.getService() === service)) {
                     block.markForRecycling();
                 }
@@ -1136,7 +1170,6 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
          */
         this.clearCache = function() {
             clear();
-            purge();
             stepResolutions = [];
             cacheHits = 0;
             cacheMisses = 0;
@@ -1144,7 +1177,6 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
 
         this.fetch = function(taskDef, finalCallback, progressCallback) {
             checkTaskDef(taskDef);
-            fireEvent('fetchStarted', taskDef);
             retrieveDataAsync(taskDef, finalCallback, progressCallback);
         };
 
