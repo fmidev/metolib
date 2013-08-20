@@ -13,7 +13,7 @@ files = [
   JASMINE,
   JASMINE_ADAPTER,
   'deps/jquery/jquery-1.10.2.js',
-  'deps/underscore/underscore-1.4.4.js',
+  'deps/lodash/lodash.underscore-1.3.1.js',
   'deps/async/async-0.2.5.js',
   'src/utils.js',
   'src/splittercache.js',
@@ -73,7 +73,7 @@ autoWatch = true;
 // - Safari (only Mac)
 // - PhantomJS
 // - IE (only Windows)
-browsers = ['Chrome'];
+browsers = ['Chrome','Firefox'];
 
 
 // If browser does not capture in given timeout [ms], kill it

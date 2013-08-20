@@ -4,7 +4,7 @@ $(function() {
     var sideBefore = 0;
     var maxBlockSize = 2000;
     var minBlockSize = 200;
-    var cacheCapacity = 500000;
+    var cacheCapacity = 1000000;
     var maxVisualizedBlocks = 500;
 
     var fetching = false;
@@ -20,7 +20,6 @@ $(function() {
 
     function updateView() {
         var trans = (minTime < 0) ? (-minTime) : 0;
-
         var timeScale = paper.width / (maxTime - minTime);
         var blockCount = _.keys(activeBlocks).length;
         paper.clear();
@@ -105,30 +104,26 @@ $(function() {
         });
 
         var obs = function(taskDef, callback) {
-            var retval = {};
-            var i = 0;
-            async.forEach(taskDef.location, function(loc, locNotify) {
-                if (retval[loc] === undefined) {
-                    retval[loc] = {};
+                var retval = {};
+                var i, locI, parI, loc, param;
+                for (locI = 0;locI < taskDef.location.length; locI++){
+                   loc = taskDef.location[locI];
+                   if (retval[loc] === undefined) {
+                       retval[loc] = {};
+                   }
+                   for (parI = 0;parI < taskDef.parameter.length; parI++){
+                       param = taskDef.parameter[parI];
+                       if (retval[loc][param] === undefined) {
+                           retval[loc][param] = [];
+                       }
+                       for (i = 0; i < taskDef.pointCount; i++) {
+                           retval[loc][param].push(Math.random());
+                       }
+                   }
                 }
-                async.forEach(taskDef.parameter, function(param, paramNotify) {
-                    if (retval[loc][param] === undefined) {
-                        retval[loc][param] = [];
-                    }
-                    for ( i = 0; i < taskDef.pointCount; i++) {
-                        retval[loc][param].push(Math.random());
-                    }
-                    paramNotify();
-                }, function(err) {
-                    // one location completed
-                    locNotify();
-                });
-            }, function(err) {
-                // all done, simulate network delay:
-                setTimeout(function() {
-                    callback(err, retval);
-                }, Math.random() * 2000);
-            });
+                setTimeout(function(){
+                    callback(null,retval);
+                },Math.random() * 2000);
         };
 
         var fct = function(taskDef, callback) {
@@ -255,6 +250,7 @@ $(function() {
         try {
             activeFetches.push(td);
             delayedUpdateView();
+            
             cache.fetch(td, function(err, result) {
                 if ("undefined" !== typeof console && console) {
                     if (err) {
@@ -269,6 +265,7 @@ $(function() {
                 });
                 updateView();
             });
+            console.log('Fetch started');
         } catch(ex) {
             fetching = false;
             activeFetches = _.reject(activeFetches, function(taskDef) {
