@@ -14,7 +14,7 @@ files = [
   JASMINE_ADAPTER,
   'deps/jquery/jquery-1.10.2.js',
   'deps/lodash/lodash.underscore-1.3.1.js',
-  'deps/async/async-0.2.5.js',
+  'deps/async/async-0.2.9.js',
   'src/utils.js',
   'src/splittercache.js',
   'src/wfsrequestparser.js',

@@ -76,17 +76,26 @@
     if (typeof process === 'undefined' || !(process.nextTick)) {
         if (typeof setImmediate === 'function') {
             async.nextTick = function (fn) {
+                // not a direct alias for IE10 compatibility
                 setImmediate(fn);
             };
+            async.setImmediate = async.nextTick;
         }
         else {
             async.nextTick = function (fn) {
                 setTimeout(fn, 0);
             };
+            async.setImmediate = async.nextTick;
         }
     }
     else {
         async.nextTick = process.nextTick;
+        if (typeof setImmediate !== 'undefined') {
+            async.setImmediate = setImmediate;
+        }
+        else {
+            async.setImmediate = async.nextTick;
+        }
     }
 
     async.each = function (arr, iterator, callback) {
@@ -119,7 +128,6 @@
         }
         var completed = 0;
         var iterate = function () {
-            var sync = true;
             iterator(arr[completed], function (err) {
                 if (err) {
                     callback(err);
@@ -131,16 +139,10 @@
                         callback(null);
                     }
                     else {
-                        if (sync) {
-                            async.nextTick(iterate);
-                        }
-                        else {
-                            iterate();
-                        }
+                        iterate();
                     }
                 }
             });
-            sync = false;
         };
         iterate();
     };
@@ -425,18 +427,23 @@
         _each(keys, function (k) {
             var task = (tasks[k] instanceof Function) ? [tasks[k]]: tasks[k];
             var taskCallback = function (err) {
+                var args = Array.prototype.slice.call(arguments, 1);
+                if (args.length <= 1) {
+                    args = args[0];
+                }
                 if (err) {
-                    callback(err);
+                    var safeResults = {};
+                    _each(_keys(results), function(rkey) {
+                        safeResults[rkey] = results[rkey];
+                    });
+                    safeResults[k] = args;
+                    callback(err, safeResults);
                     // stop subsequent errors hitting callback multiple times
                     callback = function () {};
                 }
                 else {
-                    var args = Array.prototype.slice.call(arguments, 1);
-                    if (args.length <= 1) {
-                        args = args[0];
-                    }
                     results[k] = args;
-                    async.nextTick(taskComplete);
+                    async.setImmediate(taskComplete);
                 }
             };
             var requires = task.slice(0, Math.abs(task.length - 1)) || [];
@@ -462,6 +469,10 @@
 
     async.waterfall = function (tasks, callback) {
         callback = callback || function () {};
+        if (tasks.constructor !== Array) {
+          var err = new Error('First argument to waterfall must be an array of functions');
+          return callback(err);
+        }
         if (!tasks.length) {
             return callback();
         }
@@ -480,7 +491,7 @@
                     else {
                         args.push(callback);
                     }
-                    async.nextTick(function () {
+                    async.setImmediate(function () {
                         iterator.apply(null, args);
                     });
                 }
@@ -602,21 +613,12 @@
 
     async.whilst = function (test, iterator, callback) {
         if (test()) {
-            var sync = true;
             iterator(function (err) {
                 if (err) {
                     return callback(err);
                 }
-                if (sync) {
-                    async.nextTick(function () {
-                        async.whilst(test, iterator, callback);
-                    });
-                }
-                else {
-                    async.whilst(test, iterator, callback);
-                }
+                async.whilst(test, iterator, callback);
             });
-            sync = false;
         }
         else {
             callback();
@@ -624,45 +626,27 @@
     };
 
     async.doWhilst = function (iterator, test, callback) {
-        var sync = true;
         iterator(function (err) {
             if (err) {
                 return callback(err);
             }
             if (test()) {
-                if (sync) {
-                    async.nextTick(function () {
-                        async.doWhilst(iterator, test, callback);
-                    });
-                }
-                else {
-                    async.doWhilst(iterator, test, callback);
-                }
+                async.doWhilst(iterator, test, callback);
             }
             else {
                 callback();
             }
         });
-        sync = false;
     };
 
     async.until = function (test, iterator, callback) {
         if (!test()) {
-            var sync = true;
             iterator(function (err) {
                 if (err) {
                     return callback(err);
                 }
-                if (sync) {
-                    async.nextTick(function () {
-                        async.until(test, iterator, callback);
-                    });
-                }
-                else {
-                    async.until(test, iterator, callback);
-                }
+                async.until(test, iterator, callback);
             });
-            sync = false;
         }
         else {
             callback();
@@ -670,29 +654,23 @@
     };
 
     async.doUntil = function (iterator, test, callback) {
-        var sync = true;
         iterator(function (err) {
             if (err) {
                 return callback(err);
             }
             if (!test()) {
-                if (sync) {
-                    async.nextTick(function () {
-                        async.doUntil(iterator, test, callback);
-                    });
-                }
-                else {
-                    async.doUntil(iterator, test, callback);
-                }
+                async.doUntil(iterator, test, callback);
             }
             else {
                 callback();
             }
         });
-        sync = false;
     };
 
     async.queue = function (worker, concurrency) {
+        if (concurrency === undefined) {
+            concurrency = 1;
+        }
         function _insert(q, data, pos, callback) {
           if(data.constructor !== Array) {
               data = [data];
@@ -712,7 +690,7 @@
               if (q.saturated && q.tasks.length === concurrency) {
                   q.saturated();
               }
-              async.nextTick(q.process);
+              async.setImmediate(q.process);
           });
         }
 
@@ -736,7 +714,6 @@
                         q.empty();
                     }
                     workers += 1;
-                    var sync = true;
                     var next = function () {
                         workers -= 1;
                         if (task.callback) {
@@ -747,19 +724,8 @@
                         }
                         q.process();
                     };
-                    var cb = only_once(function () {
-                        var cbArgs = arguments;
-
-                        if (sync) {
-                            async.nextTick(function () {
-                                next.apply(null, cbArgs);
-                            });
-                        } else {
-                            next.apply(null, arguments);
-                        }
-                    });
+                    var cb = only_once(next);
                     worker(task.data, cb);
-                    sync = false;
                 }
             },
             length: function () {
@@ -795,7 +761,7 @@
                         cargo.saturated();
                     }
                 });
-                async.nextTick(cargo.process);
+                async.setImmediate(cargo.process);
             },
             process: function process() {
                 if (working) return;
@@ -935,6 +901,40 @@
                 callback.apply(that, [err].concat(results));
             });
         };
+    };
+
+    var _applyEach = function (eachfn, fns /*args...*/) {
+        var go = function () {
+            var that = this;
+            var args = Array.prototype.slice.call(arguments);
+            var callback = args.pop();
+            return eachfn(fns, function (fn, cb) {
+                fn.apply(that, args.concat([cb]));
+            },
+            callback);
+        };
+        if (arguments.length > 2) {
+            var args = Array.prototype.slice.call(arguments, 2);
+            return go.apply(this, args);
+        }
+        else {
+            return go;
+        }
+    };
+    async.applyEach = doParallel(_applyEach);
+    async.applyEachSeries = doSeries(_applyEach);
+
+    async.forever = function (fn, callback) {
+        function next(err) {
+            if (err) {
+                if (callback) {
+                    return callback(err);
+                }
+                throw err;
+            }
+            fn(next);
+        }
+        next();
     };
 
     // AMD / RequireJS
