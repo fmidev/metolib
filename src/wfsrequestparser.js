@@ -29,9 +29,9 @@ if ("undefined" === typeof jQuery || !jQuery) {
     throw "ERROR: jQuery is required for fi.fmi.metoclient.metolib.WfsRequestParser!";
 }
 
-// Requires underscore
+// Requires lodash
 if ("undefined" === typeof _ || !_) {
-    throw "ERROR: Underscore is required for fi.fmi.metoclient.metolib.WfsRequestParser!";
+    throw "ERROR: Lodash is required for fi.fmi.metoclient.metolib.WfsRequestParser!";
 }
 
 // "Package" definitions

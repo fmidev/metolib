@@ -155,7 +155,7 @@ module.exports = function(grunt) {
                 src : 'lib/metolib-combined-<%= pkg.version %>.js',
                 options : {
                     specs : ['test/jasmine/js/*.js', 'test/jasmine/spec/*.js'],
-                    vendor : ['deps/async/async-0.2.5.js', 'deps/jquery/jquery-1.10.2.js', 'deps/underscore/underscore-1.4.4.js'],
+                    vendor : ['deps/async/async-0.2.5.js', 'deps/jquery/jquery-1.10.2.js', 'deps/lodash/lodash.underscore-1.3.1.js'],
                     // See connect task for this.
                     host : 'http://localhost:8987/'
                 }

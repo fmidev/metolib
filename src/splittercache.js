@@ -37,9 +37,9 @@
 // Strict mode for whole file.
 "use strict";
 
-// Requires lodash or underscore
+// Requires lodash
 if ("undefined" === typeof _ || !_) {
-    throw "ERROR: Lo-dash-underscore or Underscore is required for fi.fmi.metoclient.metolib.SplitterCache!";
+    throw "ERROR: Lo-dash-underscore is required for fi.fmi.metoclient.metolib.SplitterCache!";
 }
 
 // Requires async
@@ -233,8 +233,7 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
                         dispatcher('blockPinned', thisBlock);
                     }
                     return pinCount;
-                }
-                else {
+                } else {
                     return null;
                 }
             };
@@ -256,11 +255,11 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
             this.getPinCount = function() {
                 return pinCount;
             };
-            
+
             this.getRequestId = function() {
                 return requestId;
             };
-            
+
             this.isWaitingRecycling = function() {
                 return waitingRecycling;
             };
@@ -380,11 +379,10 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
                             }
                             data = result;
                             fetched = true;
-                            if (callbacks.length === 0){
+                            if (callbacks.length === 0) {
                                 that.unpin();
                                 fetching = false;
-                            }
-                            else {
+                            } else {
                                 async.whilst(function() {
                                     var myReqId = that.getRequestId();
                                     //We may still be looping here when this block has been recycled, re-prepared and fetching for the next request.
@@ -401,7 +399,7 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
                                         }
                                     } finally {
                                         notify();
-                                        if (that.unpin() === 0){
+                                        if (that.unpin() === 0) {
                                             fetching = false;
                                         }
                                     }
@@ -494,8 +492,6 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
             dataProviderRemoved : {}
         };
 
-       
-        
         //Private functions:
         //Event handling:
 
@@ -561,7 +557,7 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
             var newBlock = null;
             var taskDef = {};
             var combinedData = [];
-            if ((block1.pin() > 0) && (block2.pin() > 0)){
+            if ((block1.pin() > 0) && (block2.pin() > 0)) {
                 block1.markForMerging();
                 block2.markForMerging();
                 newBlock = getDataBlock();
@@ -698,14 +694,14 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
                 emptyBlockPool.push(block);
             }
         }
-        
+
         //A single-line queue for running iterateCache: if more than one
         //iteration is requested simultaneously, others have to queue for
         //execution, because iterateCache changes the internal cache state asynchronously.
-        var iterateCacheQueue = async.queue(function(taskDef,callback){
-            callback(null,iterateCache(taskDef));
-        },1);
-        
+        var iterateCacheQueue = async.queue(function(taskDef, callback) {
+            callback(null, iterateCache(taskDef));
+        }, 1);
+
         function iterateCache(taskDef) {
             var retval = [];
             var requestedStart = taskDef.start;
@@ -719,8 +715,8 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
             var mergeInd = -1;
             var blockToMerge = null;
             var prevMatchingBlock = null;
-            
-            var sortIterator = function (bl) {
+
+            var sortIterator = function(bl) {
                 return bl.getStart();
             };
 
@@ -958,7 +954,7 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
                 });
             }, function(err) {
                 //all done:
-                callback(err,target);
+                callback(err, target);
             });
         }
 
@@ -969,7 +965,6 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
                 throw 'finishCallback must be a function';
             }
 
-           
             if (getFetcher(taskDef.service) === null) {
                 throw 'No data fetcher set for service \'' + taskDef.service + '\', unable to provide data';
             }
@@ -985,25 +980,25 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
                 start : taskDef.start,
                 resolution : taskDef.resolution
             };
-            
-            iterateCacheQueue.push(taskDef, function(err,dataBlocks){
-                fetchDataForBlocks(dataBlocks, taskDef, finishCallback, progressCallback);                
+
+            iterateCacheQueue.push(taskDef, function(err, dataBlocks) {
+                fetchDataForBlocks(dataBlocks, taskDef, finishCallback, progressCallback);
             });
 
         }
-        
-        function fetchDataForBlocks(dataBlocks, taskDef, finishCallback, progressCallback){
+
+        function fetchDataForBlocks(dataBlocks, taskDef, finishCallback, progressCallback) {
             var errors = null;
             var notifyProgress = false;
             var result = {};
-            
+
             if (_.isFunction(progressCallback)) {
                 notifyProgress = true;
             }
             fireEvent('fetchStarted', taskDef);
             result.steps = _.range(taskDef.start, taskDef.end + taskDef.resolution, taskDef.resolution);
             result.data = {};
-            
+
             async.each(dataBlocks, function(dataBlock, notify) {
                 var td = dataBlock.getTaskDef();
 
@@ -1033,9 +1028,9 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
                     sourceStartIndex = 0;
                 }
                 targetStartIndex = _.indexOf(result.steps, includeStart, true);
-                
-                if (targetStartIndex === -1){
-                    throw dataBlock.getId()+':something wrong with indexing, start index for cache block not found in the combined results!';
+
+                if (targetStartIndex === -1) {
+                    throw dataBlock.getId() + ':something wrong with indexing, start index for cache block not found in the combined results!';
                 }
 
                 if (td.end > taskDef.end) {
@@ -1046,7 +1041,7 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
                     targetEndIndex = _.indexOf(result.steps, td.end, true);
                 }
                 valueCount = targetEndIndex - targetStartIndex + 1;
-                
+
                 // See fillWith function description about the structure that data object should have.
                 dataBlock.getDataAsync(function(err, data) {
                     var fillValue = data;

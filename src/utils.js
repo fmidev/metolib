@@ -24,9 +24,9 @@
 // Strict mode for whole file.
 "use strict";
 
-// Requires underscore
+// Requires lodash
 if ("undefined" === typeof _ || !_) {
-    throw "ERROR: Underscore is required for fi.fmi.metoclient.metolib.Utils!";
+    throw "ERROR: Lodash is required for fi.fmi.metoclient.metolib.Utils!";
 }
 
 // "Package" definitions

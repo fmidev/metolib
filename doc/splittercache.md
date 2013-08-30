@@ -13,7 +13,7 @@ Dependencies
 SplitterCache requires the following libraries to be available at runtime:
 
 * async.js (<https://github.com/caolan/async>) and
-* underscore.js (<http://underscorejs.org/>)
+* lodash.js (<https://github.com/lodash/lodash>)
 
 How the caching works
 ---------------------

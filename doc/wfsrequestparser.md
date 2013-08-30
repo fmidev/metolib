@@ -9,8 +9,8 @@ Parser parses the data received from the server in XML format and provides parse
 * Other MetOLib classes
     * *fi.fmi.metoclient.metolib.Utils*
 * Thirdparty libraries
-    * *jQuery*
-    * *underscore*
+    * *jQuery* (<https://github.com/jquery/jquery>)
+    * *lodash* (<https://github.com/lodash/lodash>)
 
 Notice, examples shown in this document are also included in the MetOLib source example folder: example/parser.html
 

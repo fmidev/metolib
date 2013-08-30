@@ -14,9 +14,9 @@ it always uses request parser directly instead of checking cache.
     * *fi.fmi.metoclient.metolib.WfsRequest*
     * *fi.fmi.metoclient.metolib.SplitterCache*
 * Thirdparty libraries
-    * *jQuery*
-    * *underscore*
-    * *async*
+    * *jQuery* (<https://github.com/jquery/jquery>)
+    * *lodash* (<https://github.com/lodash/lodash>)
+    * *async* (<https://github.com/caolan/async>)
 
 Notice, these examples are also included in the MetOLib source example folder: example/connection.html
 
