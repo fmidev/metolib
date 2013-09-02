@@ -575,7 +575,7 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
                             } else {
                                 fillWith(combinedData, NaN, taskDef.location, taskDef.parameter, 0, 0, block1.getPointCount(), cb);
                                 if ("undefined" !== typeof console && console) {
-                                    console.log('Error in merge:' + err);
+                                    console.log('Merge: getDataAsync from block1 returned error:\'' + err + '\', filling with NaN');
                                 }
                             }
                         });
@@ -587,7 +587,7 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
                             } else {
                                 fillWith(combinedData, NaN, taskDef.location, taskDef.parameter, block1.getPointCount(), 0, block2.getPointCount(), cb);
                                 if ("undefined" !== typeof console && console) {
-                                    console.log('Error in merge:' + err);
+                                    console.log('Merge: getDataAsync from block2 returned error:\'' + err + '\', filling with NaN');
                                 }
                             }
                         });
@@ -1060,6 +1060,12 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
                         // Notice, errors may have occurred but data is still given because it should be good enough.
                         // Therefore, do not ignore given data if it is available. It is up to the data provider to make
                         // sure that data is undefined if it should not be handled in cache.
+                        
+                        //Ilkka Rinne/2013-09-02: This is inconsistent with the node.js callback error conventions:
+                        //You should always get either an error or result, never both.
+                        //http://nodemanual.org/latest/nodejs_dev_guide/working_with_callbacks.html
+                        //When would you want to return errors but also useable data?
+                        
                         if (!data) {
                             fillValue = NaN;
                         }
