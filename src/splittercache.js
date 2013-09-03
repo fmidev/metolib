@@ -473,6 +473,8 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
         var minBlockDataPoints = 20;
         var maxCacheDataSize = 50000;
         var strictErrorHandling = true;
+        var errorFillValue = NaN;
+        
         var fetchers = {};
         var cachedDataSize = 0;
         var cacheHits = 0;
@@ -945,7 +947,7 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
                         } else if (source[loc][param].length < (sourceIndex + count)) {
                             useErrorValues = true;
                             if ("undefined" !== typeof console && console) {
-                                console.error('Trying to fill segment with only ' + source[loc][param].length + ' values for location ' + loc + ' and parameter ' + param + ' when ' + (sourceIndex + count) + ' would be needed. Filling the whole segment with NaN');
+                                console.error('Trying to fill segment with only ' + source[loc][param].length + ' values for location ' + loc + ' and parameter ' + param + ' when ' + (sourceIndex + count) + ' would be needed. Filling the whole segment with \''+errorFillValue+'\'');
                             }
                         }
                     }
@@ -953,7 +955,7 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
                         ti = targetIndex;
                         end = targetIndex + count;
                         while (ti < end) {
-                            target[loc][param][ti++] = NaN;
+                            target[loc][param][ti++] = errorFillValue;
                         }
                     } else if (copyFromArray) {
                         ti = targetIndex;
@@ -1080,7 +1082,7 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
                             error : err
                         });
 
-                        // error in fetching data, fill result with NaN for this step sequence if data is undefined itself.
+                        // error in fetching data, fill result with 'errorFillValue' for this step sequence if data is undefined itself.
                         // Notice, errors may have occurred but data is still given because it should be good enough.
                         // Therefore, do not ignore given data if it is available. It is up to the data provider to make
                         // sure that data is undefined if it should not be handled in cache.
@@ -1091,7 +1093,7 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
                         //When would you want to return errors but also useable data?
                         
                         if (strictErrorHandling || !data) {
-                            fillValue = NaN;
+                            fillValue = errorFillValue;
                         }
                         //do not keep this block in cache:
                         dataBlock.markForRecycling();
@@ -1274,6 +1276,10 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
             if (properties.strictErrorHandling === false) {
                 strictErrorHandling = false;
             }
+        }
+        
+        if (properties.errorFillValue !== undefined) {
+            errorFillValue = properties.errorFillValue;
         }
     };
 

@@ -109,9 +109,9 @@ The data provider shall always return a result object of the following structure
         parameterN: [valueArrNN]
       }
     }
-If an error occurs, and no useable results can be returned, an error object should be returned as the only parameter.  In this case SplitterCache will fill the corresponding values of the combined response with `NaN`, and return all the `err` objects as an array for the `fetch` callback function. If another parameter is given in addition to a non-null error, it's discarded, unless the configuration parameter `strictErrorHandling` is set to `false` (see Cache configuration). If no errors were encountered, the first parameter for the data fetcher callback function must be null value.
+If an error occurs, and no useable results can be returned, an error object should be returned as the only parameter.  In this case SplitterCache will fill the corresponding values of the combined response with `errorFillValue` (`NaN` by default, see Cache configuration), and return all the `err` objects as an array for the `fetch` callback function. If another parameter is given in addition to a non-null error, it's discarded, unless the configuration parameter `strictErrorHandling` is set to `false` (see Cache configuration). If no errors were encountered, the first parameter for the data fetcher callback function must be null value.
 
-If not all requested values are available, but the partial results should be passed through the cache, the data provider should fill the missing values with `NaN` or any other 'missing' value understandable to the using application, and call the callback with the null value and the result structure with missing and found values filled.
+If not all requested values are available, but the partial results should be passed through the cache, the data provider should fill the missing values with `Nan` or any other 'missing' value understandable to the using application, and call the callback with the null value and the result structure with missing and found values filled.
 
 Example code (using async):
 
@@ -158,7 +158,7 @@ The data provider is responsible for making sure that
 * the values at the last index of all valueArr arrays reflect the value for the `end` time
 * all valueArr arrays lengths are equal to the `pointCount`
 
-If the data provider does not adhere to these rules, the combining of the final result may not work correctly, or some of the values will be filled with `NaN`.
+If the data provider does not adhere to these rules, the combining of the final result may not work correctly, or some of the values will be filled with `errorFillValue` (`NaN` by default, see Cache configuration).
 
 Requesting data through cache
 -----------------------------
@@ -194,7 +194,7 @@ Example code:
 Only either of `end` and `pointCount` should be used for each task. If the `pointCount` is given, the returned data arrays will always contains exactly `pointCount` values, and the `end` property is calculated using the `resolution` and the `start` parameters. If only the `end` is given, it's extended until the next even `resolution` multiple starting from `start`, and the `pointCount` is calculated by dividing the adjusted time span by `resolution`.
 
 If the data provider responsible for doing the actual fetching has returned an error for any of the fetched data blocks contained in the final result,
-the time steps covered by those blocks are filled with `NaN` value unless the configuration parameter `strictErrorHandling` is set to `false` AND the data provider has returned a valid result object along with the error. In this case all the encountered error objects are collected into an array passed as the first parameter if the `fetch` callback function. Each error object contains start and end times if the erroneous block, as well as the original error object returned from the data provider. If there were no errors the first callback parameter in has value null.
+the time steps covered by those blocks are filled with `errorFillValue` (`NaN` by default, see Cache configuration), unless the configuration parameter `strictErrorHandling` is set to `false` AND the data provider has returned a valid result object along with the error. In this case all the encountered error objects are collected into an array passed as the first parameter if the `fetch` callback function. Each error object contains start and end times if the erroneous block, as well as the original error object returned from the data provider. If there were no errors the first callback parameter in has value null.
 
 The second callback function for `fetch` is called when each of the data blocks has been fetched and it's data added to the combined return data structure. If there was a fetch error for this block, the original error object is returned as the first callback parameter, otherwise it's value is null. The second and the third callback parameters indicate the start and the end times of the fetched block.
 
@@ -239,7 +239,8 @@ The following configuration properties can be given with the SplitterCache const
       minBlockDataPoints: 20,
       maxBlockDataPoints: 500,
       maxCacheDataSize: 50000,
-      strictErrorHandling: true
+      strictErrorHandling: true,
+      errorFillValue: NaN
     });
  
 Note: `maxCacheDataSize` is measured in approximate data size: A data block with 2 locations, 5 parameters and 10 time steps is calculated as 2 * 5 * 10 = 100 units. `minBlockDataPoints` and `maxBlockDataPoints` are calculated as time steps. By default any error returned by the data provider for fetching contents for a data block results in filling the data
