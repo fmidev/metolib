@@ -302,6 +302,10 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
             this.getNotUsedSince = function() {
                 return age;
             };
+            
+            this.fetchFailed = function() {
+              return fetchError !== null;  
+            };
 
             this.markForRecycling = function() {
                 waitingRecycling = true;
@@ -310,10 +314,18 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
                 }
             };
 
-            this.markForMerging = function() {
-                waitingMerging = true;
-                if (dispatcher) {
-                    dispatcher('blockMarkedForMerge', thisBlock);
+            this.markForMerging = function(merge) {
+                if (merge === true){
+                    waitingMerging = true;                    
+                    if (dispatcher) {
+                        dispatcher('blockMarkedForMerge', thisBlock);
+                    }
+                }
+                else {
+                    waitingMerging = false;
+                    if (dispatcher) {
+                        dispatcher('blockMergeCancelled', thisBlock);
+                    }
                 }
             };
 
@@ -377,10 +389,9 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
                             if (err) {
                                 fetchError = err;
                             }
-                            data = result;
+                            data = result;                                
                             fetched = true;
                             if (callbacks.length === 0) {
-                                that.unpin();
                                 fetching = false;
                             } else {
                                 async.whilst(function() {
@@ -399,9 +410,7 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
                                         }
                                     } finally {
                                         notify();
-                                        if (that.unpin() === 0) {
-                                            fetching = false;
-                                        }
+                                        fetching = false;
                                     }
                                 }, function(err) {
                                     //NOOP
@@ -423,13 +432,12 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
                                 dispatcher('blockCacheFetchFinished', thisBlock);
                             }
                             callback(err, d);
-                            that.unpin();
                         }, fetchError, data);
                         if (dispatcher) {
                             dispatcher('blockCacheFetchStarted', thisBlock);
                         }
                     } else {
-                        that.unpin();
+
                     }
                 }
             };
@@ -464,6 +472,7 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
         var maxBlockDataPoints = 500;
         var minBlockDataPoints = 20;
         var maxCacheDataSize = 50000;
+        var strictErrorHandling = true;
         var fetchers = {};
         var cachedDataSize = 0;
         var cacheHits = 0;
@@ -483,6 +492,7 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
             blockRecycled : {},
             blockAged : {},
             blockMarkedForMerge : {},
+            blockMergeCancelled : {},
             evictStarted : {},
             evictFinished : {},
             fetchStarted : {},
@@ -558,8 +568,8 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
             var taskDef = {};
             var combinedData = [];
             if ((block1.pin() > 0) && (block2.pin() > 0)) {
-                block1.markForMerging();
-                block2.markForMerging();
+                block1.markForMerging(true);
+                block2.markForMerging(true);
                 newBlock = getDataBlock();
                 taskDef = _.clone(block1.getTaskDef());
                 taskDef.end = block2.getEnd();
@@ -570,42 +580,52 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
                 async.parallel({
                     data1 : function(cb) {
                         block1.getDataAsync(function(err, data) {
-                            if (!err) {
-                                fillWith(combinedData, data, taskDef.location, taskDef.parameter, 0, 0, block1.getPointCount(), cb);
-                            } else {
-                                fillWith(combinedData, NaN, taskDef.location, taskDef.parameter, 0, 0, block1.getPointCount(), cb);
+                            if (err) {
                                 if ("undefined" !== typeof console && console) {
-                                    console.log('Merge: getDataAsync from block1 returned error:\'' + err + '\', filling with NaN');
+                                    console.log('Warning: getDataAsync from merged block1 returned error:\'' + err + '\'');
                                 }
+                                cb(err);
+                            }
+                            else {
+                                fillWith(combinedData, data, taskDef.location, taskDef.parameter, 0, 0, block1.getPointCount(), cb);                                
                             }
                         });
                     },
                     data2 : function(cb) {
                         block2.getDataAsync(function(err, data) {
-                            if (!err) {
-                                fillWith(combinedData, data, taskDef.location, taskDef.parameter, block1.getPointCount(), 0, block2.getPointCount(), cb);
-                            } else {
-                                fillWith(combinedData, NaN, taskDef.location, taskDef.parameter, block1.getPointCount(), 0, block2.getPointCount(), cb);
+                            if (err) {
                                 if ("undefined" !== typeof console && console) {
-                                    console.log('Merge: getDataAsync from block2 returned error:\'' + err + '\', filling with NaN');
+                                    console.log('Warning: getDataAsync from merged block2 returned error:\'' + err + '\'');
                                 }
+                                cb(err);
+                            }
+                            else {
+                                fillWith(combinedData, data, taskDef.location, taskDef.parameter, block1.getPointCount(), 0, block2.getPointCount(), cb);                                
                             }
                         });
                     }
                 }, function(err, results) {
-                    block1.markForRecycling();
-                    block2.markForRecycling();
-                    newBlock.setData(combinedData);
-                    newBlock.setFetching(false);
-                    newBlock.setFetched(true);
-                    fireEvent('blockCacheFetchFinished', newBlock);
-                    callback(null, newBlock);
+                    block1.unpin();
+                    block2.unpin();
+                    if (!err){
+                        block1.markForRecycling();
+                        block2.markForRecycling();
+                        newBlock.setData(combinedData);
+                        newBlock.setFetching(false);
+                        newBlock.setFetched(true);
+                        callback(null, newBlock);
+                        fireEvent('blockCacheFetchFinished', newBlock);
+                    } else {
+                        newBlock.reset();
+                        block1.markForMerging(false);
+                        block2.markForMerging(false);
+                        callback(err);
+                        fireEvent('blockCacheFetchFinished', null);
+                    }
                 });
             } else {
-                block1.unpin();
-                block2.unpin();
                 _.defer(function() {
-                    callback('One or both blocks already marked for recycling', null);
+                    callback(new Error('One or both blocks already marked for recycling'));
                 });
             }
         }
@@ -620,7 +640,7 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
 
         function shouldBlocksBeMerged(block1, block2) {
             //It's assumed that service, location and parameter equality has already been checked:
-            if (!block1.isWaitingMerging() && !block2.isWaitingMerging() && ((block1.getPointCount() < minBlockDataPoints) || (block2.getPointCount() < minBlockDataPoints)) && blocksAreContinuous(block1, block2) && (block1.getPointCount() + block2.getPointCount() < maxBlockDataPoints)) {
+            if (!block1.fetchFailed() && !block2.fetchFailed() && !block1.isWaitingMerging() && !block2.isWaitingMerging() && ((block1.getPointCount() < minBlockDataPoints) || (block2.getPointCount() < minBlockDataPoints)) && blocksAreContinuous(block1, block2) && (block1.getPointCount() + block2.getPointCount() < maxBlockDataPoints)) {
                 return true;
             } else {
                 return false;
@@ -780,6 +800,8 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
                         if ((prevMatchingBlock !== null) && shouldBlocksBeMerged(prevMatchingBlock, block)) {
                             mergeBlocks(prevMatchingBlock, block, function(err, merged) {
                                 if (err) {
+                                    //Merge failed. This should only happen if the data for either block
+                                    //could not be fetched.
                                     if ("undefined" !== typeof console && console) {
                                         console.error(err);
                                     }
@@ -885,7 +907,7 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
                 taskDef.pointCount = Math.min(maxBlockDataPoints, totalPointCount - (i * maxBlockDataPoints));
                 taskDef.end = taskDef.start + (taskDef.pointCount - 1) * parentTaskDef.resolution;
                 block.prepare(taskDef, getFetcher(parentTaskDef.service));
-                if (block.pin()) {
+                if (block.pin() > 0) {
                     blocks.push(block);
                 } else {
                     if ("undefined" !== typeof console && console) {
@@ -1013,7 +1035,9 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
                     //For completely out-of-range blocks:
                     //we fetch them just to cache them, but otherwise
                     //ignore the results completely:
-                    dataBlock.getDataAsync();
+                    dataBlock.getDataAsync(function(){
+                        dataBlock.unpin();                        
+                    });
 
                     //and continue the loop:
                     notify();
@@ -1066,14 +1090,18 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
                         //http://nodemanual.org/latest/nodejs_dev_guide/working_with_callbacks.html
                         //When would you want to return errors but also useable data?
                         
-                        if (!data) {
+                        if (strictErrorHandling || !data) {
                             fillValue = NaN;
                         }
+                        //do not keep this block in cache:
+                        dataBlock.markForRecycling();
                     }
                     fillWith(result.data, fillValue, td.location, td.parameter, targetStartIndex, sourceStartIndex, valueCount, function() {
                         if (notifyProgress) {
                             progressCallback(err, includeStart, includeEnd);
                         }
+                        dataBlock.unpin();
+                        
                         //always succeed, even with fetch error: we want to return the rest of the data anyway
                         notify();
                     });
@@ -1240,6 +1268,11 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
                 if (properties.maxCacheDataSize > 0) {
                     maxCacheDataSize = properties.maxCacheDataSize;
                 }
+            }
+        }
+        if (properties.strictErrorHandling !== undefined) {
+            if (properties.strictErrorHandling === false) {
+                strictErrorHandling = false;
             }
         }
     };
