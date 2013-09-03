@@ -49,8 +49,7 @@ In this a bit more complicated scenario the cache data size overflows during a f
 
 ![Cache overflow](splittercache/splittercache_doc_scenario6.png)
 
-After the first fetch operation the cached data size is noticed to be too large. The least recently used data blocks are marked for recycling
-until enough data is removed for the total cached data size to be under the configured maximum again (`E`, `K` and `L` will be removed in this case). These data blocks are actually recycled in the beginning of the next fetch cycle, and their data is let for the garbage collector to be removed from the memory. The recycled data block objects are returned into the empty block pool to be reused during future fetch requests.
+After the first fetch operation the cached data size is noticed to be too large. The least recently used data blocks are marked for recycling until enough data is removed for the total cached data size to be under the configured maximum again (`E`, `K` and `L` will be removed in this case). These data blocks are actually recycled in the beginning of the next fetch cycle, and their data is let for the garbage collector to be removed from the memory. The recycled data block objects are returned into the empty block pool to be reused during future fetch requests.
 
 SplitterCache API
 -----------------
@@ -88,7 +87,7 @@ The data provider function is typically given a task definition like this:
 
 The location and parameter arrays may be replaced with a single string value, if only one location and/or parameter is requested at the time.
 
-The data provider shall always return a result object of the following structure (regardless of the number of locations and parameters):
+The data provider shall always return a result object of the following structure even if there is only one location or parameter:
 
     {
       location1: {
@@ -110,33 +109,46 @@ The data provider shall always return a result object of the following structure
         parameterN: [valueArrNN]
       }
     }
+If an error occurs, and no useable results can be returned, an error object should be returned as the only parameter.  In this case SplitterCache will fill the corresponding values of the combined response with `errorFillValue` (`NaN` by default, see Cache configuration), and return all the `err` objects as an array for the `fetch` callback function. If another parameter is given in addition to a non-null error, it's discarded, unless the configuration parameter `strictErrorHandling` is set to `false` (see Cache configuration). If no errors were encountered, the first parameter for the data fetcher callback function must be null value.
+
+If not all requested values are available, but the partial results should be passed through the cache, the data provider should fill the missing values with `Nan` or any other 'missing' value understandable to the using application, and call the callback with the null value and the result structure with missing and found values filled.
 
 Example code (using async):
 
     var randomProvider = function(taskDef, callback) {
       var retval = {};
       var i = 0;
-      async.forEach(taskDef.location, function(loc, locNotify) {
-        if (retval[loc] === undefined) retval[loc] = {};
-        async.forEach(taskDef.parameter, function(param, paramNotify) {
-          if (retval[loc][param] === undefined) retval[loc][param] = [];
-          for (i = 0; i < taskDef.pointCount; i++) {
-            retval[loc][param].push(Math.random());
-          }
-          paramNotify();
+      var success = (Math.random() > 0.1);
+      if (success){
+        async.forEach(taskDef.location, function(loc, locNotify) {
+          if (retval[loc] === undefined) retval[loc] = {};
+          async.forEach(taskDef.parameter, function(param, paramNotify) {
+            if (retval[loc][param] === undefined) retval[loc][param] = [];
+            for (i = 0; i < taskDef.pointCount; i++) {
+              retval[loc][param].push(Math.random());
+            }
+            paramNotify();
+          }, function(err) {
+            // one location completed
+            locNotify();
+          });
         }, function(err) {
-          // one location completed
-          locNotify();
+          // all done, simulate network delay:
+          setTimeout(function() {
+            callback(null, retval);
+          }, Math.random() * 100);
         });
-      }, function(err) {
-        // all done, simulate network delay:
+      }
+      else {
         setTimeout(function() {
-          callback(err, retval);
+          callback(new Error('Random error occurred'));
         }, Math.random() * 100);
-      });
+      }
     };
 
     var providerId = cache.addDataProvider('random',randomProvider);
+    
+Data blocks containing fetch errors are not stored in the cache for the following requests, and thus there will always be new data provider request covering the same time span the next time this failed part of the time series is fetched.
 
 The data provider is responsible for making sure that
 
@@ -146,9 +158,7 @@ The data provider is responsible for making sure that
 * the values at the last index of all valueArr arrays reflect the value for the `end` time
 * all valueArr arrays lengths are equal to the `pointCount`
 
-If the data provider does not adhere to these rules, the combining of the final result may not work correctly, or some of the values will be filled with `NaN`.
-
-If not all requested values are available, the data provider should fill the missing values with `NaN` or any other 'missing' value understandable to the using application. If an error occurs during acquiring the data block, and no sensible values can be returned, the data  provider should populate the `err` object with descriptive error information. The SplitterCache will fill the corresponding values of the combined response with `NaN`, and return all the `err` objects as an array for the `fetch` callback function.
+If the data provider does not adhere to these rules, the combining of the final result may not work correctly, or some of the values will be filled with `errorFillValue` (`NaN` by default, see Cache configuration).
 
 Requesting data through cache
 -----------------------------
@@ -171,18 +181,22 @@ Example code:
       resolution: 60*5,
       pointCount: 1000
     };
-    cache.fetch(taskDef, function(err,result){
-        if (err){
+    cache.fetch(taskDef, function(combinedErrors,result){
+        if (combinedErrors){
            //handle errors
         }
         //use the result data
       },
-      function(err, blockStart, blockEnd){
+      function(singleError, blockStart, blockEnd){
         //do something with the progress information, show progress bar etc.
       });
 
 Only either of `end` and `pointCount` should be used for each task. If the `pointCount` is given, the returned data arrays will always contains exactly `pointCount` values, and the `end` property is calculated using the `resolution` and the `start` parameters. If only the `end` is given, it's extended until the next even `resolution` multiple starting from `start`, and the `pointCount` is calculated by dividing the adjusted time span by `resolution`.
 
+If the data provider responsible for doing the actual fetching has returned an error for any of the fetched data blocks contained in the final result,
+the time steps covered by those blocks are filled with `errorFillValue` (`NaN` by default, see Cache configuration), unless the configuration parameter `strictErrorHandling` is set to `false` AND the data provider has returned a valid result object along with the error. In this case all the encountered error objects are collected into an array passed as the first parameter if the `fetch` callback function. Each error object contains start and end times if the erroneous block, as well as the original error object returned from the data provider. If there were no errors the first callback parameter in has value null.
+
+The second callback function for `fetch` is called when each of the data blocks has been fetched and it's data added to the combined return data structure. If there was a fetch error for this block, the original error object is returned as the first callback parameter, otherwise it's value is null. The second and the third callback parameters indicate the start and the end times of the fetched block.
 
 Cache eviction policy
 ---------------------
@@ -224,10 +238,12 @@ The following configuration properties can be given with the SplitterCache const
       sideFetchAfterFactor: 1,
       minBlockDataPoints: 20,
       maxBlockDataPoints: 500,
-      maxCacheDataSize: 50000
+      maxCacheDataSize: 50000,
+      strictErrorHandling: true,
+      errorFillValue: NaN
     });
  
-Note: `maxCacheDataSize` is measured in approximate data size: A data block with 2 locations, 5 parameters and 10 time steps is calculated as 2 * 5 * 10 = 100 units. `minBlockDataPoints` and `maxBlockDataPoints` are calculated as time steps.
+Note: `maxCacheDataSize` is measured in approximate data size: A data block with 2 locations, 5 parameters and 10 time steps is calculated as 2 * 5 * 10 = 100 units. `minBlockDataPoints` and `maxBlockDataPoints` are calculated as time steps. By default any error returned by the data provider for fetching contents for a data block results in filling the data
 
 Introspecting internal cache events
 -----------------------------------
@@ -261,7 +277,10 @@ happens after the block's data has been deleted from the memory and given to the
 happens for each data block stored in the cache, but not used for the current fetch() operation. When it is used, the age is zeroed. The higher the block's age is the more likely it's being evicted.
 
 **blockMarkedForMerge**, callback receives a DataBlock instance
-happens when a data block is selected for merging with another, temporarily continuous data block (see Automatic defragmentation). This event is always followed by `blockEvicted` after the merge is complete, and eventually `blockRecycled` for the same block.
+happens when a data block is selected for merging with another, temporarily continuous data block (see Automatic defragmentation). This event is always followed by `blockEvicted` after the merge is complete, and eventually `blockRecycled` for the same block, unless the merge is cancelled because data fetch for either of the blocks fails.
+
+**blockMarkedCancelled**
+happens when a data block merge is cancelled because the data fetch for either of the merged blocks fails.
 
 **fetchStarted** and **fetchFinished**, callback receives a copy of the taskDefinition  
 are called once before and after each fetch() operation.

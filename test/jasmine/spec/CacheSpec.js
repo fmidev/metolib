@@ -58,10 +58,15 @@ describe("Cache", function() {
                     for ( i = 0; i < taskDef.pointCount; i++) {
                         retval[loc][param].push(taskDef.start + taskDef.resolution * i);
                     }
-                    paramNotify();
+                    setTimeout(function(){
+                        paramNotify();                        
+                    },Math.random()*10);
+
                 }, function(err) {
                     // one location completed
-                    locNotify();
+                    setTimeout(function(){
+                        locNotify();
+                    },Math.random()*10);
                 });
             }, function(err) {
                 // all done, simulate network delay:
@@ -85,10 +90,14 @@ describe("Cache", function() {
                     for ( i = 0; i < taskDef.pointCount; i++) {
                         retval[loc][param].push(taskDef.startTime + taskDef.resolution * i);
                     }
-                    paramNotify();
+                    setTimeout(function(){
+                        paramNotify();                        
+                    },Math.random()*10);
                 }, function(err) {
                     // one location completed
-                    locNotify();
+                    setTimeout(function(){
+                        locNotify();
+                    },Math.random()*10);
                 });
             }, function(err) {
                 // all done, simulate network delay:
