@@ -531,8 +531,10 @@ fi.fmi.metoclient.metolib.WfsConnection = (function() {
         var converted = {
             // Data is converted below into the data object if data is available.
             data : data ? {} : undefined,
-            // No need to convert errors for cache.
-            errors : errors
+            // Cache handles errors according to node.js error convention.
+            // Therefore, instead of passing empty array for cache,
+            // error object should be set null if there are no errors.
+            errors : errors && !errors.length ? null : errors
         };
         if (data) {
             // Convert the given data into the correct structure that is inserted
