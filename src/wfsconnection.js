@@ -1012,8 +1012,7 @@ fi.fmi.metoclient.metolib.WfsConnection = (function() {
                 sideFetchAfterFactor : 1,
                 sideFetchBeforeFactor : 0.5,
                 maxBlockDataPoints : 200,
-                maxCacheDataSize : 4000,
-                strictErrorHandling: false
+                maxCacheDataSize : 4000
             })
         };
 
