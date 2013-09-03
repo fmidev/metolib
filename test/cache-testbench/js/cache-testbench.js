@@ -4,7 +4,7 @@ $(function() {
     var sideBefore = 0;
     var maxBlockSize = 2000;
     var minBlockSize = 200;
-    var cacheCapacity = 1000000;
+    var cacheCapacity = 180000;
     var maxVisualizedBlocks = 500;
 
     var fetching = false;
