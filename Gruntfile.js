@@ -136,7 +136,7 @@ module.exports = function(grunt) {
                 src : ['src/utils.js', 'src/wfsrequestparser.js', 'src/splittercache.js', 'src/wfsconnection.js'],
                 options : {
                     specs : ['test/jasmine/js/*.js', 'test/jasmine/spec/*.js'],
-                    vendor : ['deps/async/async-0.2.9.js', 'deps/jquery/jquery-1.10.2.js', 'deps/lodash/lodash.underscore-1.3.1.js'],
+                    vendor : ['deps/async/async-0.2.9.js', 'deps/jquery/jquery-1.10.2.js', 'deps/lodash/lodash.compat-2.1.0.js'],
                     // See connect task for this.
                     host : 'http://localhost:8987/'
                 }
@@ -145,7 +145,7 @@ module.exports = function(grunt) {
                 src : ['lib/utils-<%= pkg.version %>-min.js', 'lib/wfsrequestparser-<%= pkg.version %>-min.js', 'lib/splittercache-<%= pkg.version %>-min.js', 'lib/wfsconnection-<%= pkg.version %>-min.js'],
                 options : {
                     specs : ['test/jasmine/js/*.js', 'test/jasmine/spec/*.js'],
-                    vendor : ['deps/async/async-0.2.9-min.js', 'deps/jquery/jquery-1.10.2-min.js', 'deps/lodash/lodash.underscore-1.3.1-min.js'],
+                    vendor : ['deps/async/async-0.2.9-min.js', 'deps/jquery/jquery-1.10.2-min.js', 'deps/lodash/lodash.compat-2.1.0-min.js'],
                     // See connect task for this.
                     host : 'http://localhost:8987/'
                 }
@@ -154,7 +154,7 @@ module.exports = function(grunt) {
                 src : 'lib/metolib-combined-<%= pkg.version %>.js',
                 options : {
                     specs : ['test/jasmine/js/*.js', 'test/jasmine/spec/*.js'],
-                    vendor : ['deps/async/async-0.2.9.js', 'deps/jquery/jquery-1.10.2.js', 'deps/lodash/lodash.underscore-1.3.1.js'],
+                    vendor : ['deps/async/async-0.2.9.js', 'deps/jquery/jquery-1.10.2.js', 'deps/lodash/lodash.compat-2.1.0.js'],
                     // See connect task for this.
                     host : 'http://localhost:8987/'
                 }
@@ -163,7 +163,7 @@ module.exports = function(grunt) {
                 src : 'lib/metolib-combined-<%= pkg.version %>-min.js',
                 options : {
                     specs : ['test/jasmine/js/*.js', 'test/jasmine/spec/*.js'],
-                    vendor : ['deps/async/async-0.2.9-min.js', 'deps/jquery/jquery-1.10.2-min.js', 'deps/lodash/lodash.underscore-1.3.1-min.js'],
+                    vendor : ['deps/async/async-0.2.9-min.js', 'deps/jquery/jquery-1.10.2-min.js', 'deps/lodash/lodash.compat-2.1.0-min.js'],
                     // See connect task for this.
                     host : 'http://localhost:8987/'
                 }

@@ -11,7 +11,7 @@ module.exports = function(config) {
 
         // list of files / patterns to load in the browser
         // Notice, test/jasmine/js/specconfig.js defines if only local or both local and server tests should be run.
-        files : ['deps/jquery/jquery-1.10.2.js', 'deps/lodash/lodash.underscore-1.3.1.js', 'deps/async/async-0.2.9.js', 'src/utils.js', 'src/splittercache.js', 'src/wfsrequestparser.js', 'src/wfsconnection.js', 'test/jasmine/js/*.js', 'test/jasmine/spec/*Spec.js', {
+        files : ['deps/jquery/jquery-1.10.2.js', 'deps/lodash/lodash.compat-2.1.0.js', 'deps/async/async-0.2.9.js', 'src/utils.js', 'src/splittercache.js', 'src/wfsrequestparser.js', 'src/wfsconnection.js', 'test/jasmine/js/*.js', 'test/jasmine/spec/*Spec.js', {
             pattern : 'test/jasmine/data/common/*.xml',
             included : false
         }, {
