@@ -588,8 +588,8 @@ fi.fmi.metoclient.metolib.WfsConnection = (function() {
      *
      * This data has been set in {convertSitesDataFromParserForCache} function for the cache.
      *
-     * @para taskDef {Object} Definition object to describe cache blocks of the operation.
-     * @para data
+     * @param taskDef {Object} Definition object to describe cache blocks of the operation.
+     * @param data
      * @param errors Errors that have occurred during loading, parsing and caching data.
      * @return {Object} Object that contains converted errors and converted data.
      */
