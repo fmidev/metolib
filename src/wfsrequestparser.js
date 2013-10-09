@@ -1211,7 +1211,7 @@ fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
         jQuery(xmlElement).children(myConstants.XML_SWE_FIELD).each(function() {
             // Parameter identifier is provided as an attribute.
             var nameAttr = jQuery.trim(jQuery(this).attr(myConstants.XML_ATTR_NAME));
-            if (nameAttr) {
+            if (nameAttr && !_.contains(container, nameAttr)) {
                 container.push(nameAttr);
             }
         });
