@@ -521,11 +521,13 @@ fi.fmi.metoclient.metolib.WfsConnection = (function() {
      * always be available when data is requested from the cache.
      *
      * @param {Object} taskDef Definition object to describe cache blocks of the operation.
-     * @param {Object} data Data from the parser.
+     *                         May not be {undefined} or {null}.
+     * @param {Object} data Data from the parser. May be {undefined} or {null}.
      * @param {Object} errors Errors that have occurred during loading and parsing data.
+     *                        May be {undefined} or {null}.
      * @return {Object} Object that contains converted errors and converted data.
      *                  {@link fi.fmi.metoclient.metolib.SplitterCache#fillWith} function describes
-     *                  the object structure of the converted data.
+     *                  the object structure of the converted data. May not be {undefined} or {null}.
      */
     function convertSitesDataFromParserForCache(taskDef, data, errors) {
         var converted = {
@@ -588,9 +590,11 @@ fi.fmi.metoclient.metolib.WfsConnection = (function() {
      *
      * This data has been set in {convertSitesDataFromParserForCache} function for the cache.
      *
-     * @param taskDef {Object} Definition object to describe cache blocks of the operation.
-     * @param data
-     * @param errors Errors that have occurred during loading, parsing and caching data.
+     * @param {Object} taskDef Definition object to describe cache blocks of the operation.
+     *                         May be {undefined} or {null}.
+     * @param {Object} data Parsed data from cache. May be {undefined} or {null}.
+     * @param {Array} errors Errors that have occurred during loading, parsing and caching data.
+     *                       May be {undefined} or {null}.
      * @return {Object} Object that contains converted errors and converted data.
      */
     function convertSitesDataFromCacheForApi(taskDef, data, errors) {
@@ -679,9 +683,12 @@ fi.fmi.metoclient.metolib.WfsConnection = (function() {
      * Parser will provide the fetched and parsed data for this callback.
      * This callback will forward the data in a correct format for the cache.
      *
-     * @param container Object that provides connection instance specific private member variables.
-     * @param taskDef
-     * @param taskCallback
+     * @param {Object} container Object that provides connection instance specific private member variables.
+     *                           May not be {undefined} or {null}.
+     * @param {Object} taskDef Definition object to describe cache blocks of the operation.
+     *                         May not be {undefined} or {null}.
+     * @param {function(errors, data)} taskCallback Called with the parsed data and errors array when operation finishes.
+     *                                              May not be {undefined} or {null}.
      */
     function cacheSitesDataFetcherCallback(container, taskDef, taskCallback) {
         fi.fmi.metoclient.metolib.WfsRequestParser.getData({
@@ -1240,7 +1247,7 @@ fi.fmi.metoclient.metolib.WfsConnection = (function() {
          *                    Callback is called with the parsed data and errors array when operation finishes.
          *                    If an error occurs, data is set {undefined} for the callback. Possible errors are
          *                    given inside the array that is always provided.
-         *         progressCallback : {Function(err, partStart, partEnd)}
+         *         progressCallback : {function(err, partStart, partEnd)}
          *                            Not mandatory property.
          *                            Called when part of the flow has finished.
          *                            Function is called with {err}, {partStart} and {partEnd} parameters.
