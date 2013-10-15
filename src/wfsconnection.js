@@ -353,7 +353,7 @@ fi.fmi.metoclient.metolib.WfsConnection = (function() {
                     // Then, values can be compared to taskDef locations.
                     name = jQuery.trim(name.slice(regionPrefix.length));
                 }
-                // TaskDef sites and lcoations have been created before for cache by combining
+                // TaskDef sites and locations have been created before for cache by combining
                 // name and region that have been given through the API. TaskDef locations are
                 // compared to the name and region values that are given as parameters for this
                 // function.
@@ -777,7 +777,7 @@ fi.fmi.metoclient.metolib.WfsConnection = (function() {
                 crs : options.crs,
                 queryExtension : options.queryExtension
             };
-            // Because locations can be given in multiple ways, location relate properties are
+            // Because locations can be given in multiple ways, location related properties are
             // set separately for taskDef to combine all location informations for cache.
             setTaskDefLocations(taskDef, options);
             this.cache.fetch(taskDef, function(errors, result) {
