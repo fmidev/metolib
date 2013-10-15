@@ -189,17 +189,24 @@ fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
 
         // Error object keys.
         KEY_ERROR_CODE : "errorCode",
-        KEY_ERROR_TEXT : "errorText",
+        KEY_ERROR_TEXT : "errorText"
+    };
 
-        // Empty property object if data has not been gotten from server.
-        PROPERTY_OBJECT_EMPTY : {
+    /**
+     * Create empty property object that may be used if property data has not been gotten from the server.
+     *
+     * @return {Object} New property object that contains properties with default empty values.
+     *                  May not be {undefined} or {null}.
+     */
+    function createEmptyPropertyObject() {
+        return {
             label : "",
             unit : "",
             phenomenon : "",
             statisticalFunction : "",
             statisticalPeriod : ""
-        }
-    };
+        };
+    }
 
     /**
      * Parses the given XML DOM document.
@@ -246,7 +253,8 @@ fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
                 gmlcovPositions : {
                     srsDimension : undefined,
                     timeIndex : undefined,
-                    contents : [] // Array of all position and time data as strings. This relates to the locations pos data.
+                    // Array of all position and time data as strings. This relates to the locations pos data.
+                    contents : []
                 },
                 // All properties related data is inserted in turns item by item here.
                 data : [],
@@ -479,7 +487,7 @@ fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
                                 if ("undefined" !== typeof console && console) {
                                     console.error("ERROR: Server has not provided properties for request parameter!");
                                 }
-                                result.properties[parameter] = myConstants.PROPERTY_OBJECT_EMPTY;
+                                result.properties[parameter] = createEmptyPropertyObject();
                             }
                         }
                     }
@@ -1455,11 +1463,7 @@ fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
         jQuery(xmlElement).children(myConstants.XML_OBSERVABLE_PROPERTY).each(function() {
             var property = jQuery.trim(jQuery(this).attr(myConstants.XML_ATTR_GML_ID));
             if (property) {
-                // Create a shallow copy of the empty property object.
-                // Then, object contains default values that may be replaced by parsed content.
-                // Notice, empty property object contains only strings. So, shallow copy here
-                // is actually a deep copy.
-                var propertyObject = _.clone(myConstants.PROPERTY_OBJECT_EMPTY);
+                var propertyObject = createEmptyPropertyObject();
                 parseLabel(this, propertyObject, asyncStarted, asyncCallback, errors);
                 parseBasePhenomenon(this, propertyObject, asyncStarted, asyncCallback, errors);
                 parseUom(this, propertyObject, asyncStarted, asyncCallback, errors);
