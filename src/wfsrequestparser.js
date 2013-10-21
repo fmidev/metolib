@@ -209,6 +209,44 @@ fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
     }
 
     /**
+     * Check if the object contains the given key.
+     *
+     * If an object property key is a case-insensitive but not case-sensitive match
+     * to the given {key} string, the property key is changed to be a case-sensitive match.
+     *
+     * The case-sensitivity check is made because some of the XML elements may contain
+     * values as lower-case strings instead of using the originally given case-sensitive value.
+     *
+     * @param {Object} obj Object whose keys are checked against {key}.
+     *                     May be {undefined} or {null}.
+     * @param {String} key Key for the {obj}.
+     *                     May be {undefined}, {null} or empty.
+     * @return {Boolean} {true} if {obj} contains {key} match. Else {false}.
+     */
+    function checkKey(obj, key) {
+        // Check if key is case-sensitive match.
+        var keyExists = obj && key && obj.hasOwnProperty(key);
+        if (!keyExists && obj && key) {
+            // Object does not contain case-sensitive key match.
+            // Check if any object key is case-insensitive key match.
+            var lowerCaseKey = key.toLowerCase();
+            for (var objKey in obj) {
+                if (obj.hasOwnProperty(objKey)) {
+                    if (objKey.toLowerCase() === lowerCaseKey) {
+                        // Key is case-insensitive match.
+                        // Change the key to be case-sensitive match.
+                        obj[key + ""] = obj[objKey];
+                        delete obj[objKey];
+                        keyExists = true;
+                        break;
+                    }
+                }
+            }
+        }
+        return keyExists;
+    }
+
+    /**
      * Parses the given XML DOM document.
      *
      * Notice, this may be an asynchronous operation because parsing of sub-elements
@@ -483,7 +521,9 @@ fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
                             // Therefore, data indexing is based on the position and parameter indexing.
                             resultObject.values[parameter] = parseFloat(parsedContent.data[(i / srsDimension ) * parametersLength + j]);
                             // Make sure properties have at least empty default property object corresponding every parameter.
-                            if (!result.properties[parameter]) {
+                            // Notice, checkKey function also makes sure parameter is case-sensitive key match in properties object
+                            // if corresponding property exists.
+                            if (!checkKey(result.properties, parameter) || !result.properties[parameter]) {
                                 if ("undefined" !== typeof console && console) {
                                     console.error("ERROR: Server has not provided properties for request parameter!");
                                 }
