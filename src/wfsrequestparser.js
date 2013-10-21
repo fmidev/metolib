@@ -298,15 +298,22 @@ fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
                 data : [],
                 // May contain none, one or more parameter strings that identify the request parameter, such as td.
                 parameters : [],
-                // May contain none, one or more of key-value-pairs. Key identifies the request parameter and
-                // is same as parameters array item, such as td. Value gives property object for the requested data.
-                // Key-value-pair that describes one property in properties object:
-                //   parameterAsKey : { label : "labelString",
-                //                      unit : "unitString",
-                //                      phenomenon : "phenomenonString",
-                //                      statisticalFunction : "statisticalFunctionString",
-                //                      statisticalPeriod : "statisticalAggregationTimePeriod" }
-                properties : {}
+                propertiesContainer : {
+                    // Array to hold URLs that have been used to query properties data.
+                    // Then, URLs can be checked to avoid duplicate downloads for same property data.
+                    // Duplicate downloads could occur, for example, if multiple wfs:member -elments are provided in XML
+                    // and elements use same parameters.
+                    urls : [],
+                    // May contain none, one or more of key-value-pairs. Key identifies the request parameter and
+                    // is same as parameters array item, such as td. Value gives property object for the requested data.
+                    // Key-value-pair that describes one property in properties object:
+                    //   parameterAsKey : { label : "labelString",
+                    //                      unit : "unitString",
+                    //                      phenomenon : "phenomenonString",
+                    //                      statisticalFunction : "statisticalFunctionString",
+                    //                      statisticalPeriod : "statisticalAggregationTimePeriod" }
+                    properties : {}
+                }
             };
 
             // This counter is used in the flow to keep count
@@ -451,7 +458,7 @@ fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
             // Parameters are used directly from the parsed content object.
             parameters : parsedContent.parameters,
             // Properties are used directly from the parsed content object.
-            properties : parsedContent.properties,
+            properties : parsedContent.propertiesContainer.properties,
             // Locations will contain time-value-pairs that belong to that location.
             locations : []
         };
@@ -715,7 +722,7 @@ fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
     function parseOmsoPointTimeSeriesObservation(xmlElement, container, asyncStarted, asyncCallback, errors) {
         jQuery(xmlElement).children(myConstants.XML_OMSO_POINT_TIME_SERIES_OBSERVATION).each(function() {
             parseOmPhenomenonTime(this, container.info, asyncStarted, asyncCallback, errors);
-            parseOmObservedProperty(this, container.properties, asyncStarted, asyncCallback, errors);
+            parseOmObservedProperty(this, container.propertiesContainer, asyncStarted, asyncCallback, errors);
             parseOmFeatureOfInterest(this, container, asyncStarted, asyncCallback, errors);
             parseOmResult(this, container, asyncStarted, asyncCallback, errors);
         });
@@ -733,7 +740,7 @@ fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
     function parseOmsoGridSeriesObservation(xmlElement, container, asyncStarted, asyncCallback, errors) {
         jQuery(xmlElement).children(myConstants.XML_OMSO_GRID_SERIES_OBSERVATION).each(function() {
             parseOmPhenomenonTime(this, container.info, asyncStarted, asyncCallback, errors);
-            parseOmObservedProperty(this, container.properties, asyncStarted, asyncCallback, errors);
+            parseOmObservedProperty(this, container.propertiesContainer, asyncStarted, asyncCallback, errors);
             parseOmFeatureOfInterest(this, container, asyncStarted, asyncCallback, errors);
             parseOmResult(this, container, asyncStarted, asyncCallback, errors);
         });
@@ -819,7 +826,9 @@ fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
         jQuery(xmlElement).children(myConstants.XML_OM_OBSERVED_PROPERTY).each(function() {
             // URL for the property information that is provided as an attribute.
             var url = jQuery.trim(jQuery(this).attr(myConstants.XML_ATTR_XLINK_HREF));
-            if (url) {
+            if (url && !_.contains(container.urls, url)) {
+                // URL content has not been downloaded before.
+                container.urls.push(url);
                 // Start asynchronous operation to get the properties.
                 requestXml(url, errors, function(xml, errorContainer) {
                     // Check if server responded with an error.
@@ -829,8 +838,8 @@ fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
                             // Notice, multiple observable property elements are given inside a composite.
                             // If only one observable property is given, composite is not used. Therefore,
                             // check observable properties in both ways here.
-                            parseCompositeObservableProperty(xml, container, asyncStarted, asyncCallback, errors);
-                            parseObservableProperty(xml, container, asyncStarted, asyncCallback, errors);
+                            parseCompositeObservableProperty(xml, container.properties, asyncStarted, asyncCallback, errors);
+                            parseObservableProperty(xml, container.properties, asyncStarted, asyncCallback, errors);
                         }
                     }
                     // Callback because asynchronous operation has finished.
