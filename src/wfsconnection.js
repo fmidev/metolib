@@ -303,6 +303,7 @@ fi.fmi.metoclient.metolib.WfsConnection = (function() {
         var locationName = LOCATION_SITES_PREFIX + region;
         if (taskDef) {
             var matchFound = false;
+            var loc;
             var i;
             // Check geoid.
             if (taskDef.geoid && geoid) {
@@ -341,32 +342,57 @@ fi.fmi.metoclient.metolib.WfsConnection = (function() {
             // Notice, taskDef contains location property that contains all the location data.
             // But, part of locations were already handled separately above. Therefore, also handle
             // sites by using sites-property instead of location-property.
-            if (!matchFound && taskDef.sites && name && region) {
-                // Server may also include region as prefix into site name.
-                // Therefore, take this into account when comparing server response
-                // to taskDef sites that contain name and region combination string
-                // as recognized by the cache.
-                var regionPrefix = region + LOCATION_NAME_REGION_SEPARATOR;
-                var regionIndex = name.indexOf(regionPrefix);
-                if (0 === regionIndex) {
-                    // Remove region substring from name and trim possible whitespaces.
-                    // Then, values can be compared to taskDef locations.
-                    name = jQuery.trim(name.slice(regionPrefix.length));
+            if (!matchFound && taskDef.sites && region) {
+                if (name) {
+                    // Server may also include region as prefix into site name.
+                    // Therefore, take this into account when comparing server response
+                    // to taskDef sites that contain name and region combination string
+                    // as recognized by the cache.
+                    var regionPrefix = region + LOCATION_NAME_REGION_SEPARATOR;
+                    var regionIndex = name.indexOf(regionPrefix);
+                    if (0 === regionIndex) {
+                        // Remove region substring from name and trim possible whitespaces.
+                        // Then, values can be compared to taskDef locations.
+                        name = jQuery.trim(name.slice(regionPrefix.length));
+                    }
+                    // TaskDef sites and locations have been created before for cache by combining
+                    // name and region that have been given through the API. TaskDef locations are
+                    // compared to the name and region values that are given as parameters for this
+                    // function.
+                    var combinedLocationNameLowerCase = (name + PARAMETER_SEPARATOR + region).toLowerCase();
+                    // Sites are given as string array in taskDef.
+                    for ( i = 0; i < taskDef.sites.length; ++i) {
+                        loc = taskDef.sites[i];
+                        // Location names are compared as case-insensitive here.
+                        // Notice, server also handles places as case-insensitive. Therefore,
+                        // cache is used with case-insensitive comparison here if API user has not
+                        // given case-sensitive sites information for some reason.
+                        if (loc && combinedLocationNameLowerCase && loc.toLowerCase() === combinedLocationNameLowerCase) {
+                            // Matching location for cache was found from taskDef locations.
+                            // Notice, prefix is used with cache.
+                            locationName = LOCATION_SITES_PREFIX + loc;
+                            matchFound = true;
+                            break;
+                        }
+                    }
                 }
-                // TaskDef sites and locations have been created before for cache by combining
-                // name and region that have been given through the API. TaskDef locations are
-                // compared to the name and region values that are given as parameters for this
-                // function.
-                var combinedLocationName = name + PARAMETER_SEPARATOR + region;
-                // Sites are given as string array in taskDef.
-                for ( i = 0; i < taskDef.sites.length; ++i) {
-                    var loc = taskDef.sites[i];
-                    if (-1 !== loc.indexOf(PARAMETER_SEPARATOR) && loc === combinedLocationName) {
-                        // Matching location for cache was found from taskDef locations.
-                        // Notice, prefix is used with cache.
-                        locationName = LOCATION_SITES_PREFIX + loc;
-                        matchFound = true;
-                        break;
+                if (!matchFound) {
+                    // Match was not found with name and region above.
+                    // Check if case-insensitive region is a match.
+                    var regionLowerCase = region.toLowerCase();
+                    for ( i = 0; i < taskDef.sites.length; ++i) {
+                        loc = taskDef.sites[i];
+                        // Location names are compared as case-insensitive here.
+                        // Notice, server also handles places as case-insensitive. Therefore,
+                        // cache is used with case-insensitive comparison here if API user has not
+                        // given case-sensitive sites information for some reason.
+                        if (loc && loc.toLowerCase() === regionLowerCase) {
+                            // Matching location for cache was found from taskDef locations.
+                            // Notice, prefix is used with cache.
+                            locationName = LOCATION_SITES_PREFIX + loc;
+                            matchFound = true;
+                            break;
+                        }
                     }
                 }
             }
