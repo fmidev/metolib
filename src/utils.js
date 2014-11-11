@@ -169,11 +169,17 @@ fi.fmi.metoclient.metolib.Utils = (function() {
                             xdr.onerror = function() {
                                 callback(404, "Not Found");
                             };
-                            xdr.onprogress = jQuery.noop;
+                            xdr.onprogress = function() {
+                                // For some reason, XDomainRequest send does not seem to work properly with IE9
+                                // when jQuery.noop is used for onprogress function and jQuery ajax requests are
+                                // called inside an iframe. Therefore, separately defined empty function is set
+                                // here to be sure that send works properly in all cases and callback is called.
+                            };
                             xdr.ontimeout = function() {
                                 callback(0, "timeout");
                             };
-                            xdr.timeout = s.xdrTimeout || Number.MAX_VALUE;
+                            // When using timeout value of 0, IE will not abort the request prematurely.
+                            xdr.timeout = s.xdrTimeout || 0;
                             xdr.open(s.type, s.url);
                             xdr.send((s.hasContent && s.data ) || null);
                         },
