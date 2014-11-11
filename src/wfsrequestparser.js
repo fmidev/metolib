@@ -2217,8 +2217,8 @@ fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
          *                            This is one of the parameter strings that is part of
          *                            URL parameters to define which data is requested from the server.
          *                            Parameter string may contain request for multiple parameters.
-         *                            For example, value for temperature may be "td". If an array is given,
-         *                            strings are given as separate array string items.
+         *                            For example, value for dew point temperature may be "td".
+         *                            If an array is given, strings are given as separate array string items.
          *         begin : {int|Date}
          *                 Mandatory property. May not be {undefined} or {null}.
          *                 The begin time for the data.
