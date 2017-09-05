@@ -1,7 +1,7 @@
 /**
  * This software may be freely distributed and used under the following MIT license:
  *
- * Copyright (c) 2013 Finnish Meteorological Institute
+ * Copyright (c) 2017 Finnish Meteorological Institute
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this
  * software and associated documentation files (the "Software"), to deal in the
@@ -24,27 +24,15 @@
 // Strict mode for whole file.
 "use strict";
 
-// Requires jQuery
-if ("undefined" === typeof jQuery || !jQuery) {
-    throw "ERROR: jQuery is required for fi.fmi.metoclient.metolib.WfsRequestParser!";
-}
+// Requires jQuery, lodash
+// var jQuery = require('jquery');
+// var _ = require('lodash');
+import jQuery from 'jquery';
+import _ from 'lodash';
 
-// Requires lodash
-if ("undefined" === typeof _ || !_) {
-    throw "ERROR: Lodash is required for fi.fmi.metoclient.metolib.WfsRequestParser!";
-}
-
-// "Package" definitions
-var fi = fi || {};
-fi.fmi = fi.fmi || {};
-fi.fmi.metoclient = fi.fmi.metoclient || {};
-fi.fmi.metoclient.metolib = fi.fmi.metoclient.metolib || {};
-
-// Requires fi.fmi.metoclient.metolib.Utils.
-// "Package" exists because it is created above if it did not exist.
-if ("undefined" === typeof fi.fmi.metoclient.metolib.Utils || !fi.fmi.metoclient.metolib.Utils) {
-    throw "ERROR: fi.fmi.metoclient.metolib.Utils is required for fi.fmi.metoclient.metolib.WfsRequestParser!";
-}
+// Requires Utils
+// var Utils = require('./utils.js');
+import Utils from './utils.js';
 
 /**
  * RequestParser object acts as an interface that provides functions
@@ -55,7 +43,9 @@ if ("undefined" === typeof fi.fmi.metoclient.metolib.Utils || !fi.fmi.metoclient
  * to start asynchronous flows that can be followed by callback functions.
  *
  * Example:
- *      fi.fmi.metoclient.metolib.WfsRequestParser.getData({
+ *      import Metolib from 'metolib';
+ *      var WfsRequestParser = new Metolib.WfsRequestParser();
+ *      WfsRequestParser.getData({
  *          url : url,
  *          storedQueryId : storedQueryId,
  *          requestParameter : "td,ws_10min",
@@ -73,7 +63,7 @@ if ("undefined" === typeof fi.fmi.metoclient.metolib.Utils || !fi.fmi.metoclient
  *
  * See API description in the end of the function.
  */
-fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
+function WfsRequestParser() {
 
     /**
      * Constants that are used for requests and for parsing the requested data.
@@ -267,6 +257,11 @@ fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
      *                                 {undefined}.
      */
     function parseXml(xml, errors, callback) {
+      
+        // This counter is used in the flow to keep count
+        // of asynchronous operations that are going on.
+        var asyncCounter = 0;
+
         try {
             // This data structure will hold the parsed data.
             // Notice, this is not the finalized data structure.
@@ -315,10 +310,6 @@ fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
                     properties : {}
                 }
             };
-
-            // This counter is used in the flow to keep count
-            // of asynchronous operations that are going on.
-            var asyncCounter = 0;
 
             /**
              * When an asynchronous operation is started for the sub-element parsing,
@@ -474,7 +465,7 @@ fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
             // Every object has a position and time and corresponding measurement values for all the parameters.
             // gmlcovPositionsContents contains position values and times values in a row as array elements.
             // One timeposition contains srsDimension count of array items that describe that position and time.
-            if (srsDimension > 0 && parsedContent.data.length === parametersLength * (gmlcovPositionsContents.length / srsDimension) && parsedContent.locations.length === fi.fmi.metoclient.metolib.Utils.objectLength(parsedContent.positions)) {
+            if (srsDimension > 0 && parsedContent.data.length === parametersLength * (gmlcovPositionsContents.length / srsDimension) && parsedContent.locations.length === Utils.objectLength(parsedContent.positions)) {
                 // Create locations objects for results.
                 for (var ind = 0; ind < parsedContent.locations.length; ++ind) {
                     var contentLocation = parsedContent.locations[ind];
@@ -826,7 +817,7 @@ fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
         jQuery(xmlElement).children(myConstants.XML_OM_OBSERVED_PROPERTY).each(function() {
             // URL for the property information that is provided as an attribute.
             var url = jQuery.trim(jQuery(this).attr(myConstants.XML_ATTR_XLINK_HREF));
-            if (url && !_.contains(container.urls, url)) {
+            if (url && !_.includes(container.urls, url)) {
                 // URL content has not been downloaded before.
                 container.urls.push(url);
                 // Start asynchronous operation to get the properties.
@@ -1268,7 +1259,7 @@ fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
         jQuery(xmlElement).children(myConstants.XML_SWE_FIELD).each(function() {
             // Parameter identifier is provided as an attribute.
             var nameAttr = jQuery.trim(jQuery(this).attr(myConstants.XML_ATTR_NAME));
-            if (nameAttr && !_.contains(container, nameAttr)) {
+            if (nameAttr && !_.includes(container, nameAttr)) {
                 container.push(nameAttr);
             }
         });
@@ -1841,9 +1832,9 @@ fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
             for (var key in queryExtension) {
                 if (queryExtension.hasOwnProperty(key)) {
                     // Always include delimiter character even if value would not be given.
-                    extension += fi.fmi.metoclient.metolib.Utils.encodeUriComponent(key);
+                    extension += Utils.encodeUriComponent(key);
                     extension += myConstants.URL_QUERY_FIELD_VALUE_DELIMITER;
-                    extension += fi.fmi.metoclient.metolib.Utils.encodeUriComponent(queryExtension[key] || "");
+                    extension += Utils.encodeUriComponent(queryExtension[key] || "");
                 }
             }
             if (extension) {
@@ -1906,8 +1897,8 @@ fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
             // Remove millisecond part from the timestamp because server does not support it.
             // Millisecond is separated by . character. So, use regex to remove . delimiter and ms integer.
             var MS_REG = /\.\d+/;
-            begin = fi.fmi.metoclient.metolib.Utils.encodeUriComponent(begin.toISOString()).split(MS_REG).join("");
-            end = fi.fmi.metoclient.metolib.Utils.encodeUriComponent(end.toISOString()).split(MS_REG).join("");
+            begin = Utils.encodeUriComponent(begin.toISOString()).split(MS_REG).join("");
+            end = Utils.encodeUriComponent(end.toISOString()).split(MS_REG).join("");
 
             // The server uses the default timestep when the URL parameter string is empty.
             var timeStepParameter = "";
@@ -1920,7 +1911,7 @@ fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
             // Parameters are given through the API. Therefore, make sure parameters do not
             // contain illegal characters when inserted into the URL. Parameters that should
             // be numbers are checked above and numbers are always accepted.
-            requestParameter = fi.fmi.metoclient.metolib.Utils.encodeUriComponent(requestParameter);
+            requestParameter = Utils.encodeUriComponent(requestParameter);
 
             var ind;
             var geoidParameter = "";
@@ -1935,7 +1926,7 @@ fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
                 for ( ind = 0; ind < geoid.length; ++ind) {
                     var tmpGeoid = geoid[ind];
                     if (_.isNumber(tmpGeoid) || tmpGeoid && _.isString(tmpGeoid)) {
-                        tmpGeoid = fi.fmi.metoclient.metolib.Utils.encodeUriComponent(tmpGeoid);
+                        tmpGeoid = Utils.encodeUriComponent(tmpGeoid);
                         geoidParameter += myConstants.REQUEST_GEOID + tmpGeoid;
                     }
                 }
@@ -1953,7 +1944,7 @@ fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
                 for ( ind = 0; ind < wmo.length; ++ind) {
                     var tmpWmo = wmo[ind];
                     if (_.isNumber(tmpWmo) || tmpWmo && _.isString(tmpWmo)) {
-                        tmpWmo = fi.fmi.metoclient.metolib.Utils.encodeUriComponent(tmpWmo);
+                        tmpWmo = Utils.encodeUriComponent(tmpWmo);
                         wmoParameter += myConstants.REQUEST_WMO + tmpWmo;
                     }
                 }
@@ -1971,7 +1962,7 @@ fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
                 for ( ind = 0; ind < fmisid.length; ++ind) {
                     var tmpFmisid = fmisid[ind];
                     if (_.isNumber(tmpFmisid) || tmpFmisid && _.isString(tmpFmisid)) {
-                        tmpFmisid = fi.fmi.metoclient.metolib.Utils.encodeUriComponent(tmpFmisid);
+                        tmpFmisid = Utils.encodeUriComponent(tmpFmisid);
                         fmisidParameter += myConstants.REQUEST_FMISID + tmpFmisid;
                     }
                 }
@@ -1987,7 +1978,7 @@ fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
                 for ( ind = 0; ind < sites.length; ++ind) {
                     var place = sites[ind];
                     if (place && _.isString(place)) {
-                        place = fi.fmi.metoclient.metolib.Utils.encodeUriComponent(place);
+                        place = Utils.encodeUriComponent(place);
                         sitesParameter += myConstants.REQUEST_PLACE + place;
                     }
                 }
@@ -1995,15 +1986,15 @@ fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
 
             var bboxParameter = "";
             if (bbox) {
-                bboxParameter = myConstants.REQUEST_BBOX + fi.fmi.metoclient.metolib.Utils.encodeUriComponent(bbox);
+                bboxParameter = myConstants.REQUEST_BBOX + Utils.encodeUriComponent(bbox);
             }
 
             var crsParameter = "";
             if (crs) {
-                crsParameter = myConstants.REQUEST_CRS + fi.fmi.metoclient.metolib.Utils.encodeUriComponent(crs);
+                crsParameter = myConstants.REQUEST_CRS + Utils.encodeUriComponent(crs);
             }
 
-            var storedQueryIdParameter = myConstants.REQUEST_STORED_QUERY_ID + fi.fmi.metoclient.metolib.Utils.encodeUriComponent(storedQueryId);
+            var storedQueryIdParameter = myConstants.REQUEST_STORED_QUERY_ID + Utils.encodeUriComponent(storedQueryId);
 
             // Check which delimiter is used with the first query that is appended to the base URL.
             var urlQueryDelimiter = url.indexOf(myConstants.URL_QUERY_PREFIX_BEGIN) === -1 ? myConstants.URL_QUERY_PREFIX_BEGIN : myConstants.URL_QUERY_PREFIX_AND;
@@ -2333,4 +2324,6 @@ fi.fmi.metoclient.metolib.WfsRequestParser = (function() {
         adjustEndTime : adjustEndTime
     };
 
-})();
+}
+
+module.exports = WfsRequestParser;

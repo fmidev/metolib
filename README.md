@@ -1,14 +1,14 @@
 MetOLib
 =======
 
-MetOLib provides implementation of API classes that may be used to request weather 
+MetOLib provides implementation of API classes that may be used to request weather
 data from the Web Feature Service (WFS) server of the Finnish Meteorological Institute
 INSPIRE Atmospheric Features and Geographical Meteorological Features
 guidelines compatible WFS Download Service server at http://data.fmi.fi.
 
-The response is assumed to the wfs:FeatureCollection with one or more members of 
-PointTimeSeriesObservation or GridSeriesObservation features of namespace 
-http://inspire.ec.europa.eu/schemas/omso/2.0rc3. The WfsRequestParser creates 
+The response is assumed to the wfs:FeatureCollection with one or more members of
+PointTimeSeriesObservation or GridSeriesObservation features of namespace
+http://inspire.ec.europa.eu/schemas/omso/2.0rc3. The WfsRequestParser creates
 the WFS GetFeature request and parses the XML response into
 JS response object.
 
@@ -25,10 +25,9 @@ Root folder contains this README.md and Grunt files that may be used to build di
     * [SplitterCache](doc/splittercache.md)
     * [Build and Test](doc/buildandtest.md)
 * *src* contains actual MetOClient source files that may be used as a reference and are used to create *release* content
-   into *lib* -folder when Grunt is used.
-* *deps* contains thirdparty libraries that are used by MetOLib
+   into *lib* -folder. This repository builds with Webpack; any other bundler that supports ES6 can also be used. Also converting to RequireJS or AMD module syntax is possible.
 * *examples* contains examples of how to use MetOLib
-* *test* contains general test files to test *src* and *lib* files
+* *test* contains general test files to test *lib* files
 * *testdeps* contains thirdparty libraries that are used by MetOClient tests. *Jasmine* is used for test cases.
 
 Browsers

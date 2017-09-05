@@ -1,25 +1,18 @@
 // Requires jQuery
 if ( typeof jQuery === undefined || !jQuery) {
-    throw "ERROR: jQuery is required for fi.fmi.metoclient.test.SpecUtils!";
+    throw "ERROR: jQuery is required for Metolib.test.SpecUtils!";
 }
 
-// "Package" definitions
-var fi = fi || {};
-fi.fmi = fi.fmi || {};
-fi.fmi.metoclient = fi.fmi.metoclient || {};
-fi.fmi.metoclient.test = fi.fmi.metoclient.test || {};
-fi.fmi.metoclient.metolib = fi.fmi.metoclient.metolib || {};
-
-// Requires fi.fmi.metoclient.metolib.Utils.
-// "Package" exists because it is created above if it did not exist.
-if ( typeof fi.fmi.metoclient.metolib.Utils === "undefined" || !fi.fmi.metoclient.metolib.Utils) {
-    throw "ERROR: fi.fmi.metoclient.metolib.Utils is required for fi.fmi.metoclient.test.SpecUtils!";
+// Requires Metolib.Utils.
+if ( typeof Metolib.Utils === "undefined" || !Metolib.Utils) {
+    throw "ERROR: Metolib.Utils is required for Metolib.test.SpecUtils!";
 }
 
 /**
  * Test case utility functions.
  */
-fi.fmi.metoclient.test.SpecUtils = {
+Metolib.test = Metolib.test || {};
+Metolib.test.SpecUtils = {
     /**
      * Check given {data} structure against given {times} and {values} array values.
      *
@@ -36,7 +29,7 @@ fi.fmi.metoclient.test.SpecUtils = {
                 for (var locationInd = 0; locationInd < locationCount; ++locationInd) {
                     var locationObject = data.locations[locationInd];
                     var locationData = locationObject.data;
-                    var labelCount = fi.fmi.metoclient.metolib.Utils.objectLength(locationData);
+                    var labelCount = Metolib.Utils.objectLength(locationData);
                     // Check all the datas of the current location.
                     // Every label has own time-value-pair-array. So, loop through all the labels.
                     var labelInd = 0;

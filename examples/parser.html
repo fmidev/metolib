@@ -4,13 +4,12 @@
         <meta charset="utf-8" />
         <title>Parser examples</title>
 
-        <!-- JavaScript -->
-        <script type="text/javascript" src="../deps/jquery/jquery-1.10.2.js"></script>
-        <script type="text/javascript" src="../deps/lodash/lodash.compat-2.1.0.js"></script>
+        <!-- MetOLib JavaScript bundle -->
+        <script type="text/javascript" src="../lib/metolib-bundle-2.0.0.js"></script>
 
-        <!-- Parser JavaScript files -->
-        <script type="text/javascript" src="../src/utils.js"></script>
-        <script type="text/javascript" src="../src/wfsrequestparser.js"></script>
+        <!-- Dependencies: jQuery and Lodash -->
+        <script type="text/javascript" src="../../testdeps/jquery/jquery-1.10.2.js"></script>
+        <script type="text/javascript" src="../../testdeps/lodash/lodash.compat-2.1.0.js"></script>
 
         <script type="text/javascript">
             // Stored query ids.
@@ -22,6 +21,8 @@
             if (TEST_SERVER_URL.indexOf("insert-your-apikey-here") !== -1) {
                 alert("Check parser.html source! TEST_SERVER_URL should contain proper API-key!");
             }
+
+            Metolib.WfsRequestParser = new Metolib.WfsRequestParser();
 
             /**
              * This function recursively browses the given {data} structure and appends the content as text
@@ -70,9 +71,9 @@
 
             function testHkiTd(url) {
                 // See API documentation and comments from parser source code of
-                // fi.fmi.metoclient.metolib.WfsRequestParser.getData function for the description
+                // Metolib.WfsRequestParser.getData function for the description
                 // of function options parameter object and for the callback parameters objects structures.
-                fi.fmi.metoclient.metolib.WfsRequestParser.getData({
+                Metolib.WfsRequestParser.getData({
                     url : url,
                     storedQueryId : STORED_QUERY_OBSERVATION,
                     requestParameter : "td",
@@ -94,9 +95,9 @@
 
             function testHkiTurkuTdWind(url) {
                 // See API documentation and comments from parser source code of
-                // fi.fmi.metoclient.metolib.WfsRequestParser.getData function for the description
+                // Metolib.WfsRequestParser.getData function for the description
                 // of function options parameter object and for the callback parameters objects structures.
-                fi.fmi.metoclient.metolib.WfsRequestParser.getData({
+                Metolib.WfsRequestParser.getData({
                     url : url,
                     storedQueryId : STORED_QUERY_OBSERVATION,
                     requestParameter : "td,ws_10min",
@@ -118,9 +119,9 @@
 
             function testSpatialTdWindspeed(url) {
                 // See API documentation and comments from parser source code of
-                // fi.fmi.metoclient.metolib.WfsRequestParser.getData function for the description
+                // Metolib.WfsRequestParser.getData function for the description
                 // of function options parameter object and for the callback parameters objects structures.
-                fi.fmi.metoclient.metolib.WfsRequestParser.getData({
+                Metolib.WfsRequestParser.getData({
                     url : url,
                     storedQueryId : STORED_QUERY_OBSERVATION,
                     requestParameter : "td,ws_10min",
@@ -142,9 +143,9 @@
 
             function testForecastTemperatureWindspeed(url) {
                 // See API documentation and comments from parser source code of
-                // fi.fmi.metoclient.metolib.WfsRequestParser.getData function for the description
+                // Metolib.WfsRequestParser.getData function for the description
                 // of function options parameter object and for the callback parameters objects structures.
-                fi.fmi.metoclient.metolib.WfsRequestParser.getData({
+                Metolib.WfsRequestParser.getData({
                     url : url,
                     storedQueryId : STORED_QUERY_FORECAST,
                     requestParameter : "temperature,windspeedms",
@@ -161,17 +162,15 @@
                 });
             }
 
-            $(function() {
+            jQuery(function() {
                 // Run test cases by using functions above.
 
                 // Single station and single observation.
                 testHkiTd(TEST_SERVER_URL);
                 // Multiple stations and multiple observations.
                 testHkiTurkuTdWind(TEST_SERVER_URL);
-
                 // Spatial multiple observation data.
                 testSpatialTdWindspeed(TEST_SERVER_URL);
-
                 // Multiple stations and multiple observations.
                 testForecastTemperatureWindspeed(TEST_SERVER_URL);
             });
@@ -182,7 +181,7 @@
         <p>
             Notice,
             <code>
-                fi.fmi.metoclient.metolib.WfsRequestParser
+                Metolib.WfsRequestParser
             </code> source code is well commented.
             See more information about API and implementation from source code comments.
         </p>

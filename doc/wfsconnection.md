@@ -3,16 +3,16 @@ MetOLib: WfsConnection and use of cache
 
 Connection API wraps cache and parser implementation.
 Connection API class may be used if cache functionality is desired for requested and parsed data.
-If cache is not required, then parser class may be used directly instead. Notice, at the moment 
-cache does not support spatial (BBOX) requests. When spatial data is requested through Connection API, 
+If cache is not required, then parser class may be used directly instead. Notice, at the moment
+cache does not support spatial (BBOX) requests. When spatial data is requested through Connection API,
 it always uses request parser directly instead of checking cache.
 
-*fi.fmi.metoclient.metolib.WfsConnection* depends on
+*Metolib.WfsConnection* depends on
 
 * Other MetOLib classes
-    * *fi.fmi.metoclient.metolib.Utils*
-    * *fi.fmi.metoclient.metolib.WfsRequest*
-    * *fi.fmi.metoclient.metolib.SplitterCache*
+    * *Metolib.Utils*
+    * *Metolib.WfsRequest*
+    * *Metolib.SplitterCache*
 * Thirdparty libraries
     * *jQuery* (<https://github.com/jquery/jquery>)
     * *lodash* (<https://github.com/lodash/lodash>)
@@ -31,9 +31,9 @@ are mandatory for the request and they are set when *connect*-function is called
 what kind of content data is requested. For example, if data should be observation or forecast data.
 
             // See API documentation and comments from connection source code of
-            // fi.fmi.metoclient.metolib.WfsConnection.getData function for the description
+            // Metolib.WfsConnection.getData function for the description
             // of function options parameter object and for the callback parameters objects structures.
-            var connection = new fi.fmi.metoclient.metolib.WfsConnection();
+            var connection = new Metolib.WfsConnection();
             if (connection.connect(SERVER_URL, STORED_QUERY_OBSERVATION)) {
                 // Connection was properly initialized. So, get the data.
                 connection.getData({
@@ -67,9 +67,9 @@ Also notice, stored query defines what kind of content data is requested. For ex
 or forecast data.
 
             // See API documentation and comments from connection source code of
-            // fi.fmi.metoclient.metolib.WfsConnection.getData function for the description
+            // Metolib.WfsConnection.getData function for the description
             // of function options parameter object and for the callback parameters objects structures.
-            var connection = new fi.fmi.metoclient.metolib.WfsConnection();
+            var connection = new Metolib.WfsConnection();
             if (connection.connect(SERVER_URL, STORED_QUERY_OBSERVATION)) {
                 // Connection was properly initialized. So, get the data.
                 connection.getData({
@@ -104,11 +104,11 @@ Also notice, stored query defines what kind of content data is requested. For ex
 or forecast data.
 
             // See API documentation and comments from connection source code of
-            // fi.fmi.metoclient.metolib.WfsConnection.getData function for the description
+            // Metolib.WfsConnection.getData function for the description
             // of function options parameter object and for the callback parameters objects structures.
             // Notice, when spatial data is requested through Connection API,
             // it always uses directly request parser instead of cache.
-            var connection = new fi.fmi.metoclient.metolib.WfsConnection();
+            var connection = new Metolib.WfsConnection();
             if (connection.connect(SERVER_URL, STORED_QUERY_OBSERVATION)) {
                 // Connection was properly initialized. So, get the data.
                 connection.getData({
@@ -142,9 +142,9 @@ Also notice, stored query ID is used to define if forecast or observation data i
 defines what kind of content data is requested.
 
             // See API documentation and comments from connection source code of
-            // fi.fmi.metoclient.metolib.WfsConnection.getData function for the description
+            // Metolib.WfsConnection.getData function for the description
             // of function options parameter object and for the callback parameters objects structures.
-            var connection = new fi.fmi.metoclient.metolib.WfsConnection();
+            var connection = new Metolib.WfsConnection();
             if (connection.connect(SERVER_URL, STORED_QUERY_FORECAST)) {
                 // Connection was properly initialized. So, get the data.
                 connection.getData({

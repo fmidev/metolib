@@ -1,6 +1,6 @@
 {
   "name": "MetOLib",
-  "version": "1.1.10",
+  "version": "2.0.0",
   "author": "FMI",
   "license": "MIT",
   "repository": {
@@ -8,14 +8,20 @@
     "url": "https://github.com/fmidev/metolib.git"
   },
   "devDependencies": {
+    "async": "~2.5",
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-preset-es2015": "^6.24.1",
     "grunt": "^0.4.5",
     "grunt-contrib-clean": "^0.6.0",
     "grunt-contrib-concat": "^0.5.0",
     "grunt-contrib-connect": "^0.8.0",
     "grunt-contrib-jasmine": "~0.5.2",
-    "grunt-contrib-jshint": "^0.10.0",
+    "grunt-contrib-jshint": "^1.1.0",
     "grunt-contrib-uglify": "^0.5.1",
     "grunt-string-replace": "^0.2.7",
+    "grunt-webpack": "^3.0.2",
+    "jquery": "~3.2",
     "karma": "^0.12.21",
     "karma-chrome-launcher": "^0.1.4",
     "karma-coffee-preprocessor": "^0.2.1",
@@ -27,6 +33,8 @@
     "karma-phantomjs-launcher": "^0.1.4",
     "karma-requirejs": "^0.2.2",
     "karma-safari-launcher": "^0.1.1",
-    "karma-script-launcher": "^0.1.0"
+    "karma-script-launcher": "^0.1.0",
+    "lodash": "~4.17",
+    "webpack": "^3.5.5"
   }
 }

@@ -4,16 +4,12 @@
         <meta charset="utf-8" />
         <title>Connection examples</title>
 
-        <!-- JavaScript -->
-        <script type="text/javascript" src="../deps/jquery/jquery-1.10.2.js"></script>
-        <script type="text/javascript" src="../deps/lodash/lodash.compat-2.1.0.js"></script>
-        <script type="text/javascript" src="../deps/async/async-0.2.9.js"></script>
+        <!-- MetOLib JavaScript bundle -->
+        <script type="text/javascript" src="../lib/metolib-bundle-2.0.0.js"></script>
 
-        <!-- MetOLib JavaScript files -->
-        <script type="text/javascript" src="../src/utils.js"></script>
-        <script type="text/javascript" src="../src/wfsrequestparser.js"></script>
-        <script type="text/javascript" src="../src/splittercache.js"></script>
-        <script type="text/javascript" src="../src/wfsconnection.js"></script>
+        <!-- Dependencies: jQuery and Lodash -->
+        <script type="text/javascript" src="../../testdeps/jquery/jquery-1.10.2.js"></script>
+        <script type="text/javascript" src="../../testdeps/lodash/lodash.compat-2.1.0.js"></script>
 
         <script type="text/javascript">
             // Stored query ids.
@@ -73,9 +69,9 @@
 
             function testHkiTd(url) {
                 // See API documentation and comments from connection source code of
-                // fi.fmi.metoclient.metolib.WfsConnection.getData function for the description
+                // Metolib.WfsConnection.getData function for the description
                 // of function options parameter object and for the callback parameters objects structures.
-                var connection = new fi.fmi.metoclient.metolib.WfsConnection();
+                var connection = new Metolib.WfsConnection();
                 if (connection.connect(url, STORED_QUERY_OBSERVATION)) {
                     // Connection was properly initialized. So, get the data.
                     connection.getData({
@@ -101,9 +97,9 @@
 
             function testHkiTurkuTdWind(url) {
                 // See API documentation and comments from parser source code of
-                // fi.fmi.metoclient.metolib.WfsConnection.getData function for the description
+                // Metolib.WfsConnection.getData function for the description
                 // of function options parameter object and for the callback parameters objects structures.
-                var connection = new fi.fmi.metoclient.metolib.WfsConnection();
+                var connection = new Metolib.WfsConnection();
                 if (connection.connect(url, STORED_QUERY_OBSERVATION)) {
                     // Connection was properly initialized. So, get the data.
                     connection.getData({
@@ -129,11 +125,11 @@
 
             function testSpatialTdWindspeed(url) {
                 // See API documentation and comments from parser source code of
-                // fi.fmi.metoclient.metolib.WfsConnection.getData function for the description
+                // Metolib.WfsConnection.getData function for the description
                 // of function options parameter object and for the callback parameters objects structures.
                 // Notice, when spatial data is requested through Connection API,
                 // it always uses directly request parser instead of cache.
-                var connection = new fi.fmi.metoclient.metolib.WfsConnection();
+                var connection = new Metolib.WfsConnection();
                 if (connection.connect(url, STORED_QUERY_OBSERVATION)) {
                     // Connection was properly initialized. So, get the data.
                     connection.getData({
@@ -159,9 +155,9 @@
 
             function testForecastTemperatureWindspeed(url) {
                 // See API documentation and comments from parser source code of
-                // fi.fmi.metoclient.metolib.WfsConnection.getData function for the description
+                // Metolib.WfsConnection.getData function for the description
                 // of function options parameter object and for the callback parameters objects structures.
-                var connection = new fi.fmi.metoclient.metolib.WfsConnection();
+                var connection = new Metolib.WfsConnection();
                 if (connection.connect(url, STORED_QUERY_FORECAST)) {
                     // Connection was properly initialized. So, get the data.
                     connection.getData({
@@ -182,17 +178,15 @@
                 }
             }
 
-            $(function() {
+            jQuery(function() {
                 // Run test cases by using functions above.
 
                 // Single station and single observation.
                 testHkiTd(TEST_SERVER_URL);
                 // Multiple stations and multiple observations.
                 testHkiTurkuTdWind(TEST_SERVER_URL);
-
                 // Spatial multiple observation data.
                 testSpatialTdWindspeed(TEST_SERVER_URL);
-
                 // Multiple stations and multiple observations.
                 testForecastTemperatureWindspeed(TEST_SERVER_URL);
             });
@@ -203,7 +197,7 @@
         <p>
             Notice,
             <code>
-                fi.fmi.metoclient.metolib.WfsConnection
+                Metolib.WfsConnection
             </code> source code is well commented.
             See more information about API and implementation from source code comments.
         </p>

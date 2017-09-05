@@ -2,16 +2,11 @@
  * Configuration file for spec runner tests.
  */
 
-// "Package" definitions
-var fi = fi || {};
-fi.fmi = fi.fmi || {};
-fi.fmi.metoclient = fi.fmi.metoclient || {};
-fi.fmi.metoclient.test = fi.fmi.metoclient.test || {};
-
 /**
  * Spec runner test configuration.
  */
-fi.fmi.metoclient.test.SpecConfig = {
+Metolib.test = Metolib.test || {};
+Metolib.test.SpecConfig = {
 
     /**
      * Flag to inform if only local tests should be run.

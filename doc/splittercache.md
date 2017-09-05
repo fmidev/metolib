@@ -5,7 +5,7 @@ SplitterCache is used as an asynchronous JS client or server middleware for spli
 
 The SplitterCache was originally implemented for caching timeseries data of meteorological observations and forecasts, using time axis as the task splitting dimension, but any other axis will also do. There is no date/time-specific handling of start, end and resolution task properties, so any numeric values can be used.
 
-**Note**: When using with MetOLib WFS client components to access weather data, the fi.fmi.metoclient.metolib.WfsConnection already uses the SplitterCache internally as a part of the provided WFS client functionality. You may want to use WfsConnection instance as an intermediate API object instead of using this component directly.
+**Note**: When using with MetOLib WFS client components to access weather data, the Metolib.WfsConnection already uses the SplitterCache internally as a part of the provided WFS client functionality. You may want to use WfsConnection instance as an intermediate API object instead of using this component directly.
 
 Dependencies
 ------------
@@ -20,7 +20,7 @@ How the caching works
 This section describes the internal working of the SplitterCache in a couple of scenarios. The images show the cached data blocks before the given operation and after it.
 
 ### Empty cache
-In this scenario the cache does not contain any data before the fetch operation. 
+In this scenario the cache does not contain any data before the fetch operation.
 
 ![Empty cache](splittercache/splittercache_doc_scenario1.png)
 
@@ -54,7 +54,7 @@ After the first fetch operation the cached data size is noticed to be too large.
 SplitterCache API
 -----------------
 
-Following API functions are provided by a fi.fmi.metoclient.metolib.SplitterCache instance:
+Following API functions are provided by a Metolib.SplitterCache instance:
 
 * `addDataProvider(service, providerFunction)`
 * `removeDataProvider(service, providerId)`
@@ -71,9 +71,9 @@ Implementing DataProviders
 
 The SplitterCache relies on it's data providers to fetch the original (non-cached) blocks of data. One or more data providers may be registered to a SplitterCache instance for each service using `addDataProvider(service,callback)` function. The SplitterCache calls each provider callback registered for the given service in round-robin fashion. This can be used for implementing a simple load balancing between two or more data providers. Each data provider is given a unique id, which is returned from the call to `addDataProvider`. This id is needed to remove the particular data provider later using `removeDataProvider` function.
 
-The data provider callback function receives a copy of the original task definition object given to the `fetch` function. The start, end and the pointCount of the original task definition are changed to reflect the limits of the subtask, otherwise all the properties of the original task definition are delivered to data providers as-is. 
+The data provider callback function receives a copy of the original task definition object given to the `fetch` function. The start, end and the pointCount of the original task definition are changed to reflect the limits of the subtask, otherwise all the properties of the original task definition are delivered to data providers as-is.
 
-The data provider function is typically given a task definition like this: 
+The data provider function is typically given a task definition like this:
 
     {
       service: 'service1'
@@ -147,7 +147,7 @@ Example code (using async):
     };
 
     var providerId = cache.addDataProvider('random',randomProvider);
-    
+
 Data blocks containing fetch errors are not stored in the cache for the following requests, and thus there will always be new data provider request covering the same time span the next time this failed part of the time series is fetched.
 
 The data provider is responsible for making sure that
@@ -163,15 +163,15 @@ If the data provider does not adhere to these rules, the combining of the final 
 Requesting data through cache
 -----------------------------
 
-The data requests for SplitterCache are done using `fetch` function. As request parameters the function takes 
+The data requests for SplitterCache are done using `fetch` function. As request parameters the function takes
 
-* the task definition object, 
+* the task definition object,
 * the callback function to return the results when all data blocks have been retrieved and their data combined, and
 * the callback function to be called when a single data block has been retrieved (optional)
 
 Example code:
 
-    var cache = new fi.fmi.metoclient.metolib.SplitterCache();
+    var cache = new Metolib.SplitterCache();
     cache.addDataProvider('obs',obsProvider);
     var taskDef = {
       service: 'obs',
@@ -204,19 +204,19 @@ Cache eviction policy
 When the maximum configured amount of data items are stored cache is exceeded, the cached values are removed from the cache in following the LRU eviction policy (least recently used first). The eviction is not done in the background, but in the course of the normal `fetch` requests in two phases:
 
 * during each `fetch` call, the amount of data remaining from the last `fetch` is calculated, and if the oldest data blocks are marked for recycling, if necessary.
-* During the next `fetch` operation, all the data in the blocks marked for recycling is actually removed from the memory, and the data block itself is recycled to the empty block pool. 
+* During the next `fetch` operation, all the data in the blocks marked for recycling is actually removed from the memory, and the data block itself is recycled to the empty block pool.
 
 It should be noted that because of the two phases, the cache may temporarily hold more data items at a particular time than the maximum configured amount.
 
 The cache can only store data with one resolution at the time for each service. This is because it needs to combine the data points both from the cached and the newly fetched data blocks. If the resolutions of the data blocks are different the combination is not trivial. Besides the resolution, it's also required that the data points fall exactly on the same time steps. Thus the `start` times of all the cached blocks need to be separated by a multiples of the resolution.
- 
+
  If the resolution of the fetch is different than resolution of the currently cached blocks for a service, or the `start` time does not differ from the cached `start` times by a multiple of the resolution, all the cached data blocks for that service are removed from the cache to protect the merge-ability of the stored blocks of each service. It's thus very beneficial to change the start times of the `fetch` operations only by multiples of resolution, because in this case the previously cached values can be re-used as part of the returned result.
 
 If there is need to keeping the data for the same parameters and locations in the cache with two different resolutions, one can use two different services for them. In this case the possible duplicate time step values are also duplicated in the cache memory.
 
 Proactive cache filling (side fetch)
 ------------------------------------
- 
+
 By default the SplitterCache tries to fetch more values to the cache than the ones included in the original request to anticipate future data fetching needs. This is effect is called side fetching, and it can be controlled by configuration parameters `sideFetchBeforeFactor` and `sideFetchAfterFactor`. The default values are 0.5 and 1 respectively. This means that the cache will try to fetch 1 * `pointCount` of extra values before `start`, and `0.5 * pointCount` of extra values after the `end`. Only values between the `start` and the `end` for any particular request will be returned as the combined results of the `fetch` operation however.
 
 Side fetch can be disabled by setting the property value `sideFecthBeforeFactor` and/or `sideFetchAfterFactor` to value 0;
@@ -233,7 +233,7 @@ Cache configuration
 
 The following configuration properties can be given with the SplitterCache constructor:
 
-    var cache = new fi.fmi.metoclient.metolib.SplitterCache({
+    var cache = new Metolib.SplitterCache({
       sideFetchBeforeFactor: 0.5,
       sideFetchAfterFactor: 1,
       minBlockDataPoints: 20,
@@ -242,7 +242,7 @@ The following configuration properties can be given with the SplitterCache const
       strictErrorHandling: true,
       errorFillValue: NaN
     });
- 
+
 Note: `maxCacheDataSize` is measured in approximate data size: A data block with 2 locations, 5 parameters and 10 time steps is calculated as 2 * 5 * 10 = 100 units. `minBlockDataPoints` and `maxBlockDataPoints` are calculated as time steps. By default any error returned by the data provider for fetching contents for a data block results in filling the data
 
 Introspecting internal cache events
@@ -251,7 +251,7 @@ Introspecting internal cache events
 Listeners can be added to be notified on the following cache events using `addListener(eventName,callbackFunction)`
 
 The following event names are recognized:
-  
+
 **blockCreated**, callback receives a DataBlock instance  
 Happens when a new instance of data block is created. The created data blocks are automatically recycled to be reused by the following requests after eviction to reduce garbage collection.
 

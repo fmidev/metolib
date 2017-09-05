@@ -95,7 +95,7 @@ $(function() {
     function init() {
         delayedUpdateView = _.throttle(updateView, 200);
 
-        cache = new fi.fmi.metoclient.metolib.SplitterCache({
+        cache = new Metolib.SplitterCache({
             sideFetchAfterFactor : sideAfter,
             sideFetchBeforeFactor : sideBefore,
             maxBlockDataPoints : maxBlockSize,
@@ -250,7 +250,7 @@ $(function() {
         try {
             activeFetches.push(td);
             delayedUpdateView();
-            
+
             cache.fetch(td, function(err, result) {
                 if ("undefined" !== typeof console && console) {
                     if (err) {

@@ -1,13 +1,13 @@
 MetOLib: WfsRequestParser
 =========================
 
-Parser may be used directly to request WFS data with given options. 
+Parser may be used directly to request WFS data with given options.
 Parser parses the data received from the server in XML format and provides parsed data through the API.
 
-*fi.fmi.metoclient.metolib.WfsRequestParser* depends on
+*Metolib.WfsRequestParser* depends on
 
 * Other MetOLib classes
-    * *fi.fmi.metoclient.metolib.Utils*
+    * *Metolib.Utils*
 * Thirdparty libraries
     * *jQuery* (<https://github.com/jquery/jquery>)
     * *lodash* (<https://github.com/lodash/lodash>)
@@ -17,8 +17,8 @@ Notice, examples shown in this document are also included in the MetOLib source 
 Limitations
 -----------
 
-Because of the way jQuery XML parser works, the current WfsRequestParser is very picky about 
-the element namespace prefixes used in the response. It relies on the XML elements using the 
+Because of the way jQuery XML parser works, the current WfsRequestParser is very picky about
+the element namespace prefixes used in the response. It relies on the XML elements using the
 namespace prefixes used at data.fmi.fi WFS service:
 
 * `wfs` for `http://www.opengis.net/wfs/2.0`
@@ -32,15 +32,15 @@ namespace prefixes used at data.fmi.fi WFS service:
 * `swe` for `http://www.opengis.net/swe/2.0`
 * `gmlcov` for `http://www.opengis.net/gmlcov/1.0`
 * `sam` for `http://www.opengis.net/sampling/2.0`
-* `sams` for `http://www.opengis.net/samplingSpatial/2.0` and 
+* `sams` for `http://www.opengis.net/samplingSpatial/2.0` and
 * `target` for `http://xml.fmi.fi/namespace/om/atmosphericfeatures/0.95`
 
 If the WFS response does not use exactly these prefixes for these namespaces the parser
 will fail.
 
-This library currently only supports WFS getFeature operation for 
+This library currently only supports WFS getFeature operation for
 stored queries. The id of the stored query can be given by the user, but library
-currently always assumes that all stored queries accept the following 
+currently always assumes that all stored queries accept the following
 query parameters:
 
 * 'PARAMETERS'
@@ -61,9 +61,10 @@ are mandatory for the request. Also notice, storedQueryId defines what kind of c
 should be observation or forecast data.
 
             // See, API documentation and comments from parser source code of
-            // fi.fmi.metoclient.metolib.WfsRequestParser.getData function for the description
+            // Metolib.WfsRequestParser.getData function for the description
             // of function options parameter object and for the callback parameters objects structures.
-            fi.fmi.metoclient.metolib.WfsRequestParser.getData({
+            var parser = new Metolib.WfsRequestParser();
+            parser.getData({
                 url : SERVER_URL,
                 storedQueryId : STORED_QUERY_OBSERVATION,
                 requestParameter : "td",
@@ -91,9 +92,10 @@ Also, begin and end times and timestep are defined in options object for the obs
 and storedQueryId are mandatory for the request.
 
             // See API documentation and comments from parser source code of
-            // fi.fmi.metoclient.metolib.WfsRequestParser.getData function for the description
+            // Metolib.WfsRequestParser.getData function for the description
             // of function options parameter object and for the callback parameters objects structures.
-            fi.fmi.metoclient.metolib.WfsRequestParser.getData({
+            var parser = new Metolib.WfsRequestParser();
+            parser.getData({
                 url : SERVER_URL,
                 storedQueryId : STORED_QUERY_OBSERVATION,
                 requestParameter : "td,ws_10min",
@@ -121,9 +123,10 @@ Also, begin and end times and timestep are defined in options object for the obs
 and storedQueryId are mandatory for the request.
 
             // See API documentation and comments from parser source code of
-            // fi.fmi.metoclient.metolib.WfsRequestParser.getData function for the description
+            // Metolib.WfsRequestParser.getData function for the description
             // of function options parameter object and for the callback parameters objects structures.
-            fi.fmi.metoclient.metolib.WfsRequestParser.getData({
+            var parser = new Metolib.WfsRequestParser();
+            parser.getData({
                 url : SERVER_URL,
                 storedQueryId : STORED_QUERY_OBSERVATION,
                 requestParameter : "td,ws_10min",
@@ -152,9 +155,10 @@ and storedQueryId are mandatory for the request. Also notice, storedQueryId is u
 is requested. In other words, storedQueryId defines what kind of content data is requested.
 
             // See API documentation and comments from parser source code of
-            // fi.fmi.metoclient.metolib.WfsRequestParser.getData function for the description
+            // Metolib.WfsRequestParser.getData function for the description
             // of function options parameter object and for the callback parameters objects structures.
-            fi.fmi.metoclient.metolib.WfsRequestParser.getData({
+            var parser = new Metolib.WfsRequestParser();
+            parser.getData({
                 url : SERVER_URL,
                 storedQueryId : STORED_QUERY_FORECAST,
                 requestParameter : "temperature,windspeedms",

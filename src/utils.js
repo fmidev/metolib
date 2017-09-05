@@ -1,7 +1,7 @@
 /**
  * This software may be freely distributed and used under the following MIT license:
  *
- * Copyright (c) 2013 Finnish Meteorological Institute
+ * Copyright (c) 2017 Finnish Meteorological Institute
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this
  * software and associated documentation files (the "Software"), to deal in the
@@ -24,16 +24,11 @@
 // Strict mode for whole file.
 "use strict";
 
-// Requires lodash
-if ("undefined" === typeof _ || !_) {
-    throw "ERROR: Lodash is required for fi.fmi.metoclient.metolib.Utils!";
-}
-
-// "Package" definitions
-var fi = fi || {};
-fi.fmi = fi.fmi || {};
-fi.fmi.metoclient = fi.fmi.metoclient || {};
-fi.fmi.metoclient.metolib = fi.fmi.metoclient.metolib || {};
+// Requires jQuery, lodash
+// var jQuery = require('jquery');
+// var _ = require('lodash');
+import jQuery from 'jquery';
+import _ from 'lodash';
 
 /**
  * Utils object provides API for general utility functions.
@@ -41,7 +36,7 @@ fi.fmi.metoclient.metolib = fi.fmi.metoclient.metolib || {};
  * There is no need to use {new} to create an instance of Utils.
  * Instead, use directly API functions provided by the object.
  */
-fi.fmi.metoclient.metolib.Utils = (function() {
+var Utils = (function() {
 
     /**
      * Avoid console errors in browsers that lack a console.
@@ -54,7 +49,7 @@ fi.fmi.metoclient.metolib.Utils = (function() {
         };
         var methods = ['assert', 'clear', 'count', 'debug', 'dir', 'dirxml', 'error', 'exception', 'group', 'groupCollapsed', 'groupEnd', 'info', 'log', 'markTimeline', 'profile', 'profileEnd', 'table', 'time', 'timeEnd', 'timeStamp', 'trace', 'warn'];
         var length = methods.length;
-        var console = (window.console = window.console || {});
+        var console = (console || {});
 
         while (length--) {
             method = methods[length];
@@ -344,3 +339,5 @@ fi.fmi.metoclient.metolib.Utils = (function() {
     };
 
 })();
+
+module.exports = Utils;

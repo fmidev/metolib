@@ -1,19 +1,19 @@
 /**
- * fi.fmi.metoclient.metolib.SplitterCache
+ * Metolib.SplitterCache
  * =======================================
  *
  * See https://github.com/fmidev/metolib/wiki/SplitterCache for documentation.
  *
  * Requires:
  * - async.js (https://github.com/caolan/async)
- * - lodash.underscore.js (http://lodash.com/) or underscore.js (http://underscorejs.org/)
+ * - lodash.underscore.js (http://lodash.com/)
  *
  * Original author: Ilkka Rinne / Spatineo Inc. for the Finnish Meteorological Institute
  *
  *
  * This software may be freely distributed and used under the following MIT license:
  *
- * Copyright (c) 2013 Finnish Meteorological Institute
+ * Copyright (c) 2017 Finnish Meteorological Institute
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this
  * software and associated documentation files (the "Software"), to deal in the
@@ -37,23 +37,13 @@
 // Strict mode for whole file.
 "use strict";
 
-// Requires lodash
-if ("undefined" === typeof _ || !_) {
-    throw "ERROR: Lo-dash-underscore is required for fi.fmi.metoclient.metolib.SplitterCache!";
-}
+// Requires lodash, async
+// var _ = require('lodash');
+// var async = require('async');
+import _ from 'lodash';
+import async from 'async';
 
-// Requires async
-if ("undefined" === typeof async || !async) {
-    throw "ERROR: Async is required for fi.fmi.metoclient.metolib.SplitterCache!";
-}
-
-//"Package" definitions
-var fi = fi || {};
-fi.fmi = fi.fmi || {};
-fi.fmi.metoclient = fi.fmi.metoclient || {};
-fi.fmi.metoclient.metolib = fi.fmi.metoclient.metolib || {};
-
-fi.fmi.metoclient.metolib.SplitterCache = (function() {
+var SplitterCache = (function(){
 
     //Functions and variables shared with all instances:
     var checkTaskDef = function(taskDef) {
@@ -302,9 +292,9 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
             this.getNotUsedSince = function() {
                 return age;
             };
-            
+
             this.fetchFailed = function() {
-              return fetchError !== null;  
+              return fetchError !== null;
             };
 
             this.markForRecycling = function() {
@@ -316,7 +306,7 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
 
             this.markForMerging = function(merge) {
                 if (merge === true){
-                    waitingMerging = true;                    
+                    waitingMerging = true;
                     if (dispatcher) {
                         dispatcher('blockMarkedForMerge', thisBlock);
                     }
@@ -389,7 +379,7 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
                             if (err) {
                                 fetchError = err;
                             }
-                            data = result;                                
+                            data = result;
                             fetched = true;
                             if (callbacks.length === 0) {
                                 fetching = false;
@@ -474,7 +464,7 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
         var maxCacheDataSize = 50000;
         var strictErrorHandling = true;
         var errorFillValue = NaN;
-        
+
         var fetchers = {};
         var cachedDataSize = 0;
         var cacheHits = 0;
@@ -589,7 +579,7 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
                                 cb(err);
                             }
                             else {
-                                fillWith(combinedData, data, taskDef.location, taskDef.parameter, 0, 0, block1.getPointCount(), cb);                                
+                                fillWith(combinedData, data, taskDef.location, taskDef.parameter, 0, 0, block1.getPointCount(), cb);
                             }
                         });
                     },
@@ -602,7 +592,7 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
                                 cb(err);
                             }
                             else {
-                                fillWith(combinedData, data, taskDef.location, taskDef.parameter, block1.getPointCount(), 0, block2.getPointCount(), cb);                                
+                                fillWith(combinedData, data, taskDef.location, taskDef.parameter, block1.getPointCount(), 0, block2.getPointCount(), cb);
                             }
                         });
                     }
@@ -1038,7 +1028,7 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
                     //we fetch them just to cache them, but otherwise
                     //ignore the results completely:
                     dataBlock.getDataAsync(function(){
-                        dataBlock.unpin();                        
+                        dataBlock.unpin();
                     });
 
                     //and continue the loop:
@@ -1053,8 +1043,7 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
                     includeStart = td.start;
                     sourceStartIndex = 0;
                 }
-                targetStartIndex = _.indexOf(result.steps, includeStart, true);
-
+                targetStartIndex = _.indexOf(result.steps, includeStart);
                 if (targetStartIndex === -1) {
                     throw dataBlock.getId() + ':something wrong with indexing, start index for cache block not found in the combined results!';
                 }
@@ -1086,12 +1075,12 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
                         // Notice, errors may have occurred but data is still given because it should be good enough.
                         // Therefore, do not ignore given data if it is available. It is up to the data provider to make
                         // sure that data is undefined if it should not be handled in cache.
-                        
+
                         //Ilkka Rinne/2013-09-02: This is inconsistent with the node.js callback error conventions:
                         //You should always get either an error or result, never both.
                         //http://nodemanual.org/latest/nodejs_dev_guide/working_with_callbacks.html
                         //When would you want to return errors but also useable data?
-                        
+
                         if (strictErrorHandling || !data) {
                             fillValue = errorFillValue;
                         }
@@ -1103,7 +1092,7 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
                             progressCallback(err, includeStart, includeEnd);
                         }
                         dataBlock.unpin();
-                        
+
                         //always succeed, even with fetch error: we want to return the rest of the data anyway
                         notify();
                     });
@@ -1277,7 +1266,7 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
                 strictErrorHandling = false;
             }
         }
-        
+
         if (properties.errorFillValue !== undefined) {
             errorFillValue = properties.errorFillValue;
         }
@@ -1288,3 +1277,5 @@ fi.fmi.metoclient.metolib.SplitterCache = (function() {
      */
     return _constructor;
 })();
+
+module.exports = SplitterCache;

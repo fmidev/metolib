@@ -1,7 +1,7 @@
 /**
  * This software may be freely distributed and used under the following MIT license:
  *
- * Copyright (c) 2013 Finnish Meteorological Institute
+ * Copyright (c) 2017 Finnish Meteorological Institute
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this
  * software and associated documentation files (the "Software"), to deal in the
@@ -24,42 +24,19 @@
 // Strict mode for whole file.
 "use strict";
 
-// Requires jQuery
-if ("undefined" === typeof jQuery || !jQuery) {
-    throw "ERROR: jQuery is required for fi.fmi.metoclient.metolib.WfsConnection!";
-}
+// Requires jQuery, lodash, async
+// var jQuery = require('jquery');
+// var _ = require('lodash');
+// var async = require('async');
+import jQuery from 'jquery';
+import _ from 'lodash';
+import async from 'async';
 
-// Requires lodash
-if ("undefined" === typeof _ || !_) {
-    throw "ERROR: Lodash is required for fi.fmi.metoclient.metolib.WfsConnection!";
-}
-
-// Requires async
-if ("undefined" === typeof async || !async) {
-    throw "ERROR: Async is required for fi.fmi.metoclient.metolib.WfsConnection!";
-}
-
-// "Package" definitions
-var fi = fi || {};
-fi.fmi = fi.fmi || {};
-fi.fmi.metoclient = fi.fmi.metoclient || {};
-fi.fmi.metoclient.metolib = fi.fmi.metoclient.metolib || {};
-
-// Requires fi.fmi.metoclient.metolib.Utils.
-// "Package" exists because it is created above if it did not exist.
-if (!fi.fmi.metoclient.metolib.Utils) {
-    throw "ERROR: fi.fmi.metoclient.metolib.Utils is required for fi.fmi.metoclient.metolib.WfsConnection!";
-}
-
-// Requires cache.
-if (!fi.fmi.metoclient.metolib.SplitterCache) {
-    throw "ERROR: fi.fmi.metoclient.metolib.SplitterCache is required for fi.fmi.metoclient.metolib.WfsConnection!";
-}
-
-// Requires parser.
-if (!fi.fmi.metoclient.metolib.WfsRequestParser) {
-    throw "ERROR: fi.fmi.metoclient.metolib.WfsRequestParser is required for fi.fmi.metoclient.metolib.WfsConnection!";
-}
+// Requires SplitterCache, WfsRequestParser
+// var SplitterCache = require('./splittercache.js');
+// var WfsRequestParser = require('./wfsrequestparser.js');
+import SplitterCache from './splittercache.js';
+import WfsRequestParser from './wfsrequestparser.js';
 
 /**
  * WfsConnection object acts as an interface that provides functions
@@ -68,7 +45,7 @@ if (!fi.fmi.metoclient.metolib.WfsRequestParser) {
  *
  * WfsConnection wraps cache, request and parser functionality.
  * Notice, if you do not require cache functionality, you may
- * want to use parser, {@link fi.fmi.metoclient.metolib.WfsRequestParser},
+ * want to use parser, {@link WfsRequestParser},
  * directly without using this class as an intermediate object.
  *
  * API functions are defined in the end of the constructor,
@@ -76,7 +53,7 @@ if (!fi.fmi.metoclient.metolib.WfsRequestParser) {
  * See API description there.
  *
  * Example:
- *      var connection = new fi.fmi.metoclient.metolib.WfsConnection();
+ *      var connection = new WfsConnection();
  *      if (connection.connect(SERVER_URL, STORED_QUERY_OBSERVATION)) {
  *          // Connection was properly initialized. So, get the data.
  *          connection.getData({
@@ -98,7 +75,8 @@ if (!fi.fmi.metoclient.metolib.WfsRequestParser) {
  *          });
  *      }
  */
-fi.fmi.metoclient.metolib.WfsConnection = (function() {
+
+var WfsConnection = (function() {
 
     /**
      * @private
@@ -539,7 +517,7 @@ fi.fmi.metoclient.metolib.WfsConnection = (function() {
      * If data was already in cache, the flow does not come here.
      *
      * Notice, data is provided as structure of the objects.
-     * {@link fi.fmi.metoclient.metolib.SplitterCache#fillWith} function describes
+     * {@link SplitterCache#fillWith} function describes
      * the object structure of the converted data. Cache data blocks are provided
      * as the structure leaf objects. Notice, even if structure is created by using
      * objects, it is better to include all the persisting data in the leaf cache block
@@ -552,7 +530,7 @@ fi.fmi.metoclient.metolib.WfsConnection = (function() {
      * @param {Object} errors Errors that have occurred during loading and parsing data.
      *                        May be {undefined} or {null}.
      * @return {Object} Object that contains converted errors and converted data.
-     *                  {@link fi.fmi.metoclient.metolib.SplitterCache#fillWith} function describes
+     *                  {@link SplitterCache#fillWith} function describes
      *                  the object structure of the converted data. May not be {undefined} or {null}.
      */
     function convertSitesDataFromParserForCache(taskDef, data, errors) {
@@ -568,7 +546,7 @@ fi.fmi.metoclient.metolib.WfsConnection = (function() {
             // Convert the given data into the correct structure that is inserted
             // into the convert object. Convert object contains location specific objects,
             // which in turn contain measurement parameter specific objects, which contain arrays for
-            // cache data block objects. See fi.fmi.metoclient.metolib.SplitterCache#fillWith
+            // cache data block objects. See SplitterCache#fillWith
             // function for the corresponding structure that cache requires.
             _.each(data.locations, function(location) {
                 // Location name is used as a key for the location object.
@@ -717,7 +695,7 @@ fi.fmi.metoclient.metolib.WfsConnection = (function() {
      *                                              May not be {undefined} or {null}.
      */
     function cacheSitesDataFetcherCallback(container, taskDef, taskCallback) {
-        fi.fmi.metoclient.metolib.WfsRequestParser.getData({
+        container.parser.getData({
             url : container.connectionUrl,
             storedQueryId : container.storedQueryId,
             requestParameter : taskDef.parameter,
@@ -760,12 +738,15 @@ fi.fmi.metoclient.metolib.WfsConnection = (function() {
      * See API for function description.
      */
     var retrieveSitesData = function(options) {
+
+        var that = this;
+
         if (!options.timestep || options.timestep === 1) {
             // Cache requires that timestep is the actual timestep that is used for data.
             // But, in speacial cases server may use magic numbers to handle data differently.
             // Cache can not be used with the given options. Therefore, use parser directly.
-            var that = this;
-            fi.fmi.metoclient.metolib.WfsRequestParser.getData({
+
+            that.parser.getData({
                 url : that.connectionUrl,
                 storedQueryId : that.storedQueryId,
                 requestParameter : options.requestParameter,
@@ -790,8 +771,8 @@ fi.fmi.metoclient.metolib.WfsConnection = (function() {
             var endDate = options.end;
             var resolution = options.timestep;
             if (!options.denyTimeAdjusting) {
-                beginDate = fi.fmi.metoclient.metolib.WfsRequestParser.adjustBeginTime(resolution, beginDate);
-                endDate = fi.fmi.metoclient.metolib.WfsRequestParser.adjustEndTime(resolution, endDate, beginDate);
+                beginDate = that.parser.adjustBeginTime(resolution, beginDate);
+                endDate = that.parser.adjustEndTime(resolution, endDate, beginDate);
             }
             var taskDef = {
                 service : DATA_FETCHER_NAME_SITES,
@@ -832,7 +813,7 @@ fi.fmi.metoclient.metolib.WfsConnection = (function() {
      */
     var retrieveSpatialData = function(options) {
         var that = this;
-        fi.fmi.metoclient.metolib.WfsRequestParser.getData({
+        that.parser.getData({
             url : that.connectionUrl,
             storedQueryId : that.storedQueryId,
             requestParameter : options.requestParameter,
@@ -890,6 +871,7 @@ fi.fmi.metoclient.metolib.WfsConnection = (function() {
             var errorStr = "ERROR: API level error occurred in a synchronous flow!";
             if ("undefined" !== typeof console && console) {
                 console.error(errorStr);
+                console.log(e);
             }
             success = false;
             if (callback) {
@@ -1016,7 +998,7 @@ fi.fmi.metoclient.metolib.WfsConnection = (function() {
     /**
      * Constructor for the connection instance.
      *
-     * Notice, this constructor is returned from {fi.fmi.metoclient.metolib.WfsConnection}
+     * Notice, this constructor is returned from {WfsConnection}
      * and can be used for instantiation later.
      */
     var connectionConstructor = function() {
@@ -1028,7 +1010,7 @@ fi.fmi.metoclient.metolib.WfsConnection = (function() {
         // object is applied to the function calls by using this private object. Then, these
         // variables and functions are capsulated and are not available outside of the connection
         // instance.
-        var _private = {
+        this._private = {
             // Reference to the connection instance object.
             connectionInstance : _me,
 
@@ -1041,18 +1023,15 @@ fi.fmi.metoclient.metolib.WfsConnection = (function() {
             // throughout the lifetime of object instance.
 
             // Cache for retrieved data.
-            cache : new fi.fmi.metoclient.metolib.SplitterCache({
+            cache : new SplitterCache({
                 sideFetchAfterFactor : 1,
                 sideFetchBeforeFactor : 0.5,
                 maxBlockDataPoints : 200,
                 maxCacheDataSize : 4000
-            })
-        };
+            }),
 
-        // Set data fetcher that cache uses for the given type of the data.
-        _private.cache.addDataProvider(DATA_FETCHER_NAME_SITES, function(taskDef, callback) {
-            cacheSitesDataFetcherCallback(_private, taskDef, callback);
-        });
+            parser : new WfsRequestParser()
+        };
 
         //=================================================================
         // Public WfsConnection API is defined here as priviledged functions.
@@ -1066,7 +1045,7 @@ fi.fmi.metoclient.metolib.WfsConnection = (function() {
          *                  May be {undefined} if state is not connected.
          */
         this.getUrl = function() {
-            return getUrl.call(_private);
+            return getUrl.call(this._private);
         };
 
         /**
@@ -1077,7 +1056,7 @@ fi.fmi.metoclient.metolib.WfsConnection = (function() {
          *                  May be {undefined} if state is not connected.
          */
         this.getStoredQueryId = function() {
-            return getStoredQueryId.call(_private);
+            return getStoredQueryId.call(this._private);
         };
 
         /**
@@ -1095,7 +1074,14 @@ fi.fmi.metoclient.metolib.WfsConnection = (function() {
          * @return {boolean} {true} if synchronous operation was successfull. Else {false}.
          */
         this.connect = function(url, storedQueryId) {
-            return makeSafe.call(_private, connect, undefined, url, storedQueryId);
+
+            var that = this;
+            // Set data fetcher that cache uses for the given type of the data.
+            this._private.cache.addDataProvider(DATA_FETCHER_NAME_SITES, function(taskDef, callback) {
+                cacheSitesDataFetcherCallback(that._private, taskDef, callback);
+            });
+
+            return makeSafe.call(that._private, connect, undefined, url, storedQueryId);
         };
 
         /**
@@ -1106,7 +1092,7 @@ fi.fmi.metoclient.metolib.WfsConnection = (function() {
          * @return {boolean} {true} if synchronous operation was successfull. Else {false}.
          */
         this.disconnect = function() {
-            return makeSafe.call(_private, disconnect, undefined);
+            return makeSafe.call(this._private, disconnect, undefined);
         };
 
         /**
@@ -1117,7 +1103,7 @@ fi.fmi.metoclient.metolib.WfsConnection = (function() {
          * @return {boolean} {true} if synchronous operation was successfull. Else {false}.
          */
         this.resetCache = function() {
-            return makeSafe.call(_private, resetCache, undefined);
+            return makeSafe.call(this._private, resetCache, undefined);
         };
 
         /**
@@ -1281,7 +1267,7 @@ fi.fmi.metoclient.metolib.WfsConnection = (function() {
          * @return {boolean} {true} if asynchronous operation is successfully started. Else {false}.
          */
         this.getData = function(options) {
-            return makeSafe.call(_private, getData, options ? options.callback : undefined, options);
+            return makeSafe.call(this._private, getData, options ? options.callback : undefined, options);
         };
     };
 
@@ -1289,3 +1275,5 @@ fi.fmi.metoclient.metolib.WfsConnection = (function() {
     return connectionConstructor;
 
 })();
+
+module.exports = WfsConnection;
