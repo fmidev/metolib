@@ -25,18 +25,18 @@
 "use strict";
 
 // Requires jQuery, lodash, async
-// var jQuery = require('jquery');
-// var _ = require('lodash');
-// var async = require('async');
-import jQuery from 'jquery';
-import _ from 'lodash';
-import async from 'async';
+var jQuery = require('jquery');
+var _ = require('lodash');
+var async = require('async');
+// import jQuery from 'jquery';
+// import _ from 'lodash';
+// import async from 'async';
 
 // Requires SplitterCache, WfsRequestParser
-// var SplitterCache = require('./splittercache.js');
-// var WfsRequestParser = require('./wfsrequestparser.js');
-import SplitterCache from './splittercache.js';
-import WfsRequestParser from './wfsrequestparser.js';
+var SplitterCache = require('./splittercache.js');
+var WfsRequestParser = require('./wfsrequestparser.js');
+// import SplitterCache from './splittercache.js';
+// import WfsRequestParser from './wfsrequestparser.js';
 
 /**
  * WfsConnection object acts as an interface that provides functions

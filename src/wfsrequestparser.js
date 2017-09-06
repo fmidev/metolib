@@ -25,14 +25,14 @@
 "use strict";
 
 // Requires jQuery, lodash
-// var jQuery = require('jquery');
-// var _ = require('lodash');
-import jQuery from 'jquery';
-import _ from 'lodash';
+var jQuery = require('jquery');
+var _ = require('lodash');
+// import jQuery from 'jquery';
+// import _ from 'lodash';
 
 // Requires Utils
-// var Utils = require('./utils.js');
-import Utils from './utils.js';
+var Utils = require('./utils.js');
+// import Utils from './utils.js';
 
 /**
  * RequestParser object acts as an interface that provides functions
@@ -257,7 +257,7 @@ function WfsRequestParser() {
      *                                 {undefined}.
      */
     function parseXml(xml, errors, callback) {
-      
+
         // This counter is used in the flow to keep count
         // of asynchronous operations that are going on.
         var asyncCounter = 0;

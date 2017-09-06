@@ -25,10 +25,10 @@
 "use strict";
 
 // Requires jQuery, lodash
-// var jQuery = require('jquery');
-// var _ = require('lodash');
-import jQuery from 'jquery';
-import _ from 'lodash';
+var jQuery = require('jquery');
+var _ = require('lodash');
+// import jQuery from 'jquery';
+// import _ from 'lodash';
 
 /**
  * Utils object provides API for general utility functions.

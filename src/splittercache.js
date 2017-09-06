@@ -38,10 +38,10 @@
 "use strict";
 
 // Requires lodash, async
-// var _ = require('lodash');
-// var async = require('async');
-import _ from 'lodash';
-import async from 'async';
+var _ = require('lodash');
+var async = require('async');
+// import _ from 'lodash';
+// import async from 'async';
 
 var SplitterCache = (function(){
 
