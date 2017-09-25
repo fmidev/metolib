@@ -209,7 +209,7 @@ describe("Cache", function() {
         };
 
         cache.addListener('blockPrepared', function(dataBlock) {
-            var span = dataBlock.getStart() + '-' + dataBlock.getEnd();
+            var span = dataBlock.getStart() + '-' + dataBlock.getEnd();console.log(span);
             if (expectedBlocks[span] === false) {
                 expectedBlocks[span] = true;
             } else {

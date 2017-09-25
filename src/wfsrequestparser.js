@@ -1892,7 +1892,6 @@ function WfsRequestParser() {
                 begin.setTime(adjustBeginTime(timestep, begin).getTime());
                 end.setTime(adjustEndTime(timestep, end, begin).getTime());
             }
-
             // Server uses ISO-timestamp for pre 1970 times.
             // Remove millisecond part from the timestamp because server does not support it.
             // Millisecond is separated by . character. So, use regex to remove . delimiter and ms integer.
@@ -2057,6 +2056,7 @@ function WfsRequestParser() {
                 // Make sure that the end value is evenly on the timestep.
                 // Unlike with begin time, exact hour does not limit time step here.
                 var reminder = (date.getTime() - beginDate.getTime()) % timestep;
+                console.log(reminder);
                 if (reminder > 0) {
                     date.setTime(date.getTime() + (timestep - reminder));
                 }

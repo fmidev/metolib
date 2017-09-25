@@ -51,13 +51,13 @@ Metolib.test.SpecUtils = {
                                     // Change XML times to milliseconds.
                                     // Vague check for NaN values to accept value if value is NaN.
                                     if (times[timeTmpInd] * 1000 !== timeValuePairs[i].time || values[valueTmpInd] !== timeValuePairs[i].value && !isNaN(values[valueTmpInd]) && !isNaN(timeValuePairs[i].value)) {
-                                        success = false;
+                                        success = false;console.log(data);console.log(values);
                                         break;
                                     }
                                 }
 
                             } else {
-                                success = false;
+                                success = false;console.log("this fails");
                             }
 
                             if (!success) {
@@ -79,7 +79,7 @@ Metolib.test.SpecUtils = {
 
             } catch(e) {
                 // An error may occur for example if indexing fails.
-                success = false;
+                success = false;console.log("this fails");
             }
         }
         return success;

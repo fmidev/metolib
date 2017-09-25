@@ -258,129 +258,6 @@ var WfsConnection = (function() {
     /**
      * @private
      *
-     * Creates the proper location name for cache by checking taskDef properties
-     * for location information that match the given values.
-     *
-     * Location name is checked in the following order and first match is used:
-     *   - GEOID
-     *   - WMO
-     *   - FMISID
-     *   - taskDef location contains both name and region.
-     *     - If taskDef contains location that matches the given name and region,
-     *       then corresponding name is returned.
-     *   - If taskDef location does not match the combined name and region,
-     *     then region is returned.
-     *
-     * @param {Object} taskDef Contains location information. May be {undefined} or {null}.
-     * @param {String} name Location name string. May be {undefined} or {null}.
-     * @param {String} region Location region string. May be {undefined} or {null}.
-     * @return {String} Proper location name for cache. May be {undefined} or {null} if region is.
-     */
-    function locationNameForCache(taskDef, name, region, wmo, geoid, fmisid) {
-        // Default value is just region with site prefix.
-        var locationName = LOCATION_SITES_PREFIX + region;
-        if (taskDef) {
-            var matchFound = false;
-            var loc;
-            var i;
-            // Check geoid.
-            if (taskDef.geoid && geoid) {
-                for ( i = 0; i < taskDef.geoid.length; ++i) {
-                    if (taskDef.geoid[i] === geoid) {
-                        // Notice, prefix is used with cache.
-                        locationName = LOCATION_GEOID_PREFIX + geoid;
-                        matchFound = true;
-                        break;
-                    }
-                }
-            }
-            // Check WMO.
-            if (!matchFound && taskDef.wmo && wmo) {
-                for ( i = 0; i < taskDef.wmo.length; ++i) {
-                    if (taskDef.wmo[i] === wmo) {
-                        // Notice, prefix is used with cache.
-                        locationName = LOCATION_WMO_PREFIX + wmo;
-                        matchFound = true;
-                        break;
-                    }
-                }
-            }
-            // Check FMISID.
-            if (!matchFound && taskDef.fmisid && fmisid) {
-                for ( i = 0; i < taskDef.fmisid.length; ++i) {
-                    if (taskDef.fmisid[i] === fmisid) {
-                        // Notice, prefix is used with cache.
-                        locationName = LOCATION_FMISID_PREFIX + fmisid;
-                        matchFound = true;
-                        break;
-                    }
-                }
-            }
-            // Check name and region.
-            // Notice, taskDef contains location property that contains all the location data.
-            // But, part of locations were already handled separately above. Therefore, also handle
-            // sites by using sites-property instead of location-property.
-            if (!matchFound && taskDef.sites && region) {
-                if (name) {
-                    // Server may also include region as prefix into site name.
-                    // Therefore, take this into account when comparing server response
-                    // to taskDef sites that contain name and region combination string
-                    // as recognized by the cache.
-                    var regionPrefix = region + LOCATION_NAME_REGION_SEPARATOR;
-                    var regionIndex = name.indexOf(regionPrefix);
-                    if (0 === regionIndex) {
-                        // Remove region substring from name and trim possible whitespaces.
-                        // Then, values can be compared to taskDef locations.
-                        name = jQuery.trim(name.slice(regionPrefix.length));
-                    }
-                    // TaskDef sites and locations have been created before for cache by combining
-                    // name and region that have been given through the API. TaskDef locations are
-                    // compared to the name and region values that are given as parameters for this
-                    // function.
-                    var combinedLocationNameLowerCase = (name + PARAMETER_SEPARATOR + region).toLowerCase();
-                    // Sites are given as string array in taskDef.
-                    for ( i = 0; i < taskDef.sites.length; ++i) {
-                        loc = taskDef.sites[i];
-                        // Location names are compared as case-insensitive here.
-                        // Notice, server also handles places as case-insensitive. Therefore,
-                        // cache is used with case-insensitive comparison here if API user has not
-                        // given case-sensitive sites information for some reason.
-                        if (loc && combinedLocationNameLowerCase && loc.toLowerCase() === combinedLocationNameLowerCase) {
-                            // Matching location for cache was found from taskDef locations.
-                            // Notice, prefix is used with cache.
-                            locationName = LOCATION_SITES_PREFIX + loc;
-                            matchFound = true;
-                            break;
-                        }
-                    }
-                }
-                if (!matchFound) {
-                    // Match was not found with name and region above.
-                    // Check if case-insensitive region is a match.
-                    var regionLowerCase = region.toLowerCase();
-                    for ( i = 0; i < taskDef.sites.length; ++i) {
-                        loc = taskDef.sites[i];
-                        // Location names are compared as case-insensitive here.
-                        // Notice, server also handles places as case-insensitive. Therefore,
-                        // cache is used with case-insensitive comparison here if API user has not
-                        // given case-sensitive sites information for some reason.
-                        if (loc && loc.toLowerCase() === regionLowerCase) {
-                            // Matching location for cache was found from taskDef locations.
-                            // Notice, prefix is used with cache.
-                            locationName = LOCATION_SITES_PREFIX + loc;
-                            matchFound = true;
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-        return locationName;
-    }
-
-    /**
-     * @private
-     *
      * Check that time-value-pair objects are not missing from the given array.
      * If an object is missing, time-value-pair of the correct time and NaN value
      * is inserted into the array according to the resolution step.
@@ -548,9 +425,9 @@ var WfsConnection = (function() {
             // which in turn contain measurement parameter specific objects, which contain arrays for
             // cache data block objects. See SplitterCache#fillWith
             // function for the corresponding structure that cache requires.
-            _.each(data.locations, function(location) {
+            _.each(data.locations, function(location, key) {
                 // Location name is used as a key for the location object.
-                var locationName = locationNameForCache(taskDef, location.info.name, location.info.region, location.info.wmo, location.info.geoid, location.info.fmisid);
+                var locationName = taskDef.location[key];
                 if (!converted.data[locationName]) {
                     // Initialize converted data to contain location object identified by the location name.
                     converted.data[locationName] = {};
@@ -871,7 +748,6 @@ var WfsConnection = (function() {
             var errorStr = "ERROR: API level error occurred in a synchronous flow!";
             if ("undefined" !== typeof console && console) {
                 console.error(errorStr);
-                console.log(e);
             }
             success = false;
             if (callback) {
