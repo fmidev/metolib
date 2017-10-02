@@ -707,6 +707,7 @@ var WfsConnection = (function() {
             sites : trimSites(options.sites),
             bbox : options.bbox,
             crs : options.crs,
+            latlon : options.latlon,
             queryExtension : options.queryExtension,
             callback : options.callback
         });
@@ -846,8 +847,8 @@ var WfsConnection = (function() {
      */
     var getData = function(options) {
         if (options) {
-            if (options.bbox) {
-                // BBox is not supported by the cache at the moment.
+            if (options.bbox || options.latlon) {
+                // BBox nor LatLon are not supported by the cache at the moment.
                 // Therefore, pass the whole query to the parser.
                 retrieveSpatialData.call(this, options);
 
@@ -855,7 +856,7 @@ var WfsConnection = (function() {
                 retrieveSitesData.call(this, options);
 
             } else {
-                var errorStr = "ERROR: Either geoid, wmo, fmisid, sites or bbox is mandatory in options!";
+                var errorStr = "ERROR: Either geoid, wmo, fmisid, sites, bbox or latlon is mandatory in options!";
                 if ("undefined" !== typeof console && console) {
                     console.error(errorStr);
                 }

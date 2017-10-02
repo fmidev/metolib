@@ -104,6 +104,7 @@ function WfsRequestParser() {
         REQUEST_FMISID : "&fmisid=",
         REQUEST_PLACE : "&place=",
         REQUEST_BBOX : "&bbox=",
+        REQUEST_LATLON : "&latlon=",
         REQUEST_CRS : "&crs=",
 
         // XML elements that are parsed.
@@ -1854,7 +1855,7 @@ function WfsRequestParser() {
      * See API function {@link #getData()} for function and parameter descriptions.
      * @throws {String} Exception if parameters are not correct.
      */
-    function getParsedData(url, storedQueryId, requestParameter, begin, end, timestep, numOfTimesteps, denyTimeAdjusting, geoid, wmo, fmisid, sites, bbox, crs, queryExtension, callback) {
+    function getParsedData(url, storedQueryId, requestParameter, begin, end, timestep, numOfTimesteps, denyTimeAdjusting, geoid, wmo, fmisid, sites, bbox, latlon, crs, queryExtension, callback) {
         // Convert possible integer millisecond values of times into Date objects.
         if (!( begin instanceof Date) && !isNaN(begin)) {
             begin = new Date(begin);
@@ -1884,7 +1885,8 @@ function WfsRequestParser() {
         var fmisidCheck = _.isNumber(fmisid) || fmisid && _.isString(fmisid) || _.isArray(fmisid) && fmisid.length;
         var sitesCheck = sites && _.isString(sites) || _.isArray(sites) && sites.length;
         var bboxCheck = bbox && _.isString(bbox);
-        var locationGivenCheck = geoidCheck || wmoCheck || fmisidCheck || sitesCheck || bboxCheck;
+        var latlonCheck = latlon && _.isString(latlon);
+        var locationGivenCheck = geoidCheck || wmoCheck || fmisidCheck || sitesCheck || bboxCheck || latlonCheck;
         var crsCheck = !crs || _.isString(crs);
         if (urlCheck && storedQueryCheck && parameterCheck && periodCheck && locationGivenCheck && crsCheck) {
             // Check if begin and end times should be adjusted for server. They need to be exact for minutes.
@@ -1988,6 +1990,11 @@ function WfsRequestParser() {
                 bboxParameter = myConstants.REQUEST_BBOX + Utils.encodeUriComponent(bbox);
             }
 
+            var latlonParameter = "";
+            if (latlon) {
+                latlonParameter = myConstants.REQUEST_LATLON + Utils.encodeUriComponent(latlon);
+            }
+
             var crsParameter = "";
             if (crs) {
                 crsParameter = myConstants.REQUEST_CRS + Utils.encodeUriComponent(crs);
@@ -2004,7 +2011,7 @@ function WfsRequestParser() {
 
             var urlQueryExtension = handleQueryExtension(queryExtension);
 
-            var requestUrl = url + urlQueryDelimiter + myConstants.REQUEST_GET_FEATURE + storedQueryIdParameter + myConstants.REQUEST_PARAMETERS + requestParameter + myConstants.REQUEST_BEGIN + begin + myConstants.REQUEST_END + end + timeStepParameter + geoidParameter + wmoParameter + fmisidParameter + sitesParameter + bboxParameter + crsParameter + urlQueryExtension;
+            var requestUrl = url + urlQueryDelimiter + myConstants.REQUEST_GET_FEATURE + storedQueryIdParameter + myConstants.REQUEST_PARAMETERS + requestParameter + myConstants.REQUEST_BEGIN + begin + myConstants.REQUEST_END + end + timeStepParameter + geoidParameter + wmoParameter + fmisidParameter + sitesParameter + bboxParameter + latlonParameter + crsParameter + urlQueryExtension;
             requestAndParseXml(requestUrl, callback);
 
         } else {
@@ -2056,7 +2063,6 @@ function WfsRequestParser() {
                 // Make sure that the end value is evenly on the timestep.
                 // Unlike with begin time, exact hour does not limit time step here.
                 var reminder = (date.getTime() - beginDate.getTime()) % timestep;
-                console.log(reminder);
                 if (reminder > 0) {
                     date.setTime(date.getTime() + (timestep - reminder));
                 }
@@ -2075,7 +2081,7 @@ function WfsRequestParser() {
                 // Then, later if string or integer values are changed in the function, they are changed
                 // to function variables instead of changing property values of the original object. Notice,
                 // arrays and objects as function parameters still refere to the original arrays and objects.
-                getParsedData(options.url, options.storedQueryId, options.requestParameter, options.begin, options.end, options.timestep, options.numOfTimesteps, options.denyTimeAdjusting, options.geoid, options.wmo, options.fmisid, options.sites, options.bbox, options.crs, options.queryExtension, function(data, errors) {
+                getParsedData(options.url, options.storedQueryId, options.requestParameter, options.begin, options.end, options.timestep, options.numOfTimesteps, options.denyTimeAdjusting, options.geoid, options.wmo, options.fmisid, options.sites, options.bbox, options.latlon, options.crs, options.queryExtension, function(data, errors) {
                     // Notice, errors parameter is for the errors that occurred during the asynchronous flow.
                     dataCallback(options.callback, data, errors);
                 });
