@@ -1,17 +1,17 @@
 {
-  "name": "metolib",
-  "version": "2.0.0",
-  "description": "",
+  "name": "@fmidev/metolib",
+  "version": "2.0.2",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "dependencies" : {
-    "jquery" : "~3.2",
-    "lodash" : "~4.17",
-    "async" : "~2.5"
+  "dependencies": {
+    "jquery": "~3.2",
+    "lodash": "~4.17",
+    "async": "~2.5"
   },
   "keywords": [],
   "author": "FMI",
-  "license": "MIT"
+  "license": "MIT",
+  "description": ""
 }
