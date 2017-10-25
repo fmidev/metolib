@@ -573,7 +573,7 @@ var WfsConnection = (function() {
      */
     function cacheSitesDataFetcherCallback(container, taskDef, taskCallback) {
         container.parser.getData({
-            url : container.connectionUrl,
+            url : getUrlString(container.connectionUrl),
             storedQueryId : container.storedQueryId,
             requestParameter : taskDef.parameter,
             begin : taskDef.start,
@@ -624,7 +624,7 @@ var WfsConnection = (function() {
             // Cache can not be used with the given options. Therefore, use parser directly.
 
             that.parser.getData({
-                url : that.connectionUrl,
+                url : getUrlString(that.connectionUrl),
                 storedQueryId : that.storedQueryId,
                 requestParameter : options.requestParameter,
                 begin : options.begin,
@@ -686,12 +686,11 @@ var WfsConnection = (function() {
      * initialized. Callbacks given and set in this function are called when
      * the data is gotten either from the server or directly from the cache.
      *
-     * See API for function description.
      */
     var retrieveSpatialData = function(options) {
         var that = this;
         that.parser.getData({
-            url : that.connectionUrl,
+            url : getUrlString(that.connectionUrl),
             storedQueryId : that.storedQueryId,
             requestParameter : options.requestParameter,
             begin : options.begin,
@@ -748,7 +747,7 @@ var WfsConnection = (function() {
         } catch(e) {
             var errorStr = "ERROR: API level error occurred in a synchronous flow!";
             if ("undefined" !== typeof console && console) {
-                console.error(errorStr);
+                console.error(errorStr);console.error(e);
             }
             success = false;
             if (callback) {
@@ -761,6 +760,20 @@ var WfsConnection = (function() {
             }
         }
         return success;
+    };
+
+    /**
+     * @private
+     *
+     * Get a URL string. If an array of URLs has been set to make use of domain sharding, a random array member is returned.
+     *
+     */
+    var getUrlString = function(urlOption) {
+        if(_.isArray(urlOption)){
+          return urlOption[ Math.floor( Math.random() * urlOption.length ) ];
+        }else{
+          return urlOption;
+        }
     };
 
     /**
@@ -797,8 +810,8 @@ var WfsConnection = (function() {
         // Notice, if already connected, this function does not reconnect
         // even if a new URL would be different than the old one.
         if (!this.connectionUrl) {
-            if (!_.isString(url) || !url) {
-                var urlErrorStr = "ERROR: WfsConnection URL must be a string and not empty!";
+            if ((!_.isString(url) && !_.isArray(url)) || !url.length || !url) {
+                var urlErrorStr = "ERROR: WfsConnection URL must be a string or an array and not empty!";
                 if ("undefined" !== typeof console && console) {
                     console.error(urlErrorStr);
                 }
@@ -880,7 +893,7 @@ var WfsConnection = (function() {
      */
     var connectionConstructor = function() {
         // Reference to the connection instance object.
-        var _me = this;
+        var that = this;
 
         // Private object is used for API functions to provide them private member variables.
         // Instance specific data is available for API functions when reference to this private
@@ -889,7 +902,7 @@ var WfsConnection = (function() {
         // instance.
         this._private = {
             // Reference to the connection instance object.
-            connectionInstance : _me,
+            connectionInstance : that,
 
             // Member variables that are initialized to undefined.
             // When connection function is called these are set.

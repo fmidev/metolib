@@ -36,3 +36,11 @@ Browsers
 MetOLib works well with the major browsers.
 
 But notice, Internet Explorer version 8 or greater is required for cross-domain requests to work properly with MetOLib.
+
+Getting started
+---------------
+
+* MetOLib has been designed concerning the WFS standard in general, but tested only with the WFS service of FMI. Using the WFS service of FMI requires an API key. Apply for an API key here: https://ilmatieteenlaitos.fi/rekisteroityminen-avoimen-datan-kayttajaksi
+* A quick start to the WFS service of FMI can be found here: http://ilmatieteenlaitos.fi/latauspalvelun-pikaohje
+* The WFS service of FMI serves detailed metadata that can be applied according to the instructions in the quick start. The reference for the WFS standard can be found here: http://docs.geoserver.org/stable/en/user/services/wfs/reference.html
+* Stored queries in the WFS service of FMI are listed here: http://ilmatieteenlaitos.fi/tallennetut-kyselyt

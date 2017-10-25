@@ -7,6 +7,20 @@ If cache is not required, then parser class may be used directly instead. Notice
 cache does not support spatial (BBOX) requests. When spatial data is requested through Connection API,
 it always uses request parser directly instead of checking cache.
 
+When using the WfsConnection class, SERVER_URL can be defined either:
+
+1. as a String `"https://data.fmi.fi/insert-your-apikey-here/wfs/"`
+
+2. or, to utilize domain sharding, as an Array
+
+        const SERVER_URL =
+        ["https://1.p.data.fmi.fi/insert-your-apikey-here/wfs/",
+        "https://2.p.data.fmi.fi/insert-your-apikey-here/wfs/",
+        "https://3.p.data.fmi.fi/insert-your-apikey-here/wfs/",
+        "https://4.p.data.fmi.fi/insert-your-apikey-here/wfs/",
+        "https://5.p.data.fmi.fi/insert-your-apikey-here/wfs/"]
+
+
 *Metolib.WfsConnection* depends on
 
 * Other MetOLib classes
