@@ -35,9 +35,8 @@
     "karma-safari-launcher": "^0.1.1",
     "karma-script-launcher": "^0.1.0",
     "lodash": "~4.17",
+    "uglifyjs-webpack-plugin": "^0.4.6",
     "webpack": "^3.5.5"
   },
-  "dependencies": {
-    "uglifyjs-webpack-plugin": "^0.4.6"
-  }
+  "dependencies": {}
 }

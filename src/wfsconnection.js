@@ -891,7 +891,13 @@ var WfsConnection = (function() {
      * Notice, this constructor is returned from {WfsConnection}
      * and can be used for instantiation later.
      */
-    var connectionConstructor = function() {
+     var connectionConstructor = function(splitterCacheConfig = {
+         sideFetchAfterFactor : 1,
+         sideFetchBeforeFactor : 0.5,
+         maxBlockDataPoints : 200,
+         maxCacheDataSize : 4000
+     }) {
+
         // Reference to the connection instance object.
         var that = this;
 
@@ -913,12 +919,7 @@ var WfsConnection = (function() {
             // throughout the lifetime of object instance.
 
             // Cache for retrieved data.
-            cache : new SplitterCache({
-                sideFetchAfterFactor : 1,
-                sideFetchBeforeFactor : 0.5,
-                maxBlockDataPoints : 200,
-                maxCacheDataSize : 4000
-            }),
+            cache : new SplitterCache(splitterCacheConfig),
 
             parser : new WfsRequestParser()
         };
