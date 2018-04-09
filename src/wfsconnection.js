@@ -891,15 +891,18 @@ var WfsConnection = (function() {
      * Notice, this constructor is returned from {WfsConnection}
      * and can be used for instantiation later.
      */
-     var connectionConstructor = function(splitterCacheConfig = {
-         sideFetchAfterFactor : 1,
-         sideFetchBeforeFactor : 0.5,
-         maxBlockDataPoints : 200,
-         maxCacheDataSize : 4000
-     }) {
+     var connectionConstructor = function(splitterCacheConfig) {
 
         // Reference to the connection instance object.
         var that = this;
+
+        // {SplitterCache} configuration
+        splitterCacheConfig = splitterCacheConfig || {
+            sideFetchAfterFactor : 1,
+            sideFetchBeforeFactor : 0.5,
+            maxBlockDataPoints : 200,
+            maxCacheDataSize : 4000
+        };
 
         // Private object is used for API functions to provide them private member variables.
         // Instance specific data is available for API functions when reference to this private
