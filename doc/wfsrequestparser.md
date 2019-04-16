@@ -19,7 +19,7 @@ Limitations
 
 Because of the way jQuery XML parser works, the current WfsRequestParser is very picky about
 the element namespace prefixes used in the response. It relies on the XML elements using the
-namespace prefixes used at data.fmi.fi WFS service:
+namespace prefixes used at opendata.fmi.fi WFS service:
 
 * `wfs` for `http://www.opengis.net/wfs/2.0`
 * `xlink` for "http://www.w3.org/1999/xlink'
