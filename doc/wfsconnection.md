@@ -9,7 +9,7 @@ it always uses request parser directly instead of checking cache.
 
 When using the WfsConnection class, SERVER_URL can be defined either:
 
-1. as a String `"https://data.fmi.fi/insert-your-apikey-here/wfs/"`
+1. as a String `"https://opendata.fmi.fi/wfs/"`
 
 2. or, to utilize domain sharding, as an Array
 
