@@ -7,7 +7,7 @@ If cache is not required, then parser class may be used directly instead. Notice
 cache does not support spatial (BBOX) requests. When spatial data is requested through Connection API,
 it always uses request parser directly instead of checking cache.
 
-When using the WfsConnection class, SERVER_URL is defined either as a String `"https://opendata.fmi.fi/wfs/"`
+When using the WfsConnection class, SERVER_URL is defined as a String `"https://opendata.fmi.fi/wfs/"`
 
 *Metolib.WfsConnection* depends on
 
