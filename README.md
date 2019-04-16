@@ -4,7 +4,7 @@ MetOLib
 MetOLib provides implementation of API classes that may be used to request weather
 data from the Web Feature Service (WFS) server of the Finnish Meteorological Institute
 INSPIRE Atmospheric Features and Geographical Meteorological Features
-guidelines compatible WFS Download Service server at http://opendata.fmi.fi.
+guidelines compatible WFS Download Service server at https://opendata.fmi.fi.
 
 The response is assumed to the wfs:FeatureCollection with one or more members of
 PointTimeSeriesObservation or GridSeriesObservation features of namespace
