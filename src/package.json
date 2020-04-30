@@ -6,7 +6,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "jquery": "~3.4",
+    "jquery": "~3.5",
     "lodash": "~4.17",
     "async": "~2.5"
   },
