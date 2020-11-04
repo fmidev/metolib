@@ -1,6 +1,10 @@
 MetOLib
 =======
 
+**This product has reached end-of-life status and is no longer 
+maintained. For your weather data visualisation needs in JavaScript
+check out [the MetOClient-project](https://github.com/fmidev/metoclient).**
+
 MetOLib provides implementation of API classes that may be used to request weather
 data from the Web Feature Service (WFS) server of the Finnish Meteorological Institute
 INSPIRE Atmospheric Features and Geographical Meteorological Features
