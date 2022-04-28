@@ -8,7 +8,7 @@
     "url": "https://github.com/fmidev/metolib.git"
   },
   "devDependencies": {
-    "async": "~2.5",
+    "async": "~2.6",
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",
     "babel-preset-es2015": "^6.24.1",
